@@ -1,0 +1,90 @@
+.common-detail-popup {
+  left: 3.69vh;
+
+  .info-container .panel-body .basic-wrapper {
+    .basic-content {
+      .detail {
+        text-align: left;
+        background-color: #e6edf4;
+        box-sizing: border-box;
+        margin-top: 1vh;
+        padding: 0.75vh 0.5vh 1vh 1.25vh;
+
+        span {
+          display: block;
+          font-family: PingFang;
+          font-weight: 600;
+          font-size: 1.5vh;
+
+          &:first-child {
+            height: 2.06vh;
+            line-height: 2.06vh;
+            color: #165fea;
+          }
+
+          &:last-child {
+            text-align: justify;
+            height: 11.31vh;
+            color: #000;
+            margin-top: 0.69vh;
+            padding-right: 0.75vh;
+            overflow-y: auto;
+          }
+        }
+      }
+
+      .desc {
+        display: flex;
+        padding: 1.5vh 0.69vh 0;
+
+        span {
+          text-align: left;
+          display: block;
+          height: 2.06vh;
+          line-height: 2.06vh;
+          font-family: PingFang;
+          font-weight: 600;
+          font-size: 1.5vh;
+        }
+
+        >div {
+          span:first-child {
+            color: #165fea;
+          }
+
+          span:last-child {
+            color: #000;
+          }
+
+          &:first-child {
+            padding-right: 1.13vh;
+            position: relative;
+
+            &::after {
+              content: "";
+              width: 0.1vh;
+              height: 3.5vh;
+              position: absolute;
+              top: 50%;
+              right: 0;
+              transform: translateY(-50%);
+              background-color: #707070;
+            }
+          }
+
+          &:last-child {
+            padding-left: 1.25vh;
+          }
+        }
+      }
+    }
+  }
+
+  .audio-wrapper {
+    margin-top: 2vh;
+
+    .audio-content {
+      margin-top: 2.25vh;
+    }
+  }
+}

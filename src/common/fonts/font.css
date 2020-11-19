@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: "Digital-7Mono";
+    src: url("Digital-7Mono.woff2") format("woff2"),
+        url("Digital-7Mono.ttf") format("truetype"),
+        url("Digital-7Mono.eot") format("embedded-opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "DIN-Regular";
+    src: url("DIN-Regular.otf") format("OpenType");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "DIN";
+    src: url("DIN-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "PingFang";
+    src: url("PingFang.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "YouSheBiaoTiHei";
+    src: url("YouSheBiaoTiHei.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}

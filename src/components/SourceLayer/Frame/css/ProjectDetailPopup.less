@@ -1,0 +1,160 @@
+.project-detail-popup {
+  .info-container .panel-body .base-info {
+    margin-top: 1.69vh;
+
+    .base-content {
+      margin-top: 1vh;
+
+      .base-name {
+        text-align: left;
+        line-height: 3vh;
+        background-color: #e6edf4;
+        padding-left: 1.25vh;
+
+        span {
+          height: 2.06vh;
+          line-height: 2.06vh;
+          font-family: PingFang;
+          font-size: 1.5vh;
+          font-weight: 600;
+
+          &:first-child {
+            color: #165fea;
+            padding-right: 2.13vh;
+          }
+
+          &:last-child {
+            color: #000;
+          }
+        }
+      }
+
+      .info-line {
+        box-sizing: border-box;
+        padding: 1vh 0.69vh 0;
+
+        table {
+          width: 100%;
+
+          tr td {
+            &:first-child {
+              width: 30%;
+            }
+
+            &:last-child {
+              width: 35%;
+            }
+          }
+
+          td {
+            position: relative;
+
+            span {
+              text-align: left;
+              display: block;
+              line-height: 2.06vh;
+              font-family: PingFang;
+              font-weight: 600;
+              font-size: 1.4vh;
+
+              &:first-child {
+                height: 2.06vh;
+                color: #165fea;
+                padding-bottom: 0.25vh;
+              }
+            }
+
+            &:not(:first-child) {
+              padding-left: 1vh;
+            }
+
+            &:not(:last-child)::after {
+              content: "";
+              width: 0.05vh;
+              height: 3.5vh;
+              position: absolute;
+              top: 50%;
+              right: 0;
+              transform: translateY(-50%);
+              background-color: #707070;
+            }
+          }
+
+          tr:nth-child(2) td {
+            height: 1.3vh;
+
+            &::after {
+              width: 0;
+            }
+          }
+        }
+      }
+
+      .latest {
+        border: solid 0.06vh #d5d5d5;
+        box-sizing: border-box;
+        margin-top: 0.88vh;
+        padding: 1vh 0.5vh 1vh 1.38vh;
+
+        >span {
+          text-align: left;
+          display: block;
+          line-height: 2.06vh;
+          font-family: PingFang;
+          font-weight: 600;
+          font-size: 1.5vh;
+
+          &:first-child {
+            height: 2.06vh;
+            color: #165fea;
+          }
+
+          &:last-child {
+            height: 8.31vh;
+            color: #000;
+            margin-top: 0.69vh;
+            padding-right: 0.75vh;
+            overflow-y: auto;
+          }
+        }
+      }
+
+      .plan {
+        border: solid 0.06vh #d5d5d5;
+        box-sizing: border-box;
+        margin-top: 1vh;
+        padding: 1vh 1.19vh 1vh 1.38vh;
+
+        >span {
+          text-align: left;
+          display: block;
+          height: 2.06vh;
+          line-height: 2.06vh;
+          font-family: PingFang;
+          font-weight: 600;
+          font-size: 1.5vh;
+          color: #165fea;
+        }
+
+        img {
+          width: 100%;
+        }
+
+        .time-desc {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          font-family: PingFang;
+          font-weight: 600;
+          font-size: 0.9vh;
+          color: #000;
+          margin-top: 1.1vh;
+
+          span {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+}

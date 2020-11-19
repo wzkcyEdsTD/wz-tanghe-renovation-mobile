@@ -1,0 +1,205 @@
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+ul,
+li {
+    margin: 0;
+    padding: 0;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+.cesium-viewer-bottom,
+.cesium-viewer-navigationContainer {
+    display: none;
+}
+
+
+// 弹出框样式
+.layer-popper {
+    width: 14.69vh;
+    min-width: 0;
+    border-radius: 0.8vh;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0vh 0.13vh 0.25vh 0vh rgba(10, 73, 120, 0.4);
+    border: solid 0.06vh #0f4dd8;
+    box-sizing: border-box;
+    padding: 1.38vh 1.63vh 1.75vh;
+
+    .panel {
+        .panel-title {
+            display: block;
+            height: 1.75vh;
+            line-height: 1.75vh;
+            font-family: PingFang;
+            font-weight: 600;
+            font-size: 1.25vh;
+            color: #000;
+            margin-bottom: 0.63vh;
+        }
+
+        .panel-body {
+            .line {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 1.25vh;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            .card {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 5vh;
+                height: 6.75vh;
+                background-color: transparent;
+                border-radius: 0.38vh;
+                border: dashed 0.06vh #255dda;
+                border-radius: 0.38vh;
+                cursor: pointer;
+
+                img {
+                    width: 3.5vh;
+                    height: 3.5vh;
+                    margin-bottom: 0.63vh;
+                }
+
+                .card-label {
+                    display: block;
+                    height: 1.38vh;
+                    line-height: 1.38vh;
+                    font-family: PingFang;
+                    font-size: 1vh;
+                    color: #000;
+                }
+
+                &.active {
+                    background-color: rgba(167, 238, 255, 0.8);
+                    border: solid 0.13vh #255dda;
+                }
+            }
+        }
+    }
+
+    .popper__arrow {
+        border-color: transparent transparent #0F4DD8 !important;
+        border-style: solid dashed dashed !important;
+    }
+}
+
+
+.name-popper {
+    width: 14.69vh;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 0.5vh 1vh;
+}
+
+
+.el-image-viewer__img {
+    max-height: 80% !important;
+    max-width: 90% !important;
+}
+
+.el-icon-circle-close {
+    color: #fff !important;
+}
