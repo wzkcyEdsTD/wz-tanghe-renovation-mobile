@@ -1,4 +1,8 @@
 .project-detail-popup {
+  .bg-image(@url) {
+    background: url("@{url}.png") no-repeat center;
+    background-size: 100% 100%;
+  }
   .info-container .panel-body .base-info {
     margin-top: 1.69vh;
 
@@ -110,7 +114,7 @@
           }
 
           &:last-child {
-            height: 8.31vh;
+            max-height: 8.31vh;
             color: #000;
             margin-top: 0.69vh;
             padding-right: 0.75vh;
@@ -136,8 +140,31 @@
           color: #165fea;
         }
 
-        img {
-          width: 100%;
+        .img-wrapper {
+          margin-top: 10px;
+          position: relative;
+          .pop {
+            position: absolute;
+            padding: 0px 5px 6px 5px;
+            color: #fff;
+            font-size: 14px;
+            &.pop1 {
+              left: 68%;
+              .bg-image("../../../../assets/images/detail/已贯通pop");
+            }
+            &.pop2 {
+              left: 55%;
+              .bg-image("../../../../assets/images/detail/小于三个月pop");
+            }
+            &.pop3 {
+              left: 20%;
+              .bg-image("../../../../assets/images/detail/大于三个月pop");
+            }
+          }
+          .state-img {
+            margin-top: 30px;
+            width: 80%;
+          }
         }
 
         .time-desc {

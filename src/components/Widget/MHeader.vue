@@ -5,7 +5,7 @@
       <img src="@/assets/images/widget/现代集团.png" class="logo" />
     </div>
     <div class="logo-right">
-      <span class="info">{{ date }} {{ times }}</span>
+      <!-- <span class="info">{{ date }} {{ times }}</span> -->
       <img src="@/assets/images/widget/设计集团.png" class="logo" />
     </div>
   </div>
@@ -21,10 +21,10 @@ export default {
     };
   },
   mounted() {
-    this.setTime();
-    setInterval(() => {
-      this.setTime();
-    }, 1000);
+    // this.setTime();
+    // setInterval(() => {
+    //   this.setTime();
+    // }, 1000);
   },
   methods: {
     // 设置时间

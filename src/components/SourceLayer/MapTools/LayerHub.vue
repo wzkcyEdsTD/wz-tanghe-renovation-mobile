@@ -91,6 +91,9 @@ export default {
   mounted() {
     // 默认显示
     this.change(LayerList[0]);
+    this.change(LayerList[1]);
+    this.change(LayerList[2]);
+    this.change(LayerList[3]);
   },
 
   methods: {

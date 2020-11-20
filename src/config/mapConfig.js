@@ -44,7 +44,7 @@ export const LayerList = [{
     type: "mvt",
     check: false,
 }, {
-    id: "断点",
+    id: "绿道断点",
     label: "断点",
     dataset: `${datasource}绿道断点`,
     icon: '断点',

@@ -32,7 +32,7 @@
           />
           <div class="item-body">
             <div class="line">
-              <div class="item-type">
+              <!-- <div class="item-type"> -->
                 <img
                   v-if="item.icon"
                   :src="
@@ -41,7 +41,7 @@
                     }.png`)
                   "
                 />
-              </div>
+              <!-- </div> -->
               <el-popover
                 placement="bottom-start"
                 trigger="hover"
@@ -78,7 +78,6 @@ export default {
     return {
       MediaServer,
       searchIconHash,
-
       input: "",
       resultShow: false,
       results: [],
@@ -191,6 +190,7 @@ export default {
 
     // 结果点击
     itemClick(item) {
+      console.log('item', item)
       this.resultShow = false;
       const { x, y } = item.geometry;
 
@@ -312,22 +312,27 @@ export default {
             display: flex;
             align-items: center;
 
-            .item-type {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 2.5vh;
-              height: 2vh;
-              background-color: #fff;
-              border-radius: 0.63vh;
-              border: solid 0.13vh #2283fc;
-              box-sizing: border-box;
-              margin-right: 0.63vh;
+            // .item-type {
+            //   display: flex;
+            //   align-items: center;
+            //   justify-content: center;
+            //   width: 2.5vh;
+            //   height: 2vh;
+            //   background-color: #fff;
+            //   border-radius: 0.63vh;
+            //   border: solid 0.13vh #2283fc;
+            //   box-sizing: border-box;
+            //   margin-right: 0.63vh;
 
-              img {
-                width: 1.7vh;
-                height: 1.7vh;
-              }
+            //   img {
+            //     width: 1.7vh;
+            //     height: 1.7vh;
+            //   }
+            // }
+
+            img {
+              margin-right: 0.63vh;
+              width: 2vh;
             }
 
             > span {

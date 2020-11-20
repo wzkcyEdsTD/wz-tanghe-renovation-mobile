@@ -78,7 +78,7 @@ export default {
       const height = window.innerHeight;
       const offsetWidth = (100 / height) * x;
       const offsetHeight = (100 / height) * (y + 46);
-      return `translate(${offsetWidth}vh, ${offsetHeight + 4}vh)`;
+      return `translate(${offsetWidth}vh, ${offsetHeight + 3}vh)`;
     },
   },
 };

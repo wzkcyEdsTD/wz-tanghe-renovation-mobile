@@ -37,8 +37,8 @@ export const drawFeatures = (ctx, {
         window.billboardMap[node.id].add({
             id: `billboard@${item.attributes.SMID}@${node.id}`,
             image: node.icon ? `/libs/images/map-ico/${node.icon}.png` : `/libs/images/map-ico/${item.attributes.CURRENT_STATE.trim()}.png`,
-            width: 34,
-            height: 35,
+            width: node.icon=='断点' ? 30 : 34,
+            height: node.icon=='断点' ? 30 : 34,
             scaleByDistance: new Cesium.NearFarScalar(500, 1.5, 6000, 1),
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
             position

@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <MHeader />
     <div class="content">
       <router-view />
     </div>
@@ -9,10 +8,9 @@
 </template>
 
 <script>
-import MHeader from "@/components/Widget/MHeader";
 import MVideo from "@/components/Widget/MVideo";
 export default {
-  components: { MHeader, MVideo },
+  components: { MVideo },
 };
 </script>
 

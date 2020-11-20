@@ -148,25 +148,35 @@
                 <div class="info-line">
                   <table>
                     <tr>
-                      <td v-if="forceEntity.type == '项目'">
+                      <!-- <td v-if="forceEntity.type == '项目'">
                         <span>类型</span>
                         <span>{{
                           forceEntity.attributes.FUNDTYPE || `无`
                         }}</span>
-                      </td>
-                      <td v-if="forceEntity.type == '断点'">
+                      </td> -->
+                      <!-- <td v-if="forceEntity.type == '绿道断点'">
                         <span>断点长度</span>
                         <span
                           >{{ forceEntity.attributes.LENGTH || `-` }}米</span
                         >
-                      </td>
+                      </td> -->
                       <td>
+                        <span>所属街道</span>
+                        <span>{{ forceEntity.attributes.STREET || `无` }}</span>
+                      </td>
+                      <td v-if="forceEntity.type == '项目'">
                         <span>总投资</span>
                         <span>{{
                           forceEntity.attributes.TOTALAMOUNT
                             ? `${forceEntity.attributes.TOTALAMOUNT}万元`
                             : `无`
                         }}</span>
+                      </td>
+                      <td v-if="forceEntity.type == '绿道断点'">
+                        <span>断点长度</span>
+                        <span
+                          >{{ forceEntity.attributes.LENGTH || `-` }}米</span
+                        >
                       </td>
                       <td>
                         <span>责任单位</span>
@@ -178,26 +188,27 @@
                       </td>
                     </tr>
                     <!-- 空行 -->
-                    <tr>
+                    <!-- <tr>
                       <td></td>
                       <td></td>
                       <td></td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>所属街道</span>
-                        <span>{{ forceEntity.attributes.STREET || `无` }}</span>
-                      </td>
-                      <td>
+                    </tr> -->
+                    <!-- <tr> -->
+                      <!-- <td>
                         <span>问题</span>
                         <span>{{ forceEntity.attributes.CZWT || `无` }}</span>
-                      </td>
-                      <td>
+                      </td> -->
+                      <!-- <td>
                         <span>备注</span>
                         <span>{{ forceEntity.attributes.BZ || `无` }}</span>
-                      </td>
-                    </tr>
+                      </td> -->
+                    <!-- </tr> -->
                   </table>
+                </div>
+
+                <div class="latest">
+                  <span>问题</span>
+                  <span>{{ forceEntity.attributes.CZWT || `无` }}</span>
                 </div>
 
                 <div class="latest">
@@ -223,6 +234,30 @@
                     <span>
                       计划建成时间：{{
                         forceEntity.attributes.CONSYEARE || `无`
+                      }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="plan" v-if="forceEntity.type == '绿道断点'">
+                  <span>计划时间{{JHGTState}}</span>
+                  <div class="img-wrapper" v-if="JHGTState==1">
+                    <!-- <div class="pop pop1">{{this.currentYear}}-{{this.currentMonth}}-{{this.currentDay}}</div> -->
+                    <img class="state-img" :src="require(`@/assets/images/detail/已贯通.png`)"/>
+                  </div>
+                  <div class="img-wrapper" v-if="JHGTState==2">
+                    <div class="pop pop2">{{this.currentYear}}-{{this.currentMonth}}-{{this.currentDay}}</div>
+                    <img class="state-img" :src="require(`@/assets/images/detail/小于三个月.png`)"/>
+                  </div>
+                  <div class="img-wrapper" v-if="JHGTState==3">
+                    <div class="pop pop3">{{this.currentYear}}-{{this.currentMonth}}-{{this.currentDay}}</div>
+                    <img class="state-img" :src="require(`@/assets/images/detail/大于三个月.png`)"/>
+                  </div>
+                  <div class="time-desc">
+                    <span></span>
+                    <span>
+                      计划贯通时间：{{
+                        forceEntity.attributes.JHGTSJ || `无`
                       }}
                     </span>
                   </div>
@@ -275,6 +310,11 @@ export default {
       overShow: false,
 
       isSearch: false,
+
+      currentYear: '',
+      currentMonth: '',
+      currentDay: '',
+      JHGTState: 0,   // 1已贯通、2小于三个月、3大于三个月
     };
   },
   components: { ElImageViewer, Overview },
@@ -291,6 +331,39 @@ export default {
     };
   },
   methods: {
+    // 判断 断点当前状态
+    getJHGTState() {
+      let JHGTSJ = this.forceEntity.attributes.JHGTSJ
+      let y = JHGTSJ.substr(0,4)
+      let m = JHGTSJ.substr(5,2)
+      let date = new Date;
+      let currentY = date.getFullYear()
+      let currentM = date.getMonth() + 1
+      currentM = currentM < 10 ? '0' + currentM : currentM
+      let currentD = date.getDate()
+      currentD = currentD < 10 ? ('0' + currentD) : currentD
+      this.currentYear = currentY
+      this.currentMonth = currentM
+      this.currentDay = currentD
+      if (y > currentY) {
+        if (m - currentM > -9) {
+          this.JHGTState = 3
+        } else {
+          this.JHGTState = 2
+        }
+      }
+      if (y == currentY) {
+        if (m - currentM > 3) {
+          this.JHGTState = 3
+        } else {
+          m - currentM > 0 ? this.JHGTState = 2 : this.JHGTState = 1
+        }
+      }
+      if (y < currentY) {
+        this.JHGTState = 1
+      }
+    },
+
     // 时间对象
     getDate(date) {
       if (!date) return;
@@ -311,6 +384,9 @@ export default {
         this.$refs.SwiperTime.swiper.activeIndex = 0;
       }
       this.initData();
+      if(this.forceEntity.type == '绿道断点') {
+        this.getJHGTState()
+      }
     },
 
     // 初始化数据

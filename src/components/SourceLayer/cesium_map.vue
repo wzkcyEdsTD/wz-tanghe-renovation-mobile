@@ -65,6 +65,8 @@ export default {
     window.blackLabelMap = {};
   },
   async mounted() {
+    this.eventRegsiter();
+
     await this.init3DMap(() => {
       this.mapLoaded = true;
 
@@ -72,8 +74,6 @@ export default {
       this.initHandler();
       this.createEntityCollection();
     });
-
-    this.eventRegsiter();
   },
   methods: {
     ...mapActions("map", ["setSourceMap", "setSejList"]),
@@ -136,7 +136,7 @@ export default {
 
             this.$refs.Search.results = [];
             this.$refs.Search.resultShow = false;
-            if (~_NODEID_.indexOf("项目") || _NODEID_ == "断点") {
+            if (~_NODEID_.indexOf("项目") || _NODEID_ == "绿道断点") {
               this.$refs.ProjectDetailPopup.isSearch = false;
               this.$refs.ProjectDetailPopup.getForceEntity({ ...feature });
               this.$refs.CommonDetailPopup.closeInfo();

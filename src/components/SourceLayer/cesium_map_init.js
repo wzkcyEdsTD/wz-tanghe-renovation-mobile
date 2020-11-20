@@ -100,10 +100,10 @@ export const addLocationIcon = (geometry, id) => {
         position: Cesium.Cartesian3.fromDegrees(x + 0.004, y - 0.004, 4),
         billboard: {
             image: `/libs/images/map-ico/location.png`,
-            width: 44,
-            height: 45,
+            width: 40,
+            height: 40,
             scaleByDistance: new Cesium.NearFarScalar(3000, 1.5, 6000, 1.2),
-            pixelOffset: new Cesium.Cartesian2(0, -15),
+            // pixelOffset: new Cesium.Cartesian2(0, -5),
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
         },
         id,
