@@ -91,6 +91,7 @@ export const resetCamera = () => {
 export const addLocationIcon = (geometry, id) => {
     const datasource = window.earth.dataSources.getByName("location")[0];
     datasource.entities.removeAll();
+    window.earth.entities.removeById("address-location");   // 消除地名地址定位图标
 
     const {
         x,

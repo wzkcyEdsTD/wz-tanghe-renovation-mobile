@@ -85,7 +85,7 @@
 <script>
 import { ServiceUrl, MediaServer } from "@/config/mapConfig";
 import { searchIconHash } from "@/common/js/hash";
-import { addLocationIcon } from "@/components/SourceLayer/cesium_map_init";
+import { addLocationIcon, cleanLocationIcon } from "@/components/SourceLayer/cesium_map_init";
 import { getAddressList } from "@/api/addressAPI";
 export default {
   data() {
@@ -256,8 +256,42 @@ export default {
     },
 
     // 地址结果点击
-    resultClick(item) {
+    resultClick({ lng, lat, result }) {
+      window.earth.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(lng, lat, 1200),
+        orientation: {
+          heading: 0.01768860454315663,
+          pitch: Cesium.Math.toRadians(-90),
+          roll: 0.0,
+        },
+      });
+      window.earth.entities.removeById("address-location");
+      cleanLocationIcon();
 
+      const addressLocationEntity = new Cesium.Entity({
+        id: "address-location",
+        position: Cesium.Cartesian3.fromDegrees(lng, lat, 4),
+        geometry: { lng, lat },
+        billboard: {
+          image: "/libs/images/map-ico/location.png",
+          width: 40,
+          height: 40,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        },
+        label: {
+          text: result,
+          fillColor: Cesium.Color.WHITE,
+          outlineColor: Cesium.Color.BLUE,
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          font: "11px",
+          scale: 1,
+          outlineWidth: 2,
+          pixelOffset: new Cesium.Cartesian2(0, -40),
+          scaleByDistance: new Cesium.NearFarScalar(5000, 1, 10000, 0.5),
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        },
+      });
+      window.earth.entities.add(addressLocationEntity);
     },
 
     // 查看更多结果
