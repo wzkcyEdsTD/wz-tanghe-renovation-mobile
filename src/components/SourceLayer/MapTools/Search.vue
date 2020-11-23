@@ -12,58 +12,71 @@
       <span class="btn-split" />
       <img src="@/assets/images/maptools/search.png" @click="search" />
     </div>
-    <div class="result" v-if="resultShow && results.length">
+    <div class="result" v-show="resultShow">
       <div class="result-inner">
-        <div
-          class="result-item"
-          v-for="(item, index) in results"
-          :key="index"
-          @click="itemClick(item)"
-        >
-          <img
-            v-if="item.img"
-            class="item-thumb"
-            :src="`${MediaServer}/images/${item.img_dir}/${item.img}`"
-          />
-          <img
-            v-else
-            class="item-thumb"
-            src="@/assets/images/maptools/暂无图片.png"
-          />
-          <div class="item-body">
-            <div class="line">
-              <!-- <div class="item-type"> -->
-                <img
-                  v-if="item.icon"
-                  :src="
-                    require(`@/assets/images/maptools/type_${
-                      searchIconHash[item.icon]
-                    }.png`)
-                  "
-                />
-              <!-- </div> -->
-              <el-popover
-                placement="bottom-start"
-                trigger="hover"
-                popper-class="name-popper"
-                :content="item.name"
-              >
-                <span class="item-name" slot="reference">{{ item.name }}</span>
-              </el-popover>
+        <ul id="itemResultContent" v-show="results.length">
+          <li
+            class="result-item"
+            v-for="(item, index) in results"
+            :key="index"
+            @click="itemClick(item)"
+          >
+            <img
+              v-if="item.img"
+              class="item-thumb"
+              :src="`${MediaServer}/images/${item.img_dir}/${item.img}`"
+            />
+            <img
+              v-else
+              class="item-thumb"
+              src="@/assets/images/maptools/暂无图片.png"
+            />
+            <div class="item-body">
+              <div class="line">
+                <!-- <div class="item-type"> -->
+                  <img
+                    v-if="item.icon"
+                    :src="
+                      require(`@/assets/images/maptools/type_${
+                        searchIconHash[item.icon]
+                      }.png`)
+                    "
+                  />
+                <!-- </div> -->
+                <el-popover
+                  placement="bottom-start"
+                  trigger="hover"
+                  popper-class="name-popper"
+                  :content="item.name"
+                >
+                  <span class="item-name" slot="reference">{{ item.name }}</span>
+                </el-popover>
+              </div>
+              <div class="item-dep">
+                <span>责任单位</span>
+                <span>{{ item.dep }}</span>
+              </div>
             </div>
-            <div class="item-dep">
-              <span>责任单位</span>
-              <span>{{ item.dep }}</span>
-            </div>
-          </div>
-        </div>
+          </li>
+          <li class="result-item" v-show="moreShow" @click="checkMore">查看更多结果</li>
+        </ul>
+        <ul id="addressResultContent" style="margin-top:1.31vh;" v-show="addressResults.length">
+          <li
+            class="result-item"
+            v-for="(item, i) in addressResults"
+            :key="i"
+            @click="resultClick(item)"
+          >
+            {{ item.result }}
+          </li>
+        </ul>
       </div>
     </div>
-    <div class="back" v-if="!resultShow && results.length" @click="back">
+    <div class="back" v-show="!resultShow && results.length" @click="back">
       <span>{{ `&lt;` }}</span>
       <span>{{ `返回&quot;${input}&quot;的搜索结果` }}</span>
     </div>
-    <div class="none" v-if="resultShow && !results.length">
+    <div class="none" v-if="resultShow && !results.length && !addressResults.length">
       <span>未找到相应地点</span>
     </div>
   </div>
@@ -73,6 +86,7 @@
 import { ServiceUrl, MediaServer } from "@/config/mapConfig";
 import { searchIconHash } from "@/common/js/hash";
 import { addLocationIcon } from "@/components/SourceLayer/cesium_map_init";
+import { getAddressList } from "@/api/addressAPI";
 export default {
   data() {
     return {
@@ -81,16 +95,19 @@ export default {
       input: "",
       resultShow: false,
       results: [],
+      // addressResultShow: false,
+      addressResults: [],
+      moreShow: false
     };
   },
 
   methods: {
     // 搜索
     search() {
+      document.querySelector('.result-inner').scrollTop = 0;
       this.results = [];
       if (!this.input) return;
       this.multSqlQuery(this.input);
-      this.resultShow = true;
       this.$parent.$refs.ProjectDetailPopup.closeInfo();
       this.$parent.$refs.CommonDetailPopup.closeInfo();
     },
@@ -126,13 +143,32 @@ export default {
           eventListeners: {
             processCompleted: async (res) => {
               const features = res.result.features;
-              this.fixData(features);
+              console.log('features~~~~~~~~~~~~~', features)
+              if (features.length) {
+                // this.addressResultShow = false
+                this.moreShow = true
+                this.addressResults = []
+                this.fixData(features);
+              } else {
+                console.log('addressAPI')
+                this.addressQuery()
+              }
+              this.resultShow = true;
             },
             processFailed: (msg) => console.log(msg),
           },
         }
       );
       getFeatureBySQLService.processAsync(getFeatureBySQLParams);
+    },
+
+    // 地名地址查询
+    async addressQuery() {
+      this.addressResults = []
+      const { records } = await getAddressList(this.input);
+      console.log('records!!!!', records)
+      // this.addressResultShow = true
+      this.addressResults = records
     },
 
     // 组装数据
@@ -219,6 +255,17 @@ export default {
       });
     },
 
+    // 地址结果点击
+    resultClick(item) {
+
+    },
+
+    // 查看更多结果
+    checkMore() {
+      this.moreShow = false
+      this.addressQuery()
+    },
+
     // 返回搜索结果列表
     back() {
       this.resultShow = true;
@@ -291,11 +338,13 @@ export default {
       .result-item {
         display: flex;
         flex-direction: row;
+        justify-content: center;
         align-items: center;
         position: relative;
         box-sizing: border-box;
         margin-top: 1.31vh;
         padding: 0 1.63vh 1.25vh 1.06vh;
+        text-align: left;
         cursor: pointer;
 
         .item-thumb {
