@@ -117,7 +117,6 @@
                       v-for="(item, index) in finalList"
                       :key="index"
                       :class="{ active: currentIndex == index }"
-                      @click="currentIndex = index"
                     >
                       <div class="item-content">
                         <span>{{ getDate(item.date).year }}</span>
@@ -322,6 +321,7 @@ export default {
   mounted() {
     this.timeSwiperOption = {
       slidesPerView: 3,
+      slideToClickedSlide: true,
       centeredSlides: true,
       on: {
         slideChange: () => {
