@@ -19,10 +19,10 @@
                   v-for="(item, index) in topBtns"
                   :key="index"
                   class="btn-type"
-                  :disabled="!currentData[item.id]"
+                  :disabled="item.disabled"
                   :class="{
                     active: currentShow == item.id,
-                    disabled: !currentData[item.id],
+                    disabled: item.disabled,
                   }"
                   @click="currentShow = item.id"
                 >
@@ -280,7 +280,9 @@
 
 <script>
 import { MediaServer } from "@/config/mapConfig";
-import { topBtns, swiperOption, progressImgHash } from "@/common/js/hash";
+import { 
+  // topBtns, 
+swiperOption, progressImgHash } from "@/common/js/hash";
 
 import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 import Overview from "@/components/SourceLayer/Frame/Overview";
@@ -289,9 +291,23 @@ export default {
   data() {
     return {
       MediaServer,
-      topBtns,
+      // topBtns,
       swiperOption,
       progressImgHash,
+
+      topBtns: [{
+        id: "overview",
+        label: "全景",
+        disabled: true
+      }, {
+        id: "video",
+        label: "视频",
+        disabled: true
+      }, {
+        id: "photo",
+        label: "图片",
+        disabled: true
+      }],
 
       name: "",
       forceEntity: {},
@@ -403,8 +419,22 @@ export default {
       this.fixData("SP", "video");
 
       this.finalList = Object.values(this.finalData).reverse();
+      console.log('finalList', this.finalList)
       if (this.finalList.length) {
         this.currentData = this.finalList[this.currentIndex];
+        console.log('currentData', this.currentData)
+
+        this.finalList.forEach((item) => {
+          if (item.overview) {
+            this.topBtns[0].disabled = false
+          }
+          if (item.video) {
+            this.topBtns[1].disabled = false
+          }
+          if (item.photo) {
+            this.topBtns[2].disabled = false
+          }
+        })
       }
     },
 
