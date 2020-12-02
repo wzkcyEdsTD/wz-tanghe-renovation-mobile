@@ -23,7 +23,7 @@
           <el-input
             v-model="nameValue"
             class="nameInput"
-            placeholder="请输入您的姓名"
+            placeholder="输入您的姓名"
             size="small"
           />
         </div>
@@ -54,6 +54,7 @@
                 class="scoreInput"
                 placeholder="请打分"
                 size="small"
+                onkeyup="value=value.replace(/[^\d]/g,'')"
                 @change="numberChange($event,index)"
               />
             </div>
@@ -198,18 +199,22 @@ export default {
       this.date = `${year}-${month}-${date}`
     },
     numberChange(val, index) {
-      let integer = /^(-|\+)?\d+$/;
-      if (integer.test(val)) {
-        if (val > 100) {
-          this.currentData.items[index].score = 100
-        }
-        if (val < 0) {
-          this.currentData.items[index].score = 0
-        }
-        this.marked++
-      } else {
-        this.marked--
+      // let integer = /^(-|\+)?\d+$/;
+      // if (integer.test(val)) {
+      if (val > 100) {
+        this.currentData.items[index].score = 100
       }
+      if (val < 0) {
+        this.currentData.items[index].score = 0
+      }
+      this.marked = 0
+      this.zrdwList.forEach(zrdw => {
+        zrdw.items.forEach(item => {
+          if (item.score) {
+            this.marked++
+          }
+        })
+      })
       let temp = 0
       this.currentData.items.forEach(item => {
         temp += Number(item.score)
@@ -239,7 +244,7 @@ export default {
           type: 'success',
           offset: 300,
           showClose: true,
-          duration: 0
+          duration: 4000
         });
       } else {
         this.$message({
@@ -247,12 +252,17 @@ export default {
           type: 'error',
           offset: 300,
           showClose: true,
-          duration: 0
+          duration: 3000
         });
       }
     }
   },
   mounted() {
+    let h = document.getElementsByTagName('body')[0].clientHeight
+    document.getElementsByTagName('body')[0].style.height = h + 'px';
+    document.getElementsByClassName('zrdw-item').forEach(item => {
+      item.style.height = h/8 + 'px';
+    })
     this.getCurrentDate()
   }
 };
@@ -280,10 +290,10 @@ export default {
         display: flex;
         align-items: center;
         width: 20px;
-        height: 13vh;
+        // height: 13vh;
         line-height: 1;
         padding: 0 1vh;
-        font-size: 2vh;
+        font-size: 14px;
         font-family: YouSheBiaoTiHei;
         text-align: center;
         .bg-image("../assets/images/mark/zrdw-bg");
@@ -308,9 +318,10 @@ export default {
     .info {
       margin-top: 2vh;
       .name-wrapper {
-        width: 60%;
+        width: 80%;
         margin: 0 auto;
         display: flex;
+        justify-content: center;
         align-items: center;
         .text {
           color: #52fef2;
@@ -390,6 +401,7 @@ export default {
           .indexValue {
             width: 20px;
             height: 20px;
+            line-height: 20px;
             margin: 0 10px;
             color: #fff;
             border: 1px solid #fff;
@@ -401,7 +413,7 @@ export default {
             text-align: left;
           }
           .scoreValue {
-            flex: 2;
+            flex: 2.1;
             padding: 0 5px;
           }
         }
@@ -445,6 +457,7 @@ export default {
   border: 1px solid #52fef2 !important;
   border-radius: 0 !important;
   color: white !important;
+  font-size: 16px;
 }
 .el-message {
   min-width: 0 !important;
