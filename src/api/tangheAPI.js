@@ -1,8 +1,8 @@
 
 import axios from "axios";
-const BASEURL = "http://192.168.2.136:8080/jeecg-boot/tanghe";
+// const BASEURL = "http://172.168.3.182:8080/jeecg-boot";
 const serverInstanec = axios.create();
-serverInstanec.defaults.baseURL = BASEURL;
+// serverInstanec.defaults.baseURL = BASEURL;
 
 /**
  * axios default
@@ -25,6 +25,6 @@ const get = (url, data) => {
  * 打分
  */
 export const addBatch = (data) => {
-  const url = '/studyDeptScore/addBatch'
+  const url = '/tanghe/studyDeptScore/addBatch'
   return post(url, data);
 };
