@@ -4,21 +4,20 @@ import SourceLayer from '../views/SourceLayer'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     name: 'SourceLayer',
     component: SourceLayer
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/decision',
+    name: 'Decision',
+    component: () => import( /* webpackChunkName: "decision" */ '../views/Decision.vue')
   },
   {
     path: '/mark',
     name: 'Mark',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Mark.vue')
+    component: () => import( /* webpackChunkName: "about" */ '../views/Mark.vue')
   }
 ]
 

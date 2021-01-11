@@ -36,7 +36,7 @@ export const addGDLayer = ({
 export const addRiverLayer = () => {
     return window.earth.imageryLayers.addImageryProvider(
         new Cesium.SuperMapImageryProvider({
-            url: ServiceUrl.RIVER,
+            url: ServiceUrl.GDRIVER,
         })
     );
 }
@@ -46,7 +46,7 @@ export const addRiverLayer = () => {
 export const addGreenwayLayer = () => {
     return window.earth.imageryLayers.addImageryProvider(
         new Cesium.SuperMapImageryProvider({
-            url: ServiceUrl.GREENWAY,
+            url: ServiceUrl.GDGREENWAY,
         })
     );
 }

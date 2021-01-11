@@ -64,7 +64,14 @@
           <div v-show="submited" class="back" @click="submited = false">
             <img src="@/assets/images/mark/back.png" />
           </div>
-          <button v-show="!submited" class="btn-item submit" :disabled="btnLock" @click="submit">提交</button>
+          <button
+            v-show="!submited"
+            class="btn-item submit"
+            :disabled="btnLock"
+            @click="submit"
+          >
+            提交
+          </button>
         </div>
       </div>
     </div>
@@ -93,7 +100,7 @@ export default {
           value: "ouhai",
           score: "",
         },
-        
+
         {
           label: "瑞安市政府",
           value: "ruian",
@@ -118,7 +125,7 @@ export default {
       date: "",
       marked: 0,
       submited: false,
-      btnLock: false
+      btnLock: false,
     };
   },
   methods: {
@@ -153,7 +160,7 @@ export default {
           offset: 300,
         });
       }
-      this.btnLock = true
+      this.btnLock = true;
       let data = [];
       this.zrdwList.forEach((zrdw) => {
         data.push({
@@ -167,7 +174,7 @@ export default {
       let res = await addBatch(data);
       console.log("res", res);
       if (res.data.code === 200) {
-        this.btnLock = false
+        this.btnLock = false;
         this.submited = true;
         this.$message({
           message: "评测打分成功！",
@@ -177,7 +184,7 @@ export default {
           duration: 4000,
         });
       } else {
-        this.btnLock = false
+        this.btnLock = false;
         this.$message({
           message: "评测打分失败！",
           type: "error",
@@ -204,10 +211,13 @@ export default {
         } else {
           document.querySelector("body").setAttribute("style", "height:100%;");
         }
-        if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+        if (
+          document.activeElement.tagName === "INPUT" ||
+          document.activeElement.tagName === "TEXTAREA"
+        ) {
           window.setTimeout(function () {
-            document.activeElement.scrollIntoViewIfNeeded()
-          }, 0)
+            document.activeElement.scrollIntoViewIfNeeded();
+          }, 0);
         }
       })();
     };
@@ -219,13 +229,9 @@ export default {
 
 <style lang="less" scoped>
 .mark {
-  .bg-image(@url) {
-    background: url("@{url}.png") no-repeat center;
-    background-size: 100% 100%;
-  }
   width: 100%;
   height: 100%;
-  .bg-image("../assets/images/mark/bg");
+  .bg-image("~@/assets/images/mark/bg");
   .header {
     display: flex;
     justify-content: space-between;
@@ -265,7 +271,7 @@ export default {
         top: -8%;
         left: 50%;
         transform: translateX(-50%);
-        .bg-image("../assets/images/mark/name-bg");
+        .bg-image("~@/assets/images/mark/name-bg");
       }
       .list-box {
         margin: 2vh;
@@ -305,7 +311,7 @@ export default {
                 left: 50%;
                 width: 70%;
                 transform: translateX(-50%);
-                .bg-image("../assets/images/mark/zrdw2-bg");
+                .bg-image("~@/assets/images/mark/zrdw2-bg");
                 color: #fff;
                 font-size: 12px;
                 white-space: nowrap;
@@ -346,10 +352,10 @@ export default {
         }
         .submit {
           border: none;
-          .bg-image("../assets/images/mark/submit");
+          .bg-image("~@/assets/images/mark/submit");
         }
         .submited {
-          .bg-image("../assets/images/mark/submited");
+          .bg-image("~@/assets/images/mark/submited");
         }
         .back {
           position: absolute;

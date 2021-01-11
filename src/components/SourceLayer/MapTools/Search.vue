@@ -33,24 +33,16 @@
             />
             <div class="item-body">
               <div class="line">
-                <!-- <div class="item-type"> -->
-                  <img
-                    v-if="item.icon"
-                    :src="
-                      require(`@/assets/images/maptools/type_${
-                        searchIconHash[item.icon]
-                      }.png`)
-                    "
-                  />
-                <!-- </div> -->
-                <el-popover
-                  placement="bottom-start"
-                  trigger="hover"
-                  popper-class="name-popper"
-                  :content="item.name"
-                >
-                  <span class="item-name" slot="reference">{{ item.name }}</span>
-                </el-popover>
+                <img
+                  v-if="item.icon"
+                  :src="
+                    require(`@/assets/images/maptools/type_${
+                      searchIconHash[item.icon]
+                    }.png`)
+                  "
+                />
+
+                <span class="item-name">{{ item.name }}</span>
               </div>
               <div class="item-dep">
                 <span>责任单位</span>
@@ -58,9 +50,15 @@
               </div>
             </div>
           </li>
-          <li class="result-item" v-show="moreShow" @click="checkMore">查看更多结果</li>
+          <li class="result-item" v-show="moreShow" @click="checkMore">
+            查看更多结果
+          </li>
         </ul>
-        <ul id="addressResultContent" style="margin-top:1.31vh;" v-show="addressResults.length">
+        <ul
+          id="addressResultContent"
+          style="margin-top: 1.31vh"
+          v-show="addressResults.length"
+        >
           <li
             class="result-item"
             v-for="(item, i) in addressResults"
@@ -76,7 +74,10 @@
       <span>{{ `&lt;` }}</span>
       <span>{{ `返回&quot;${input}&quot;的搜索结果` }}</span>
     </div>
-    <div class="none" v-if="resultShow && !results.length && !addressResults.length">
+    <div
+      class="none"
+      v-if="resultShow && !results.length && !addressResults.length"
+    >
       <span>未找到相应地点</span>
     </div>
   </div>
@@ -85,7 +86,10 @@
 <script>
 import { ServiceUrl, MediaServer } from "@/config/mapConfig";
 import { searchIconHash } from "@/common/js/hash";
-import { addLocationIcon, cleanLocationIcon } from "@/components/SourceLayer/cesium_map_init";
+import {
+  addLocationIcon,
+  cleanLocationIcon,
+} from "@/components/SourceLayer/cesium_map_init";
 import { getAddressList } from "@/api/addressAPI";
 export default {
   data() {
@@ -97,14 +101,14 @@ export default {
       results: [],
       // addressResultShow: false,
       addressResults: [],
-      moreShow: false
+      moreShow: false,
     };
   },
 
   methods: {
     // 搜索
     search() {
-      document.querySelector('.result-inner').scrollTop = 0;
+      document.querySelector(".result-inner").scrollTop = 0;
       this.results = [];
       if (!this.input) return;
       this.multSqlQuery(this.input);
@@ -143,15 +147,15 @@ export default {
           eventListeners: {
             processCompleted: async (res) => {
               const features = res.result.features;
-              console.log('features~~~~~~~~~~~~~', features)
+              console.log("features~~~~~~~~~~~~~", features);
               if (features.length) {
                 // this.addressResultShow = false
-                this.moreShow = true
-                this.addressResults = []
+                this.moreShow = true;
+                this.addressResults = [];
                 this.fixData(features);
               } else {
-                console.log('addressAPI')
-                this.addressQuery()
+                console.log("addressAPI");
+                this.addressQuery();
               }
               this.resultShow = true;
             },
@@ -164,11 +168,11 @@ export default {
 
     // 地名地址查询
     async addressQuery() {
-      this.addressResults = []
+      this.addressResults = [];
       const { records } = await getAddressList(this.input);
-      console.log('records!!!!', records)
+      console.log("records!!!!", records);
       // this.addressResultShow = true
-      this.addressResults = records
+      this.addressResults = records;
     },
 
     // 组装数据
@@ -226,7 +230,7 @@ export default {
 
     // 结果点击
     itemClick(item) {
-      console.log('item', item)
+      console.log("item", item);
       this.resultShow = false;
       const { x, y } = item.geometry;
 
@@ -296,8 +300,8 @@ export default {
 
     // 查看更多结果
     checkMore() {
-      this.moreShow = false
-      this.addressQuery()
+      this.moreShow = false;
+      this.addressQuery();
     },
 
     // 返回搜索结果列表
@@ -492,7 +496,6 @@ export default {
 
   .back {
     display: flex;
-    align-items: center;
     width: 33.75vh;
     height: 2.5vh;
     background-color: rgba(255, 255, 255, 0.9);
@@ -504,8 +507,8 @@ export default {
 
     span {
       display: block;
-      height: 1.56vh;
-      line-height: 1.56vh;
+      height: 2.5vh;
+      line-height: 2.5vh;
       font-family: PingFang;
       font-weight: 600;
       font-size: 1.13vh;

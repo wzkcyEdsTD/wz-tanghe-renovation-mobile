@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <MHeader v-if="this.$route.path != '/mark'" />
     <div class="content">
       <router-view />
     </div>
@@ -8,9 +9,10 @@
 </template>
 
 <script>
+import MHeader from "@/components/Widget/MHeader";
 import MVideo from "@/components/Widget/MVideo";
 export default {
-  components: { MVideo },
+  components: { MHeader, MVideo },
 };
 </script>
 

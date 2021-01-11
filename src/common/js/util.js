@@ -16,3 +16,19 @@ export const getDate = () => {
     // 获取当前时间
     return `${year}年${month}月${day}日@${h}:${m}:${s}`;
 }
+
+
+// 深拷贝
+export const deepClone = (obj) => {
+    if (!obj || !(obj instanceof Object) || typeof obj == "function") {
+        return obj || undefined;
+    }
+    const constructor = obj.constructor;
+    const result = new constructor();
+    for (let key in obj) {
+        if (key in obj) {
+            result[key] = deepClone(obj[key]);
+        }
+    }
+    return result;
+}

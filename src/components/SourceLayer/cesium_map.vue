@@ -75,6 +75,10 @@ export default {
       this.createEntityCollection();
     });
   },
+  destroyed() {
+    // 路由切换，组件销毁，清空store十二景
+    this.setSejList([]);
+  },
   methods: {
     ...mapActions("map", ["setSourceMap", "setSejList"]),
     async init3DMap(fn) {

@@ -29,17 +29,17 @@
           <span class="panel-title">塘河沿线</span>
           <div class="panel-body">
             <div
-              v-for="k in Math.ceil(LayerList.length / 2)"
+              v-for="k in Math.ceil(LayerHubs.length / 2)"
               :key="k"
               class="line"
             >
               <div
-                v-for="(item, index) in LayerList.slice(
+                v-for="(item, index) in LayerHubs.slice(
                   (k - 1) * 2,
                   (k - 1) * 2 + 2
                 )"
                 :key="index"
-                @click="change(item)"
+                @click="nodeChange(item)"
                 :class="{ active: item.check }"
                 class="card"
               >
@@ -63,6 +63,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { deepClone } from "@/common/js/util";
 import { ServiceUrl, LayerList } from "@/config/mapConfig";
 import { drawFeatures } from "@/components/SourceLayer/cesium_map_draw";
 export default {
@@ -82,22 +83,27 @@ export default {
           value: "reset",
         },
       ],
-      LayerList,
+      LayerHubs: [],
       saveDataMap: {},
       currentMap: 0,
     };
   },
 
   mounted() {
+    // 深拷贝
+    this.LayerHubs = deepClone(LayerList);
+
     // 默认显示
-    this.change(LayerList[0]);
-    this.change(LayerList[1]);
-    this.change(LayerList[2]);
-    this.change(LayerList[3]);
+    this.nodeChange(this.LayerHubs[0]);
+    this.nodeChange(this.LayerHubs[1]);
+    this.nodeChange(this.LayerHubs[2]);
+    this.nodeChange(this.LayerHubs[3]);
   },
 
   methods: {
     ...mapActions("map", ["setSejList"]),
+
+    // 地图工具
     mapChange(item, index) {
       if (item.value != "reset") {
         this.currentMap = index;
@@ -107,7 +113,8 @@ export default {
       });
     },
 
-    change(node) {
+    // 节点事件
+    nodeChange(node) {
       node.check = !node.check;
 
       if (node.id == "绿道") {
@@ -269,6 +276,83 @@ export default {
         }
       }
     }
+  }
+}
+</style>
+<style lang="less">
+// 弹出框
+.layer-popper {
+  width: 14.69vh;
+  min-width: 0;
+  border-radius: 0.8vh;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0vh 0.13vh 0.25vh 0vh rgba(10, 73, 120, 0.4);
+  border: solid 0.06vh #0f4dd8;
+  box-sizing: border-box;
+  padding: 1.38vh 1.63vh 1.75vh;
+
+  .panel {
+    .panel-title {
+      display: block;
+      height: 1.75vh;
+      line-height: 1.75vh;
+      font-family: PingFang;
+      font-weight: 600;
+      font-size: 1.25vh;
+      color: #000;
+      margin-bottom: 0.63vh;
+    }
+
+    .panel-body {
+      .line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.25vh;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 5vh;
+        height: 6.75vh;
+        background-color: transparent;
+        border-radius: 0.38vh;
+        border: dashed 0.06vh #255dda;
+        border-radius: 0.38vh;
+        cursor: pointer;
+
+        img {
+          width: 3.5vh;
+          height: 3.5vh;
+          margin-bottom: 0.63vh;
+        }
+
+        .card-label {
+          display: block;
+          height: 1.38vh;
+          line-height: 1.38vh;
+          font-family: PingFang;
+          font-size: 1vh;
+          color: #000;
+        }
+
+        &.active {
+          background-color: rgba(167, 238, 255, 0.8);
+          border: solid 0.13vh #255dda;
+        }
+      }
+    }
+  }
+
+  .popper__arrow {
+    border-color: transparent transparent #0f4dd8 !important;
+    border-style: solid dashed dashed !important;
   }
 }
 </style>

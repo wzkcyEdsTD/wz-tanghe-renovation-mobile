@@ -13,7 +13,6 @@ Vue.prototype.$ = jquery;
 Vue.prototype.Cesium = window.Cesium
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
-// import "swiper/swiper-bundle.min.css";
 import 'swiper/css/swiper.css'
 Vue.use(VueAwesomeSwiper)
 

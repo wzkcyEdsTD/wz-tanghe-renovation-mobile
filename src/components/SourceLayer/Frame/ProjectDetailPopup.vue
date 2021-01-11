@@ -14,6 +14,26 @@
           </div>
           <div class="panel-body">
             <div class="content-info">
+              <div class="jgt-wrapper" v-show="forceEntity.attributes.JGT">
+                <div class="swiper-buttons jgt-swiper-button-left"></div>
+                <swiper
+                  ref="SwiperJgt"
+                  class="swiper-wrapper swiper-jgt"
+                  :options="jgtSwiperOptions"
+                >
+                  <swiper-slide
+                    v-for="(item, i) in jgtList"
+                    :key="i"
+                    class="swiper-item"
+                  >
+                    <el-image
+                      :src="item"
+                      @click="onPreview(jgtList, i, true)"
+                    ></el-image>
+                  </swiper-slide>
+                </swiper>
+                <div class="swiper-buttons jgt-swiper-button-right"></div>
+              </div>
               <div class="btn-list">
                 <button
                   v-for="(item, index) in topBtns"
@@ -96,7 +116,7 @@
                     >
                       <el-image
                         :src="`${MediaServer}/images/${forceEntity.type}/${item}`"
-                        @click="onPreview(currentData.photo, i)"
+                        @click="onPreview(currentData.photo, i, false)"
                       ></el-image>
                     </swiper-slide>
                     <swiper-slide class="swiper-item" v-if="!currentData.photo">
@@ -193,11 +213,11 @@
                       <td></td>
                     </tr> -->
                     <!-- <tr> -->
-                      <!-- <td>
+                    <!-- <td>
                         <span>问题</span>
                         <span>{{ forceEntity.attributes.CZWT || `无` }}</span>
                       </td> -->
-                      <!-- <td>
+                    <!-- <td>
                         <span>备注</span>
                         <span>{{ forceEntity.attributes.BZ || `无` }}</span>
                       </td> -->
@@ -239,25 +259,40 @@
                 </div>
 
                 <div class="plan" v-if="forceEntity.type == '绿道断点'">
-                  <span>计划时间{{JHGTState}}</span>
-                  <div class="img-wrapper" v-if="JHGTState==1">
+                  <span>计划时间{{ JHGTState }}</span>
+                  <div class="img-wrapper" v-if="JHGTState == 1">
                     <!-- <div class="pop pop1">{{this.currentYear}}-{{this.currentMonth}}-{{this.currentDay}}</div> -->
-                    <img class="state-img" :src="require(`@/assets/images/detail/已贯通.png`)"/>
+                    <img
+                      class="state-img"
+                      :src="require(`@/assets/images/detail/已贯通.png`)"
+                    />
                   </div>
-                  <div class="img-wrapper" v-if="JHGTState==2">
-                    <div class="pop pop2">{{this.currentYear}}-{{this.currentMonth}}-{{this.currentDay}}</div>
-                    <img class="state-img" :src="require(`@/assets/images/detail/小于三个月.png`)"/>
+                  <div class="img-wrapper" v-if="JHGTState == 2">
+                    <div class="pop pop2">
+                      {{ this.currentYear }}-{{ this.currentMonth }}-{{
+                        this.currentDay
+                      }}
+                    </div>
+                    <img
+                      class="state-img"
+                      :src="require(`@/assets/images/detail/小于三个月.png`)"
+                    />
                   </div>
-                  <div class="img-wrapper" v-if="JHGTState==3">
-                    <div class="pop pop3">{{this.currentYear}}-{{this.currentMonth}}-{{this.currentDay}}</div>
-                    <img class="state-img" :src="require(`@/assets/images/detail/大于三个月.png`)"/>
+                  <div class="img-wrapper" v-if="JHGTState == 3">
+                    <div class="pop pop3">
+                      {{ this.currentYear }}-{{ this.currentMonth }}-{{
+                        this.currentDay
+                      }}
+                    </div>
+                    <img
+                      class="state-img"
+                      :src="require(`@/assets/images/detail/大于三个月.png`)"
+                    />
                   </div>
                   <div class="time-desc">
                     <span></span>
                     <span>
-                      计划贯通时间：{{
-                        forceEntity.attributes.JHGTSJ || `无`
-                      }}
+                      计划贯通时间：{{ forceEntity.attributes.JHGTSJ || `无` }}
                     </span>
                   </div>
                 </div>
@@ -280,9 +315,7 @@
 
 <script>
 import { MediaServer } from "@/config/mapConfig";
-import { 
-  // topBtns, 
-swiperOption, progressImgHash } from "@/common/js/hash";
+import { swiperOption, progressImgHash } from "@/common/js/hash";
 
 import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 import Overview from "@/components/SourceLayer/Frame/Overview";
@@ -291,23 +324,26 @@ export default {
   data() {
     return {
       MediaServer,
-      // topBtns,
       swiperOption,
       progressImgHash,
 
-      topBtns: [{
-        id: "overview",
-        label: "全景",
-        disabled: true
-      }, {
-        id: "video",
-        label: "视频",
-        disabled: true
-      }, {
-        id: "photo",
-        label: "图片",
-        disabled: true
-      }],
+      topBtns: [
+        {
+          id: "overview",
+          label: "全景",
+          disabled: true,
+        },
+        {
+          id: "video",
+          label: "视频",
+          disabled: true,
+        },
+        {
+          id: "photo",
+          label: "图片",
+          disabled: true,
+        },
+      ],
 
       name: "",
       forceEntity: {},
@@ -321,15 +357,17 @@ export default {
       viewerShow: false,
       imgList: [],
       imgIndex: 0,
+      jgtList: [],
+
       overviewUrl: "",
       overShow: false,
 
       isSearch: false,
 
-      currentYear: '',
-      currentMonth: '',
-      currentDay: '',
-      JHGTState: 0,   // 1已贯通、2小于三个月、3大于三个月
+      currentYear: "",
+      currentMonth: "",
+      currentDay: "",
+      JHGTState: 0, // 1已贯通、2小于三个月、3大于三个月
     };
   },
   components: { ElImageViewer, Overview },
@@ -345,38 +383,47 @@ export default {
         },
       },
     };
+    this.jgtSwiperOptions = {
+      slidesPerView: 1,
+      slideToClickedSlide: true,
+      centeredSlides: true,
+      navigation: {
+        nextEl: ".jgt-swiper-button-right",
+        prevEl: ".jgt-swiper-button-left",
+      },
+    };
   },
   methods: {
     // 判断 断点当前状态
     getJHGTState() {
-      let JHGTSJ = this.forceEntity.attributes.JHGTSJ
-      let y = JHGTSJ.substr(0,4)
-      let m = JHGTSJ.substr(5,2)
-      let date = new Date;
-      let currentY = date.getFullYear()
-      let currentM = date.getMonth() + 1
-      currentM = currentM < 10 ? '0' + currentM : currentM
-      let currentD = date.getDate()
-      currentD = currentD < 10 ? ('0' + currentD) : currentD
-      this.currentYear = currentY
-      this.currentMonth = currentM
-      this.currentDay = currentD
+      let JHGTSJ = this.forceEntity.attributes.JHGTSJ;
+      let y = JHGTSJ.substr(0, 4);
+      let m = JHGTSJ.substr(5, 2);
+      let date = new Date();
+      let currentY = date.getFullYear();
+      let currentM = date.getMonth() + 1;
+      currentM = currentM < 10 ? "0" + currentM : currentM;
+      let currentD = date.getDate();
+      currentD = currentD < 10 ? "0" + currentD : currentD;
+      this.currentYear = currentY;
+      this.currentMonth = currentM;
+      this.currentDay = currentD;
       if (y > currentY) {
         if (m - currentM > -9) {
-          this.JHGTState = 3
+          this.JHGTState = 3;
         } else {
-          this.JHGTState = 2
+          this.JHGTState = 2;
         }
       }
       if (y == currentY) {
         if (m - currentM > 3) {
-          this.JHGTState = 3
+          this.JHGTState = 3;
         } else {
-          m - currentM > 0 ? this.JHGTState = 2 : this.JHGTState = 1
+          m - currentM > 0 ? (this.JHGTState = 2) : (this.JHGTState = 1);
         }
       }
       if (y < currentY) {
-        this.JHGTState = 1
+        this.JHGTState = 1;
       }
     },
 
@@ -394,14 +441,23 @@ export default {
     getForceEntity(entity) {
       this.name = entity.name;
       this.forceEntity = entity;
+
+      // 景观图
+      let jgtList = ~this.forceEntity.attributes.JGT.indexOf(";")
+        ? this.forceEntity.attributes.JGT.split(";")
+        : [this.forceEntity.attributes.JGT];
+      this.jgtList = jgtList.map((item) => {
+        return `${MediaServer}/images/${this.forceEntity.type}/${item}`;
+      });
+
       this.infoShow = true;
       this.currentIndex = 0;
       if (this.$refs.SwiperTime) {
         this.$refs.SwiperTime.swiper.activeIndex = 0;
       }
       this.initData();
-      if(this.forceEntity.type == '绿道断点') {
-        this.getJHGTState()
+      if (this.forceEntity.type == "绿道断点") {
+        this.getJHGTState();
       }
     },
 
@@ -419,22 +475,19 @@ export default {
       this.fixData("SP", "video");
 
       this.finalList = Object.values(this.finalData).reverse();
-      console.log('finalList', this.finalList)
       if (this.finalList.length) {
         this.currentData = this.finalList[this.currentIndex];
-        console.log('currentData', this.currentData)
-
         this.finalList.forEach((item) => {
           if (item.overview) {
-            this.topBtns[0].disabled = false
+            this.topBtns[0].disabled = false;
           }
           if (item.video) {
-            this.topBtns[1].disabled = false
+            this.topBtns[1].disabled = false;
           }
           if (item.photo) {
-            this.topBtns[2].disabled = false
+            this.topBtns[2].disabled = false;
           }
-        })
+        });
       }
     },
 
@@ -509,9 +562,11 @@ export default {
     },
 
     // 开启图片查看
-    onPreview(list, index) {
+    onPreview(list, index, includeUrl) {
       this.imgList = list.map((item) => {
-        return `${MediaServer}/images/${this.forceEntity.type}/${item}`;
+        return includeUrl
+          ? item
+          : `${MediaServer}/images/${this.forceEntity.type}/${item}`;
       });
       this.imgIndex = index;
       this.viewerShow = true;

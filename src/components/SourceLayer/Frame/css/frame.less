@@ -9,7 +9,7 @@
     border-radius: 0.63vh;
     border: solid 0.06vh #0f4dd8;
     box-sizing: border-box;
-    padding: 2.25vh 1.69vh;
+    padding: 2.25vh 0.58vh 2.25vh 1.69vh;
     z-index: 99;
 
     .popup-close {
@@ -34,6 +34,7 @@
         .panel-title {
             display: flex;
             align-items: flex-end;
+            padding-right: 1.11vh;
 
             img {
                 width: 2.13vh;
@@ -45,7 +46,7 @@
                 text-align: left;
                 display: block;
                 position: relative;
-                line-height: 3.06vh;
+                min-height: 3.44vh;
                 font-family: YouSheBiaoTiHei;
                 font-size: 2.38vh;
                 color: #165fea;
@@ -86,6 +87,7 @@
         .panel-body {
             flex: 1;
             margin-top: 0.75vh;
+            padding-right: 1.11vh;
             overflow-y: auto;
 
             .content-info {
@@ -119,6 +121,10 @@
                             color: #666;
                             background-color: #dedada;
                             border: dashed 0.06vh #666666;
+
+                            &:hover {
+                                cursor: not-allowed;
+                            }
                         }
                     }
                 }
@@ -161,10 +167,22 @@
                                     width: 100%;
                                     height: 14.19vh !important;
                                     border-radius: 0.38vh;
+                                    cursor: pointer;
                                 }
 
                                 /deep/ video {
                                     width: 100%;
+                                }
+
+                                /deep/ .el-image__error {
+                                    width: 100%;
+                                    height: 14.19vh !important;
+                                    border-radius: 0.38vh;
+                                    line-height: 14.19vh;
+                                    text-align: center;
+                                    font-family: YouSheBiaoTiHei;
+                                    font-size: 2vh;
+                                    color: #165FEA;
                                 }
 
                                 .no-tip {
