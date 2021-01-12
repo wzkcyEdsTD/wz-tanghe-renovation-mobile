@@ -34,7 +34,7 @@
         </div>
         <div class="select-tool">
           <TopSelect
-            :list="deptList"
+            :options="deptList"
             :value="currentDept"
             @change="changeDept"
           />
@@ -96,13 +96,13 @@ export default {
       ],
 
       deptList: [
-        "鹿城区政府",
-        "瓯海区政府",
-        "龙湾区政府",
-        "瑞安市政府",
-        "浙南产业区",
-        "市现代集团",
-        "市城发集团",
+        { label: "鹿城区政府", value: "A02A01" },
+        { label: "龙湾区政府", value: "A02A03" },
+        { label: "瓯海区政府", value: "A02A02" },
+        { label: "瑞安市政府", value: "A02A04" },
+        { label: "浙南产业区", value: "A02A05" },
+        { label: "温州城发集团", value: "A02A07" },
+        { label: "温州现代集团", value: "A02A06" },
       ],
       currentDept: "鹿城区政府",
     };
@@ -126,9 +126,9 @@ export default {
     },
 
     // 监听事件
-    changeDept(val) {
-      console.log("val", val);
-      this.currentDept = val;
+    changeDept(obj) {
+      console.log("val", obj.value);
+      this.currentDept = obj.label;
     },
   },
 };

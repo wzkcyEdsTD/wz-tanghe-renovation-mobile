@@ -32,3 +32,10 @@ export const deepClone = (obj) => {
     }
     return result;
 }
+
+
+// 图表vh转px
+export const vhToPx = (val) => {
+    const nowClientHeight = document.documentElement.clientHeight;
+    return (val * nowClientHeight) / 100;
+}

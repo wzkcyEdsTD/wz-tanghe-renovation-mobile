@@ -94,30 +94,27 @@ export default {
       ],
       visible: false,
       input: "南郊街道",
-      selectVal: "南郊街道",
-      defineHash: {},
     };
   },
-  created() {},
   mounted() {
-    const that = this;
-    that.options = [];
-
-    const countryName = window.countryName;
-
-    that.countryList.map((item) => {
-      that.options.push({
-        value: item,
-        label: item,
-      });
-    });
+    this.fixOptions();
   },
 
   methods: {
+    // 组装数据
+    fixOptions() {
+      this.options = [];
+      this.countryList.map((item) => {
+        this.options.push({
+          value: item,
+          label: item,
+        });
+      });
+    },
+
     selected(value) {
       this.input = value;
       this.visible = false;
-      // this.filterItem();
     },
   },
 };

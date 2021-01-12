@@ -12,8 +12,8 @@
         <li
           v-for="item in options"
           :key="item.value"
-          :class="{ selected: item.value == value }"
-          @click="selected(item.value)"
+          :class="{ selected: item.label == value }"
+          @click="selected(item)"
         >
           <span>{{ item.label }}</span>
         </li>
@@ -39,36 +39,20 @@
 export default {
   data() {
     return {
-      options: [],
       visible: false,
     };
   },
-
   props: {
-    list: Array,
+    options: Array,
     value: String,
   },
-
-  mounted() {
-    this.fixOptions();
-  },
+  mounted() {},
   methods: {
-    // 组装数据
-    fixOptions() {
-      this.options = [];
-      this.list.map((item) => {
-        this.options.push({
-          label: item,
-          value: item,
-        });
-      });
-    },
-
-    selected(value) {
+    selected(obj) {
       this.visible = false;
 
       // 父组件监听变化
-      this.$emit("change", value);
+      this.$emit("change", obj);
     },
   },
 };

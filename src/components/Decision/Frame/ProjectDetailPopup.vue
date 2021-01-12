@@ -642,6 +642,7 @@ export default {
 
     // 开启图片查看
     onPreview(list, index, includeUrl) {
+      // 是否已包含路径前缀
       this.imgList = list.map((item) => {
         return includeUrl
           ? item

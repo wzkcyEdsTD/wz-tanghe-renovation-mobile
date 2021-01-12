@@ -34,8 +34,8 @@
         </div>
         <div class="select-tool">
           <TopSelect
-            :list="deptList"
-            :value="currentDept"
+            :options="deptList"
+            :value="currentDept.label"
             @change="changeDept"
           />
         </div>
@@ -48,14 +48,16 @@
           </div>
           <div class="list-body">
             <ul>
-              <!-- 模拟数据，重复15次 -->
-              <li v-for="k in 15" :key="k">
-                <span>葡萄8-5地块</span>
-                <span>2020-02-04</span>
-                <span>2021-02-04</span>
-                <span>延期</span>
+              <li v-for="(item, index) in fixProjectList" :key="index">
+                <span>{{ item.name }}</span>
+                <span>{{ item.consdates }}</span>
+                <span>{{ item.consdatee }}</span>
+                <span>{{ item.status }}</span>
               </li>
             </ul>
+            <span class="no-data" v-show="!fixProjectList.length"
+              >暂无数据</span
+            >
           </div>
         </div>
       </div>
@@ -65,6 +67,7 @@
 
 <script>
 import TopSelect from "./TopSelect";
+import { resourceProjectList } from "@/api/tangheAPI";
 export default {
   data() {
     return {
@@ -100,15 +103,17 @@ export default {
       ],
 
       deptList: [
-        "鹿城区政府",
-        "瓯海区政府",
-        "龙湾区政府",
-        "瑞安市政府",
-        "浙南产业区",
-        "市现代集团",
-        "市城发集团",
+        { label: "鹿城区政府", value: "A02A01" },
+        { label: "龙湾区政府", value: "A02A03" },
+        { label: "瓯海区政府", value: "A02A02" },
+        { label: "瑞安市政府", value: "A02A04" },
+        { label: "浙南产业区", value: "A02A05" },
+        { label: "温州城发集团", value: "A02A07" },
+        { label: "温州现代集团", value: "A02A06" },
       ],
-      currentDept: "鹿城区政府",
+      currentDept: { label: "鹿城区政府", value: "A02A01" },
+
+      projectList: [],
     };
   },
 
@@ -121,6 +126,17 @@ export default {
         return Number(b.num) - Number(a.num);
       });
     },
+
+    // 当前列表
+    fixProjectList() {
+      return this.projectList.filter((item) => {
+        return item.sysOrgCode == this.currentDept.value;
+      });
+    },
+  },
+
+  async mounted() {
+    await this.getProjectList();
   },
 
   methods: {
@@ -130,9 +146,21 @@ export default {
     },
 
     // 监听事件
-    changeDept(val) {
-      console.log("val", val);
-      this.currentDept = val;
+    changeDept(obj) {
+      this.currentDept = obj;
+    },
+
+    // 获取项目列表
+    async getProjectList() {
+      const { data } = await resourceProjectList({
+        delFlag: 0,
+        status: "*滞后*",
+        pageSize: 9999,
+      });
+
+      if (data.code == 200) {
+        this.projectList = data.result.records;
+      }
     },
   },
 };
@@ -372,6 +400,16 @@ export default {
                 }
               }
             }
+          }
+
+          .no-data {
+            display: block;
+            height: 3vh;
+            line-height: 3vh;
+            text-align: center;
+            font-family: YouSheBiaoTiHei;
+            font-size: 1.5vh;
+            color: #fff;
           }
 
           // 滚动条
