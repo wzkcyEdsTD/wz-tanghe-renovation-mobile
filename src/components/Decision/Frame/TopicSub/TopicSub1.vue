@@ -67,41 +67,19 @@
 
 <script>
 import TopSelect from "./TopSelect";
-import { resourceProjectList } from "@/api/tangheAPI";
+import { resourceProjectList, getProjStatusByDept } from "@/api/tangheAPI";
 export default {
   data() {
     return {
       listData: [
-        {
-          label: "鹿城区政府",
-          num: 1,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
-        {
-          label: "区政府",
-          num: 2,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
-        {
-          label: "鹿城区政府",
-          num: 8,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
+        { label: "鹿城区政府", value: "A02A01", num: 0 },
+        { label: "龙湾区政府", value: "A02A03", num: 0 },
+        { label: "瓯海区政府", value: "A02A02", num: 0 },
+        { label: "瑞安市政府", value: "A02A04", num: 0 },
+        { label: "浙南产业区", value: "A02A05", num: 0 },
+        { label: "温州城发集团", value: "A02A07", num: 0 },
+        { label: "温州现代集团", value: "A02A06", num: 0 },
       ],
-
       deptList: [
         { label: "鹿城区政府", value: "A02A01" },
         { label: "龙湾区政府", value: "A02A03" },
@@ -112,7 +90,6 @@ export default {
         { label: "温州现代集团", value: "A02A06" },
       ],
       currentDept: { label: "鹿城区政府", value: "A02A01" },
-
       projectList: [],
     };
   },
@@ -136,6 +113,7 @@ export default {
   },
 
   async mounted() {
+    await this.getProjectCount();
     await this.getProjectList();
   },
 
@@ -148,6 +126,27 @@ export default {
     // 监听事件
     changeDept(obj) {
       this.currentDept = obj;
+    },
+
+    // 获取项目统计
+    async getProjectCount() {
+      const { data } = await getProjStatusByDept({
+        status: "滞后",
+      });
+
+      if (data.code == 200) {
+        this.listData.map((item) => {
+          data.result.map((v) => {
+            if (item.value == v.sysOrgCode) {
+              let num = 0;
+              v.statusInfos.map((info) => {
+                num += info.num;
+              });
+              item.num = num;
+            }
+          });
+        });
+      }
     },
 
     // 获取项目列表
@@ -354,7 +353,7 @@ export default {
             }
 
             &:last-child {
-              width: calc(100% - 26vh);
+              width: calc(100% - 25.5vh);
             }
           }
         }
@@ -395,7 +394,7 @@ export default {
                 }
 
                 &:last-child {
-                  width: calc(100% - 26vh);
+                  width: calc(100% - 25.5vh);
                   text-align: center;
                 }
               }

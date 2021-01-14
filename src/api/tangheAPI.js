@@ -44,13 +44,13 @@ export function getProjNumAndAmound(data) {
 
 // 区域分析统计
 export function getProjNumByStreet(data) {
-  const url = 'http://172.168.3.182:8080/jeecg-boot/tanghe/resourceProject/count/projNumByStreet'
+  const url = 'http://192.168.2.103:8080/tanghe/resourceProject/count/projNumByStreet'
   return get(url, data)
 }
 
 // 项目全过程占比
 export function getProjStatusByDept(data) {
-  const url = 'http://172.168.3.182:8080/jeecg-boot/tanghe/resourceProject/count/projStatusByDept'
+  const url = 'http://192.168.2.103:8080/tanghe/resourceProject/count/projStatusByDept'
   return get(url, data)
 }
 
@@ -153,5 +153,29 @@ export function resourceComment(data) {
 // 根据参数查询项目列表
 export function resourceProjectList(data) {
   const url = 'http://192.168.2.103:8080/tanghe/front/resourceProject/list'
+  return get(url, data)
+}
+
+// 问题项目数据统计
+export function countProjectProgressNum(data) {
+  const url = 'http://192.168.2.103:8080/tanghe/front/resourceProject/countProjectProgressNum'
+  return get(url, data)
+}
+
+// 问题项目列表
+export function queryProgressList(data) {
+  const url = 'http://192.168.2.103:8080/tanghe/front/resourceProject/queryProgressList'
+  return get(url, data)
+}
+
+// 根据街道统计项目数量
+export function countProjectStreetNum(data) {
+  const url = 'http://192.168.2.103:8080/tanghe/front/resourceProject/countProjectStreetNum'
+  return get(url, data)
+}
+
+// 各单位总投资额统计
+export function countProjectAmound(data) {
+  const url = 'http://192.168.2.103:8080/tanghe/front/resourceProject/countProjectAmound'
   return get(url, data)
 }

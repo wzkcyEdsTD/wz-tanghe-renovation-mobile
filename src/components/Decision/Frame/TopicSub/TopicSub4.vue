@@ -8,7 +8,7 @@
       <div class="panel-body">
         <header class="sub-title">
           <span></span>
-          <span>各责任单位投资总额（万元）</span>
+          <span>各责任单位投资总额（亿元）</span>
         </header>
         <div class="dept-list">
           <div class="chart-box">
@@ -29,7 +29,7 @@
                   <span
                     class="chart-num"
                     :class="{ top: k * 2 + index - 1 < 4 }"
-                    >{{ fixNum(item.num) }}
+                    >{{ fixNum(Math.ceil(item.num / 10000)) }}
                   </span>
                 </div>
               </section>
@@ -48,12 +48,15 @@
           </div>
           <div class="list-body">
             <ul>
-              <!-- 模拟数据，重复15次 -->
-              <li v-for="k in 15" :key="k">
-                <span>{{ k }}</span>
-                <span>葡萄8-5地块</span>
-                <span>200万元</span>
-                <span>鹿城区政府</span>
+              <li v-for="(item, index) in projectList" :key="index">
+                <span>{{ ++index }}</span>
+                <span>{{ item.name }}</span>
+                <span>{{
+                  item.totalamount > 10000
+                    ? `${(item.totalamount / 10000).toFixed(1)}亿元`
+                    : `${item.totalamount.toFixed(0)}万元`
+                }}</span>
+                <span>{{ item.sysOrgCode_dictText }}</span>
               </li>
             </ul>
           </div>
@@ -67,56 +70,29 @@
         :key="index"
         :class="{ active: currentYearIndex === index }"
         @click="yearChange(item, index)"
-        >{{ item.label }}</span
+        >{{ item }}</span
       >
     </div>
   </div>
 </template>
 
 <script>
+import { resourceProjectList, getProjStatusByDept } from "@/api/tangheAPI";
 export default {
   data() {
     return {
       listData: [
-        {
-          label: "鹿城区政府",
-          num: 900,
-        },
-        {
-          label: "鹿城区政府",
-          num: 900,
-        },
-        {
-          label: "区政府",
-          num: 2,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
-        {
-          label: "鹿城区政府",
-          num: 8,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
+        { label: "鹿城区政府", value: "A02A01", num: 0 },
+        { label: "龙湾区政府", value: "A02A03", num: 0 },
+        { label: "瓯海区政府", value: "A02A02", num: 0 },
+        { label: "瑞安市政府", value: "A02A04", num: 0 },
+        { label: "浙南产业区", value: "A02A05", num: 0 },
+        { label: "温州城发集团", value: "A02A07", num: 0 },
+        { label: "温州现代集团", value: "A02A06", num: 0 },
       ],
-
-      yearList: [
-        {
-          label: 2020,
-        },
-        {
-          label: 2021,
-        },
-      ],
+      yearList: [2020, 2021],
       currentYearIndex: 0,
+      projectList: [],
     };
   },
 
@@ -129,6 +105,10 @@ export default {
     },
   },
 
+  async mounted() {
+    await this.getProjectList(this.yearList[this.currentYearIndex]);
+  },
+
   methods: {
     // 数字补0
     fixNum(num) {
@@ -138,6 +118,40 @@ export default {
     // 年份切换事件
     yearChange(item, index) {
       this.currentYearIndex = index;
+    },
+
+    // 获取项目列表
+    async getProjectList(year) {
+      const { data } = await resourceProjectList({
+        delFlag: 0,
+        status,
+        pageNo: 1,
+        pageSize: 9999,
+        tag: year,
+        column: "totalamount",
+        order: "desc",
+      });
+
+      if (data.code == 200) {
+        this.projectList = data.result.records;
+
+        // 项目统计
+        this.listData.map((item) => {
+          item.num = 0;
+          data.result.records.map((v) => {
+            if (item.value == v.sysOrgCode) {
+              item.num += v.totalamount;
+            }
+          });
+        });
+      }
+    },
+  },
+
+  watch: {
+    currentYearIndex(n, o) {
+      const year = this.yearList[n];
+      this.getProjectList(year);
     },
   },
 };

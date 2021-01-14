@@ -12,13 +12,53 @@
           <span>{{ item.label }}</span>
         </div>
       </div>
+
+      <div class="space-sub-tool-draw" v-show="drawToolShow">
+        <div
+          class="sub-tool-item"
+          v-for="(item, index) in drawToolList"
+          :key="index"
+          :class="{ active: item.check }"
+          @mousedown="changeDrawTool(item, index)"
+          @mouseup="item.check = false"
+        >
+          <img
+            :src="
+              require(`@/assets/images/spacetools/${
+                item.check ? `${item.icon}高亮` : item.icon
+              }@2x.png`)
+            "
+          />
+          <span>{{ item.label }}</span>
+        </div>
+      </div>
+
+      <div class="space-sub-tool-measure" v-show="measureToolShow">
+        <div
+          class="sub-tool-item"
+          v-for="(item, index) in measureToolList"
+          :key="index"
+          :class="{ active: item.check }"
+          @click="changeMeasureTool(item, index)"
+        >
+          <img
+            :src="
+              require(`@/assets/images/spacetools/${
+                item.check ? `${item.icon}高亮` : item.icon
+              }@2x.png`)
+            "
+          />
+          <span>{{ item.label }}</span>
+        </div>
+        <div class=""></div>
+      </div>
     </div>
 
     <CalTools ref="CalTools" v-show="false" />
 
     <div class="space-result" v-show="spaceShow">
       <span class="space-result-title">空间分析结果</span>
-      <i class="space-result-close" @click="closePopup"></i>
+      <i class="space-result-close" @click="closeSpace(true)"></i>
       <div class="space-result-body">
         <div class="space-result-left">
           <div class="project">
@@ -130,6 +170,74 @@ export default {
           label: "空间分析",
         },
       ],
+      drawToolList: [
+        {
+          id: "新建",
+          label: "新建",
+          icon: "新建",
+          check: false,
+        },
+        {
+          id: "打开",
+          label: "打开",
+          icon: "打开",
+          check: false,
+        },
+        {
+          id: "退出",
+          label: "退出",
+          icon: "退出",
+          check: false,
+        },
+        {
+          id: "删除",
+          label: "删除",
+          icon: "删除",
+          check: false,
+        },
+        {
+          id: "保存",
+          label: "保存",
+          icon: "保存",
+          check: false,
+        },
+        {
+          id: "撤销",
+          label: "撤销",
+          icon: "撤销",
+          check: false,
+        },
+        {
+          id: "重做",
+          label: "重做",
+          icon: "重做",
+          check: false,
+        },
+      ],
+      drawToolShow: false,
+
+      measureToolList: [
+        {
+          id: "测距",
+          label: "测距",
+          icon: "测距",
+          check: false,
+        },
+        {
+          id: "测面",
+          label: "测面",
+          icon: "测面",
+          check: false,
+        },
+        {
+          id: "清除",
+          label: "清除",
+          icon: "清除",
+          check: false,
+        },
+      ],
+      measureToolShow: false,
+
       spaceShow: false,
       visible: false,
       currentIndex: null,
@@ -148,11 +256,13 @@ export default {
       pieChart: undefined,
     };
   },
+
   components: { CalTools },
+
   mounted() {
     this.eventRegsiter();
 
-    // 自适应
+    // 图表自适应
     window.addEventListener("resize", () => {
       this.pieChart && this.pieChart.resize();
       this.pieChart &&
@@ -160,7 +270,6 @@ export default {
           legend: {
             itemWidth: vhToPx(1.44),
             itemHeight: vhToPx(1.13),
-            left: vhToPx(0.63),
             top: vhToPx(1.21),
             itemGap: vhToPx(1.63),
             textStyle: {
@@ -185,15 +294,37 @@ export default {
     // 空间工具操作
     changeSpace(item, index) {
       if (!("id" in item)) return;
+
       // 单选，可点击关闭
       this.currentIndex = this.currentIndex == index ? null : index;
 
-      // 开启空间分析
-      if (this.currentIndex == 2) {
+      // 清空
+      this.drawToolShow = false;
+      this.measureToolShow = false;
+      this.closeSpace(false);
+
+      if (this.currentIndex == 0) {
+        this.drawToolShow = true;
+      } else if (this.currentIndex == 1) {
+        this.measureToolShow = true;
+      } else if (this.currentIndex == 2) {
         this.$refs.CalTools.gaugeAreaAnalyze();
-      } else if (this.currentIndex == null) {
-        this.closePopup();
       }
+    },
+
+    // 标绘工具选择
+    changeDrawTool(item, index) {
+      item.check = true;
+    },
+
+    // 测量工具选择
+    changeMeasureTool(item, index) {
+      item.check = true;
+
+      // 模拟操作后关闭
+      setTimeout(() => {
+        item.check = false;
+      }, 2000);
     },
 
     // 下拉选择
@@ -202,14 +333,21 @@ export default {
       this.visible = false;
     },
 
+    // 关闭标绘工具
+    closeDrawTool(){},
+
+    // 关闭测量工具
+    closeMeasureTool(){},
+
     // 关闭空间分析
-    closePopup() {
-      this.currentIndex = null;
+    closeSpace(flag) {
+      // 是否由按钮关闭
+      flag && (this.currentIndex = null);
       this.spaceShow = false;
       this.$refs.CalTools.clearGauge();
     },
 
-    // 事件注册
+      // 事件注册
     eventRegsiter() {
       this.$bus.$off("areaAnalyze");
       this.$bus.$on("areaAnalyze", ({ result }) => {
@@ -332,12 +470,13 @@ export default {
         this.pieChart.setOption({
           color: ["#00b1ff", "#baffff", "#4e4eff", "#AC88FF"],
           legend: {
+            type: "scroll",
             selectedMode: false,
             orient: "vertical",
             icon: "roundRect",
             itemWidth: vhToPx(1.44),
             itemHeight: vhToPx(1.13),
-            left: vhToPx(0.63),
+            left: 0,
             top: vhToPx(1.21),
             itemGap: vhToPx(1.63),
             textStyle: {
@@ -392,7 +531,7 @@ export default {
     transform: translateX(-50%);
     width: 63.5vh;
     height: 3.5vh;
-    .bg-image("~@/assets/images/maptools/spacetool-bg");
+    .bg-image("~@/assets/images/spacetools/spacetool-bg");
     z-index: 99;
 
     .space-tool-inner {
@@ -430,6 +569,84 @@ export default {
             border-radius: 50%;
             background-color: #69fee5;
           }
+        }
+      }
+    }
+
+    .space-sub-tool-draw {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 4vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36.63vh;
+      height: 3vh;
+      box-sizing: border-box;
+      border-radius: 1.88vh;
+      background-color: #0454c1;
+      padding: 0 1.38vh;
+      opacity: 0.8;
+      z-index: 99;
+
+      .sub-tool-item {
+        display: flex;
+        align-items: center;
+        font-family: PingFang;
+        font-size: 1vh;
+        color: #fff;
+        opacity: 0.6;
+        cursor: pointer;
+
+        > img {
+          width: 1.25vh;
+          height: 1.25vh;
+          margin-right: 0.5vh;
+        }
+
+        &.active {
+          color: #69fee5;
+          opacity: 1;
+        }
+      }
+    }
+
+    .space-sub-tool-measure {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 4vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36.63vh;
+      height: 3vh;
+      box-sizing: border-box;
+      border-radius: 1.88vh;
+      background-color: #0454c1;
+      padding: 0 9.56vh;
+      opacity: 0.8;
+      z-index: 99;
+
+      .sub-tool-item {
+        display: flex;
+        align-items: center;
+        font-family: PingFang;
+        font-size: 1vh;
+        color: #fff;
+        opacity: 0.6;
+        cursor: pointer;
+
+        > img {
+          width: 1.25vh;
+          height: 1.25vh;
+          margin-right: 0.5vh;
+        }
+
+        &.active {
+          color: #69fee5;
+          opacity: 1;
         }
       }
     }

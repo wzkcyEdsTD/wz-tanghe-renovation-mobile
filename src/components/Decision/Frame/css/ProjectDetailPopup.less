@@ -77,13 +77,14 @@
           display: flex;
           align-items: center;
           text-align: left;
-          height: 3vh;
+          min-height: 3vh;
           background-color: transparent;
           border: solid 0.06vh #389bff;
           box-sizing: border-box;
-          padding-left: 1.25vh;
+          padding: 0.5vh 0.5vh 0.5vh 1.25vh;
 
           span {
+            display: block;
             font-family: PingFang;
             font-size: 1.5vh;
 
@@ -94,6 +95,7 @@
             }
 
             &:last-child {
+              flex: 1;
               color: #fff;
             }
           }
@@ -181,6 +183,7 @@
             }
 
             &:last-child {
+              text-align: justify;
               max-height: 8.31vh;
               color: #fff;
               margin-top: 0.69vh;
@@ -386,6 +389,15 @@
               font-size: 1.07vh;
               color: #fff;
             }
+          }
+
+          .no-data {
+            display: block;
+            height: 3vh;
+            line-height: 3vh;
+            text-align: center;
+            font-family: YouSheBiaoTiHei;
+            font-size: 1.5vh;
           }
         }
       }

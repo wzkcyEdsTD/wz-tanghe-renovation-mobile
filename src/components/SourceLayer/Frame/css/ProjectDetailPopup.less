@@ -76,11 +76,12 @@
           display: flex;
           align-items: center;
           text-align: left;
-          height: 3vh;
+          min-height: 3vh;
           background-color: #e6edf4;
-          padding-left: 1.25vh;
+          padding: 0.5vh 0.5vh 0.5vh 1.25vh;
 
           span {
+            display: block;
             font-family: PingFang;
             font-size: 1.5vh;
             font-weight: 600;
@@ -91,6 +92,7 @@
             }
 
             &:last-child {
+              flex: 1;
               color: #000;
             }
           }

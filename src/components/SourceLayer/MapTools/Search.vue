@@ -99,7 +99,6 @@ export default {
       input: "",
       resultShow: false,
       results: [],
-      // addressResultShow: false,
       addressResults: [],
       moreShow: false,
     };
@@ -125,19 +124,18 @@ export default {
 
     // 多数据集查询
     multSqlQuery(word) {
-      const datasource = "172.168.3.181_thxm:";
+      const datasource = "172.168.3.181_thxm_manage:";
       const url = ServiceUrl.FEATUREMVT;
       const getFeatureParam = new SuperMap.REST.FilterParameter({
-        attributeFilter: `NAME like '%${word}%'`,
+        attributeFilter: `NAME like '%${word}%' AND (resource_type = 'scenicspot12' OR resource_type='greenway_all')`,
       });
       const getFeatureBySQLParams = new SuperMap.REST.GetFeaturesBySQLParameters(
         {
           queryParameter: getFeatureParam,
           toIndex: -1,
           datasetNames: [
-            `${datasource}十二景`,
-            `${datasource}项目`,
-            `${datasource}绿道断点`,
+            `${datasource}sp_point_resource`,
+            `${datasource}th_spatial_project_view`,
           ],
         }
       );
@@ -147,14 +145,11 @@ export default {
           eventListeners: {
             processCompleted: async (res) => {
               const features = res.result.features;
-              console.log("features~~~~~~~~~~~~~", features);
               if (features.length) {
-                // this.addressResultShow = false
                 this.moreShow = true;
                 this.addressResults = [];
                 this.fixData(features);
               } else {
-                console.log("addressAPI");
                 this.addressQuery();
               }
               this.resultShow = true;
@@ -170,8 +165,6 @@ export default {
     async addressQuery() {
       this.addressResults = [];
       const { records } = await getAddressList(this.input);
-      console.log("records!!!!", records);
-      // this.addressResultShow = true
       this.addressResults = records;
     },
 
@@ -183,27 +176,27 @@ export default {
       data.map(({ attributes, geometry }) => {
         this.results.push({
           id: `${attributes.SMID}@${
-            ~attributes.GUID.indexOf("sej")
+            ~attributes.RESOURCE_TYPE.indexOf("scenicspot12")
               ? `十二景`
-              : ~attributes.GUID.indexOf("xm")
-              ? `项目`
-              : "断点"
+              : ~attributes.RESOURCE_TYPE.indexOf("greenway_all")
+              ? `断点`
+              : "项目"
           }`,
-          type: ~attributes.GUID.indexOf("sej")
+          type: ~attributes.RESOURCE_TYPE.indexOf("scenicspot12")
             ? `十二景`
-            : ~attributes.GUID.indexOf("xm")
-            ? `项目`
-            : "断点",
-          icon: ~attributes.GUID.indexOf("sej")
+            : ~attributes.RESOURCE_TYPE.indexOf("greenway_all")
+            ? `断点`
+            : "项目",
+          icon: ~attributes.RESOURCE_TYPE.indexOf("scenicspot12")
             ? `十二景`
-            : ~attributes.GUID.indexOf("xm")
-            ? attributes.CURRENT_STATE
-            : "断点",
-          img_dir: ~attributes.GUID.indexOf("sej")
+            : ~attributes.RESOURCE_TYPE.indexOf("greenway_all")
+            ? `断点`
+            : attributes.STATUS,
+          img_dir: ~attributes.RESOURCE_TYPE.indexOf("scenicspot12")
             ? `十二景`
-            : ~attributes.GUID.indexOf("xm")
-            ? `项目`
-            : "绿道断点",
+            : ~attributes.RESOURCE_TYPE.indexOf("greenway_all")
+            ? `绿道断点`
+            : "项目",
           img:
             (attributes.JGT
               ? ~attributes.JGT.indexOf(";")
@@ -217,11 +210,11 @@ export default {
               : null) ||
             null,
           name:
-            attributes.SHORTNAME ||
+            attributes.SHORT_NAME ||
             attributes.NAME ||
             attributes.MC ||
             attributes.JC,
-          dep: attributes.ZRDW || attributes.ZR_DEPTID || `无`,
+          dep: attributes.STREET || `无`,
           attributes,
           geometry,
         });
@@ -230,7 +223,6 @@ export default {
 
     // 结果点击
     itemClick(item) {
-      console.log("item", item);
       this.resultShow = false;
       const { x, y } = item.geometry;
 
@@ -504,6 +496,7 @@ export default {
     box-sizing: border-box;
     margin-top: 0.5vh;
     padding: 0 1vh;
+    cursor: pointer;
 
     span {
       display: block;

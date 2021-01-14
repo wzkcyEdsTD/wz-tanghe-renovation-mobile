@@ -2,6 +2,7 @@
   <div class="cal-tools"></div>
 </template>
 <script>
+import { ServiceUrl } from "@/config/mapConfig";
 export default {
   data() {
     return {
@@ -81,7 +82,7 @@ export default {
     fetchFromDataSets(geometry) {
       return new Promise((resolve, reject) => {
         const getFeaturesByGeometryService = new SuperMap.REST.GetFeaturesByGeometryService(
-          "http://172.168.3.183:8090/iserver/services/data-alldata/rest/data",
+          ServiceUrl.FEATUREMVT,
           {
             eventListeners: {
               processCompleted: (data) => {

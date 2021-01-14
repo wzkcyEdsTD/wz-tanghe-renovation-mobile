@@ -19,15 +19,18 @@
     </div>
 
     <Supervise v-show="superviseShow" />
+    <Around v-show="aroundShow" />
     <Analyze v-show="analyzeShow" />
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import { ServiceUrl } from "@/config/mapConfig";
-import { addMapImgLayer } from "../cesium_map_init";
+import { addMapImgLayer } from "@/components/Decision/cesium_map_init";
 
 import Supervise from "@/components/Decision/Frame/TopicSub/Supervise";
+import Around from "@/components/Decision/Frame/TopicSub/Around";
 import Analyze from "@/components/Decision/Frame/TopicSub/Analyze";
 
 export default {
@@ -84,13 +87,15 @@ export default {
       },
 
       superviseShow: false,
+      aroundShow: false,
       analyzeShow: false,
     };
   },
 
-  components: { Supervise, Analyze },
+  components: { Supervise, Around, Analyze },
 
   methods: {
+    ...mapActions("decision", ["setBufferFlag"]),
     // 专题事件
     topicChange(item) {
       if (!("check" in item)) return;
@@ -106,6 +111,8 @@ export default {
         this.cityplanningHandle(item.check);
       } else if (item.id == "领导督办") {
         this.superviseHandle(item.check);
+      } else if (item.id == "周边活跃度") {
+        this.aroundHandle(item.check);
       } else if (item.id == "考核分析") {
         this.analyzeHandle(item.check);
       }
@@ -148,6 +155,14 @@ export default {
     // 领导督办
     superviseHandle(show) {
       this.superviseShow = show;
+    },
+
+    // 周边活跃度分析
+    aroundHandle(show) {
+      this.setBufferFlag(show);
+      !show && (this.aroundShow = false);
+
+      // this.aroundShow = show;
     },
 
     // 考核分析

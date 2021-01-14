@@ -21,7 +21,7 @@ export const drawFeatures = (ctx, {
     forceDrawFeatures.map(v => {
         !window.featureMap[node.id] && (window.featureMap[node.id] = {});
         window.featureMap[node.id][v.attributes.SMID] = {
-            name: v.attributes.SHORTNAME || v.attributes.NAME || v.attributes.MC || v.attributes.JC || v.attributes[node.withExtraKey],
+            name: v.attributes.SHORT_NAME || v.attributes.NAME || v.attributes.MC || v.attributes.JC || v.attributes[node.withExtraKey],
             attributes: v.attributes,
             geometry: v.geometry,
             type: node.id
@@ -36,7 +36,7 @@ export const drawFeatures = (ctx, {
 
         window.billboardMap[node.id].add({
             id: `billboard@${item.attributes.SMID}@${node.id}`,
-            image: node.icon ? `/libs/images/map-ico/${node.icon}.png` : `/libs/images/map-ico/${item.attributes.CURRENT_STATE.trim()}.png`,
+            image: node.icon ? `/libs/images/map-ico/${node.icon}.png` : `/libs/images/map-ico/${item.attributes.STATUS.trim()}.png`,
             width: node.icon=='断点' ? 30 : 34,
             height: node.icon=='断点' ? 30 : 34,
             scaleByDistance: new Cesium.NearFarScalar(500, 1.5, 6000, 1),
@@ -48,7 +48,7 @@ export const drawFeatures = (ctx, {
 
         window.whiteLabelMap[node.id].add({
             id: `label@${item.attributes.SMID}@${node.id}`,
-            text: item.attributes.SHORTNAME || item.attributes.NAME,
+            text: item.attributes.SHORT_NAME || item.attributes.NAME,
             fillColor: ~node.id.indexOf('项目') ? item.attributes.SF2021 == '是' ? new Cesium.Color.fromCssColorString("#61F5F5") : new Cesium.Color.fromCssColorString("#02FCDC") : new Cesium.Color.fromCssColorString("#fff"),
             font: "bold 1.7vh Microsoft YaHei",
             outlineColor: Cesium.Color.BLACK,
@@ -62,7 +62,7 @@ export const drawFeatures = (ctx, {
         });
         window.blackLabelMap[node.id].add({
             id: `label@${item.attributes.SMID}@${node.id}`,
-            text: item.attributes.SHORTNAME || item.attributes.NAME,
+            text: item.attributes.SHORT_NAME || item.attributes.NAME,
             fillColor: ~node.id.indexOf('项目') ? item.attributes.SF2021 == '是' ? new Cesium.Color.fromCssColorString("#61F5F5") : new Cesium.Color.fromCssColorString("#02FCDC") : new Cesium.Color.fromCssColorString("#010C27"),
             font: "bold 1.7vh Microsoft YaHei",
             outlineColor: Cesium.Color.WHITE,

@@ -103,7 +103,7 @@ export default {
     position: absolute;
     top: 0.53vh;
     right: 0.04vh;
-    .bg-image("~@/assets/images/map-ico/map-rate-close");
+    .bg-image("~@/assets/images/detail/space-result-close");
     cursor: pointer;
     z-index: 99;
   }

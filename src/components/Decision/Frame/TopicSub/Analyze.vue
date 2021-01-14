@@ -1,6 +1,7 @@
 <template>
   <div class="analyze">
     <div class="analyze-header">
+      <i class="analyze-close" @click="closeInfo"></i>
       <img class="star-left" src="@/assets/images/map-ico/star-left.png" />
       <img class="star-right" src="@/assets/images/map-ico/star-right.png" />
       <span class="analyze-title">项目评分</span>
@@ -116,6 +117,11 @@ export default {
       this.input = value;
       this.visible = false;
     },
+
+    closeInfo() {
+      this.$parent.analyzeShow = false;
+      this.$parent.topicList[6].check = false;
+    },
   },
 };
 </script>
@@ -134,6 +140,17 @@ export default {
   z-index: 2999;
 
   .analyze-header {
+    .analyze-close {
+      width: 1.44vh;
+      height: 1.5vh;
+      position: absolute;
+      top: -1.2vh;
+      right: 0.04vh;
+      .bg-image("~@/assets/images/detail/space-result-close");
+      cursor: pointer;
+      z-index: 99;
+    }
+
     .star-left {
       position: absolute;
       left: 0;

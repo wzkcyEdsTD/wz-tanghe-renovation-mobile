@@ -3,14 +3,14 @@
     <transition name="fade">
       <div
         class="detail-popup project-detail-popup"
-        v-if="infoShow && forceEntity.attributes"
+        v-if="infoShow"
         :style="{ top: (isSearch ? 16.81 : 13.81) + 'vh' }"
       >
         <i class="popup-close" @click="closeInfo" />
         <div class="info-container">
           <div class="panel-title">
             <img src="@/assets/images/detail/title-before.png" />
-            <span>{{ name }}</span>
+            <span>{{ detailData.name }}</span>
           </div>
           <div class="panel-body">
             <div class="content-info">
@@ -39,10 +39,10 @@
                   v-for="(item, index) in topBtns"
                   :key="index"
                   class="btn-type"
-                  :disabled="item.disabled"
+                  :disabled="!detailData.overallViews"
                   :class="{
                     active: currentShow == item.id,
-                    disabled: item.disabled,
+                    disabled: !detailData.overallViews,
                   }"
                   @click="currentShow = item.id"
                 >
@@ -115,7 +115,7 @@
                       class="swiper-item"
                     >
                       <el-image
-                        :src="`${MediaServer}/images/${forceEntity.type}/${item}`"
+                        :src="`${MediaServer}/images/${item}`"
                         @click="onPreview(currentData.photo, i, false)"
                       ></el-image>
                     </swiper-slide>
@@ -161,7 +161,7 @@
               <div class="base-content">
                 <div class="base-name">
                   <span>名称</span>
-                  <span>{{ name }}</span>
+                  <span>{{ detailData.name }}</span>
                 </div>
 
                 <div class="info-line">
@@ -169,29 +169,23 @@
                     <tr>
                       <td>
                         <span>所属街道</span>
-                        <span>{{ forceEntity.attributes.STREET || `无` }}</span>
+                        <span>{{ detailData.street || `无` }}</span>
                       </td>
-                      <td v-if="forceEntity.type == '项目'">
+                      <td v-if="resourceType == 'project_all'">
                         <span>总投资</span>
                         <span>{{
-                          forceEntity.attributes.TOTALAMOUNT
-                            ? `${forceEntity.attributes.TOTALAMOUNT}万元`
+                          detailData.totalamount
+                            ? `${detailData.totalamount}万元`
                             : `无`
                         }}</span>
                       </td>
-                      <td v-if="forceEntity.type == '绿道断点'">
+                      <td v-if="resourceType == 'greenway_all'">
                         <span>断点长度</span>
-                        <span
-                          >{{ forceEntity.attributes.LENGTH || `-` }}米</span
-                        >
+                        <span>{{ detailData.length || `-` }}米</span>
                       </td>
                       <td>
                         <span>责任单位</span>
-                        <span>{{
-                          forceEntity.attributes.ZR_DEPTID ||
-                          forceEntity.attributes.ZRDW ||
-                          `无`
-                        }}</span>
+                        <span>{{ detailData.sysOrgCodeName || `无` }}</span>
                       </td>
                     </tr>
                   </table>
@@ -199,41 +193,36 @@
 
                 <div class="latest">
                   <span>问题</span>
-                  <span>{{ forceEntity.attributes.CZWT || `无` }}</span>
+                  <span>{{ detailData.problems || `无` }}</span>
                 </div>
 
                 <div class="latest">
                   <span>最新进展</span>
-                  <span>{{ forceEntity.attributes.ZXJZ || `无` }}</span>
+                  <span>{{ detailData.recentStatus || `无` }}</span>
                 </div>
 
-                <div class="plan" v-if="forceEntity.type == '项目'">
+                <div class="plan" v-if="resourceType == 'project_all'">
                   <span>计划时间</span>
                   <img
                     :src="
                       require(`@/assets/images/detail/${
-                        progressImgHash[forceEntity.attributes.CURRENT_STATE]
+                        progressImgHash[detailData.status]
                       }.png`)
                     "
                   />
                   <div class="time-desc">
                     <span>
-                      计划开工时间：{{
-                        forceEntity.attributes.CONSYEARB || `无`
-                      }}
+                      计划开工时间：{{ detailData.consdates || `无` }}
                     </span>
                     <span>
-                      计划建成时间：{{
-                        forceEntity.attributes.CONSYEARE || `无`
-                      }}
+                      计划建成时间：{{ detailData.consdatee || `无` }}
                     </span>
                   </div>
                 </div>
 
-                <div class="plan" v-if="forceEntity.type == '绿道断点'">
-                  <span>计划时间{{ JHGTState }}</span>
+                <div class="plan" v-if="resourceType == 'greenway_all'">
+                  <span>计划时间</span>
                   <div class="img-wrapper" v-if="JHGTState == 1">
-                    <!-- <div class="pop pop1">{{this.currentYear}}-{{this.currentMonth}}-{{this.currentDay}}</div> -->
                     <img
                       class="state-img"
                       :src="require(`@/assets/images/detail/已贯通.png`)"
@@ -264,7 +253,7 @@
                   <div class="time-desc">
                     <span></span>
                     <span>
-                      计划贯通时间：{{ forceEntity.attributes.JHGTSJ || `无` }}
+                      计划贯通时间：{{ detailData.consdatee || `无` }}
                     </span>
                   </div>
                 </div>
@@ -278,7 +267,7 @@
               <div class="rate-wrapper" v-show="!dorate">
                 <div class="top">
                   <div class="top-row">
-                    <span>{{ name }}</span>
+                    <span>{{ detailData.name }}</span>
                     <div class="do-rate" @click="dorate = true">
                       <img src="@/assets/images/detail/comment.png" />
                       <span>写评价</span>
@@ -290,7 +279,11 @@
                   </div>
                 </div>
                 <div class="comment-list">
-                  <div class="comment-item" v-for="k in 5" :key="k">
+                  <div
+                    class="comment-item"
+                    v-for="item in commentList"
+                    :key="item.id"
+                  >
                     <div class="comment-header">
                       <div class="left">
                         <img
@@ -299,21 +292,22 @@
                         />
                       </div>
                       <div class="right">
-                        <span class="name">XXX</span>
+                        <span class="name">{{ item.name }}</span>
                         <div class="right-rate">
                           <el-rate
                             class="comment-rate"
                             disabled
                             v-model="value1"
                           ></el-rate>
-                          <span class="time">2020.12.20 14:40:00</span>
+                          <span class="time">{{ item.createTime }}</span>
                         </div>
                       </div>
                     </div>
-                    <div class="comment-content">
-                      评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评
-                    </div>
+                    <div class="comment-content">{{ item.commend }}</div>
                   </div>
+                  <span class="no-data" v-show="!commentList.length">
+                    暂无评价
+                  </span>
                 </div>
               </div>
               <div class="dorate-wrapper" v-show="dorate">
@@ -331,10 +325,10 @@
                     />
                   </div>
                   <div class="right">
-                    <span class="name">{{ name }}</span>
+                    <span class="name">{{ detailData.name }}</span>
                     <div class="rate-box">
                       <span>总体评分</span>
-                      <el-rate v-model="value2"></el-rate>
+                      <el-rate v-model="inputStar"></el-rate>
                     </div>
                   </div>
                 </div>
@@ -363,9 +357,7 @@
                     v-model="textarea"
                   >
                   </el-input>
-                  <button class="submit" @click="dorate = false">
-                    上传评价
-                  </button>
+                  <button class="submit" @click="submit">上传评价</button>
                 </div>
               </div>
             </div>
@@ -387,6 +379,12 @@
 <script>
 import { MediaServer } from "@/config/mapConfig";
 import { swiperOption, progressImgHash } from "@/common/js/hash";
+import {
+  getProjectDetail,
+  getPointDetail,
+  addComment,
+  resourceComment,
+} from "@/api/tangheAPI";
 
 import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 import Overview from "@/components/Decision/Frame/Overview";
@@ -416,7 +414,7 @@ export default {
         },
       ],
 
-      name: "",
+      detailData: {},
       forceEntity: {},
       infoShow: false,
       finalData: {},
@@ -424,6 +422,7 @@ export default {
       currentData: {},
       currentIndex: 0,
       currentShow: "overview",
+      resourceType: "",
 
       viewerShow: false,
       imgList: [],
@@ -441,8 +440,9 @@ export default {
       JHGTState: 0, // 1已贯通、2小于三个月、3大于三个月
 
       dorate: false,
+      commentList: [],
       value1: 4,
-      value2: null,
+      inputStar: null,
       rateValue1: null,
       rateValue2: null,
       rateValue3: null,
@@ -475,7 +475,7 @@ export default {
   methods: {
     // 判断 断点当前状态
     getJHGTState() {
-      let JHGTSJ = this.forceEntity.attributes.JHGTSJ;
+      let JHGTSJ = this.detailData.consdatee;
       let y = JHGTSJ.substr(0, 4);
       let m = JHGTSJ.substr(5, 2);
       let date = new Date();
@@ -509,122 +509,143 @@ export default {
     // 时间对象
     getDate(date) {
       if (!date) return;
-      return {
-        year: `${date.substring(0, 4)}`,
-        month: `${date.substring(4, 6)}`,
-        day: `${date.substring(6, 8)}`,
-      };
+      const [year, month, day] = date.split("-");
+      return { year, month, day };
     },
 
     // 获取选中对象
     getForceEntity(entity) {
-      this.name = entity.name;
       this.forceEntity = entity;
 
-      // 景观图
-      let jgtList = ~this.forceEntity.attributes.JGT.indexOf(";")
-        ? this.forceEntity.attributes.JGT.split(";")
-        : [this.forceEntity.attributes.JGT];
-      this.jgtList = jgtList.map((item) => {
-        return `${MediaServer}/images/${this.forceEntity.type}/${item}`;
-      });
-
-      this.infoShow = true;
-      this.currentIndex = 0;
-      if (this.$refs.SwiperTime) {
-        this.$refs.SwiperTime.swiper.activeIndex = 0;
-      }
-      this.initData();
-      if (this.forceEntity.type == "绿道断点") {
-        this.getJHGTState();
+      if (entity.attributes) {
+        this.resourceType = entity.attributes.RESOURCE_TYPE;
+        let id = entity.attributes.RESOURCE_ID;
+        this.initData(id);
       }
     },
 
     // 初始化数据
-    initData() {
+    async initData(id) {
+      this.dorate = false;
+      this.textarea = "";
+      this.inputStar = null;
       this.currentIndex = 0;
       this.currentShow = "overview";
 
       this.currentData = {};
       this.finalData = {};
 
-      this.fixData("PHOTO", "photo");
-      this.fixData("JGT", "photo");
-      this.fixData("QJSLT", "thumbs");
-      this.fixData("SP", "video");
+      let res;
+      if (this.resourceType == "project_all") {
+        res = await getProjectDetail({ id });
+      }
+      if (this.resourceType == "greenway_all") {
+        res = await getPointDetail({ id });
+      }
 
-      this.finalList = Object.values(this.finalData).reverse();
-      if (this.finalList.length) {
-        this.currentData = this.finalList[this.currentIndex];
-        this.finalList.forEach((item) => {
-          if (item.overview) {
-            this.topBtns[0].disabled = false;
-          }
-          if (item.video) {
-            this.topBtns[1].disabled = false;
-          }
-          if (item.photo) {
-            this.topBtns[2].disabled = false;
-          }
-        });
+      const { data } = res;
+      if (data.code === 200) {
+        this.infoShow = true;
+        this.detailData = data.result;
+
+        this.fixData();
+        this.getCommentList();
+
+        if (this.resourceType == "greenway_all") {
+          this.getJHGTState();
+        }
       }
     },
 
     // 组装数据
-    fixData(attr, key) {
-      if (this.forceEntity.attributes && this.forceEntity.attributes[attr]) {
-        const overViewStr =
-          this.forceEntity.attributes.QJ || this.forceEntity.attributes.ZBQJ;
-        const sArr =
-          overViewStr && ~overViewStr.indexOf(";")
-            ? overViewStr.split(";")
-            : [];
-        const attrVal = this.forceEntity.attributes[attr];
+    fixData() {
+      const overallViews = this.detailData.overallViews;
+      const videos = this.detailData.videos;
+      const photos = this.detailData.photos;
 
-        if (attrVal) {
-          if (~attrVal.indexOf(";")) {
-            const tmp = attrVal.split(";");
-            tmp.forEach((item, index) => {
-              if (item.split("_")[1]) {
-                let time = item.split("_")[1].split(".")[0];
-                if (this.finalData[time]) {
-                  if (!this.finalData[time][key]) {
-                    this.finalData[time][key] = [];
-                  }
-                  this.finalData[time][key].push(item);
-                } else {
-                  this.finalData[time] = { date: time };
-                  this.finalData[time][key] = [item];
-                }
-                if (~attr.indexOf("SLT")) {
-                  this.finalData[time].overview = [sArr[index]];
-                }
-              } else {
-                let time = "20200101";
-                this.finalData[time] = { date: time };
-                this.finalData[time][key] = [];
-                this.finalData[time][key].push(item);
-                if (~attr.indexOf("SLT")) {
-                  this.finalData[time].overview = [];
-                  this.finalData[time].overview.push(sArr[index]);
-                }
-              }
-            });
+      overallViews &&
+        overallViews.forEach((item) => {
+          let time = item.shotTime || "2020-01-01";
+          if (this.finalData[time]) {
+            !this.finalData[time].overview &&
+              (this.finalData[time].overview = []);
+            !this.finalData[time].thumbs && (this.finalData[time].thumbs = []);
+            this.finalData[time].overview.push(item.path);
+            this.finalData[time].thumbs.push(item.thumbnail);
           } else {
-            let time = undefined;
-            if (attrVal.split("_")[1]) {
-              time = attrVal.split("_")[1].split(".")[0];
-              if (!this.finalData[time]) this.finalData[time] = { date: time };
-            } else {
-              time = "20200101";
-              this.finalData[time] = { date: time };
-            }
-            this.finalData[time][key] = [attrVal];
-            if (~attr.indexOf("SLT")) {
-              this.finalData[time].overview = [overViewStr];
-            }
+            this.finalData[time] = { date: time };
+            this.finalData[time].overview = [item.path];
+            this.finalData[time].thumbs = [item.thumbnail];
           }
-        }
+        });
+
+      videos &&
+        videos.forEach((item) => {
+          let time = item.shotTime || "2020-01-01";
+          if (this.finalData[time]) {
+            !this.finalData[time].video && (this.finalData[time].video = []);
+            this.finalData[time].video.push(item.path);
+          } else {
+            this.finalData[time] = { date: time };
+            this.finalData[time].video = [item.path];
+          }
+        });
+
+      photos &&
+        photos.forEach((item) => {
+          let time = item.shotTime || "2020-01-01";
+          if (this.finalData[time]) {
+            !this.finalData[time].photo && (this.finalData[time].photo = []);
+            this.finalData[time].photo.push(item.path);
+          } else {
+            this.finalData[time] = { date: time };
+            this.finalData[time].photo = [item.path];
+          }
+        });
+
+      this.finalList = Object.values(this.finalData);
+      this.finalList.sort((a, b) => {
+        const date1 = a.date.split("-").join("");
+        const date2 = b.date.split("-").join("");
+        return date1 - date2;
+      });
+
+      if (this.finalList.length) {
+        this.currentData = this.finalList[this.currentIndex];
+      }
+    },
+
+    // 获取评论
+    async getCommentList() {
+      this.commentList = [];
+
+      const { data } = await resourceComment({
+        resourceId: this.detailData.id,
+      });
+
+      if (data.code === 200) {
+        this.commentList = data.result.records;
+      }
+    },
+
+    // 提交评论
+    async submit() {
+      const { data } = await addComment({
+        username: "test",
+        name: "测试",
+        commend: this.inputComment,
+        star: this.inputStar,
+        resourceId: this.detailData.id,
+      });
+
+      if (data.code === 200) {
+        this.$message({
+          message: "评价成功",
+          type: "success",
+          offset: 50,
+        });
+        this.getCommentList();
+        this.dorate = false;
       }
     },
 

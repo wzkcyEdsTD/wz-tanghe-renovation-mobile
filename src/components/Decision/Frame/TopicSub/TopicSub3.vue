@@ -9,7 +9,7 @@
         <div class="select-tool">
           <TopSelect
             :options="deptList"
-            :value="currentDept"
+            :value="currentDept.label"
             @change="changeDept"
           />
         </div>
@@ -17,7 +17,7 @@
           <div id="chart">
             <table class="chart-table">
               <tr v-for="(item, index) in fixChartData" :key="index">
-                <td class="axis-label">{{ item.label }}</td>
+                <td class="axis-label">{{ item.name }}</td>
                 <td class="chart-series">
                   <div>
                     <div
@@ -37,62 +37,24 @@
 </template>
 
 <script>
+import { countProjectStreetNum } from "@/api/tangheAPI";
 import TopSelect from "./TopSelect";
 export default {
   data() {
     return {
-      chartData: [
-        {
-          label: "景山街道",
-          num: 11,
-        },
-        {
-          label: "景山街道",
-          num: 10,
-        },
-        {
-          label: "景山街道",
-          num: 9,
-        },
-        {
-          label: "景山街道",
-          num: 8,
-        },
-        {
-          label: "景山街道",
-          num: 7,
-        },
-        {
-          label: "景山街道",
-          num: 9,
-        },
-        {
-          label: "景山街道",
-          num: 8,
-        },
-        {
-          label: "景山街道",
-          num: 7,
-        },
-        {
-          label: "景山街道",
-          num: 0,
-        },
-      ],
+      streetData: [],
+      chartData: [],
 
       // 柱状图最大长度，单位vh
       maxLength: 20.13,
 
       deptList: [
-        { label: "鹿城区政府", value: "A02A01" },
-        { label: "龙湾区政府", value: "A02A03" },
-        { label: "瓯海区政府", value: "A02A02" },
-        { label: "瑞安市政府", value: "A02A04" },
-        { label: "浙南产业区", value: "A02A05" },
-        { label: "温州城发集团", value: "A02A07" },
-        { label: "温州现代集团", value: "A02A06" },
+        { label: "鹿城区", value: "A02A01" },
+        { label: "龙湾区", value: "A02A03" },
+        { label: "瓯海区", value: "A02A02" },
+        { label: "瑞安市", value: "A02A04" },
       ],
-      currentDept: "鹿城区政府",
+      currentDept: { label: "鹿城区", value: "A02A01" },
     };
   },
 
@@ -106,20 +68,35 @@ export default {
 
     // 数据排序
     fixChartData() {
+      const res = this.streetData.find((item) => {
+        return item.name == this.currentDept.label;
+      });
+
+      this.chartData =
+        res && "countBaseRespList" in res ? res.countBaseRespList : [];
+
       return this.chartData.sort((a, b) => {
         return Number(b.num) - Number(a.num);
       });
     },
   },
-  mounted() {},
-  methods: {
-    // 更新图表
-    updateChart() {},
 
+  async mounted() {
+    await this.getStreetData();
+  },
+
+  methods: {
     // 监听事件
     changeDept(obj) {
-      console.log("val", obj.value);
-      this.currentDept = obj.label;
+      this.currentDept = obj;
+    },
+
+    // 获取街道数据
+    async getStreetData() {
+      const { data } = await countProjectStreetNum();
+      if (data.code == 200) {
+        this.streetData = data.result;
+      }
     },
   },
 };
@@ -226,7 +203,7 @@ export default {
                         #0093ff 100%
                       );
                       border-radius: 0.75vh;
-                      transition: width 2s;
+                      transition: width .8s;
                     }
 
                     .chart-bar-label {

@@ -8,5 +8,8 @@ const mutations = {
     [types.SET_SEJ_LIST](state, data) {
         state.sejList = data;
     },
+    [types.SET_BUFFER_FLAG](state, data) {
+        state.bufferFlag = data;
+    },
 }
 export default mutations;

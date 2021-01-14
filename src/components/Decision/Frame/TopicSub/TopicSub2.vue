@@ -35,7 +35,7 @@
         <div class="select-tool">
           <TopSelect
             :options="deptList"
-            :value="currentDept"
+            :value="currentDept.label"
             @change="changeDept"
           />
         </div>
@@ -46,12 +46,14 @@
           </div>
           <div class="list-body">
             <ul>
-              <!-- 模拟数据，重复15次 -->
-              <li v-for="k in 15" :key="k">
-                <span>葡萄8-5地块</span>
-                <span>因为疫情影响，无法开工</span>
+              <li v-for="(item, index) in fixProjectList" :key="index">
+                <span>{{ item.name }}</span>
+                <span>{{ item.problem }}</span>
               </li>
             </ul>
+            <span class="no-data" v-show="!fixProjectList.length"
+              >暂无数据</span
+            >
           </div>
         </div>
       </div>
@@ -61,40 +63,19 @@
 
 <script>
 import TopSelect from "./TopSelect";
+import { countProjectProgressNum, queryProgressList } from "@/api/tangheAPI";
 export default {
   data() {
     return {
       listData: [
-        {
-          label: "鹿城区政府",
-          num: 1,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
-        {
-          label: "区政府",
-          num: 2,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
-        {
-          label: "鹿城区政府",
-          num: 8,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
-        {
-          label: "鹿城区政府",
-          num: 9,
-        },
+        { label: "鹿城区政府", value: "A02A01", num: 0 },
+        { label: "龙湾区政府", value: "A02A03", num: 0 },
+        { label: "瓯海区政府", value: "A02A02", num: 0 },
+        { label: "瑞安市政府", value: "A02A04", num: 0 },
+        { label: "浙南产业区", value: "A02A05", num: 0 },
+        { label: "温州城发集团", value: "A02A07", num: 0 },
+        { label: "温州现代集团", value: "A02A06", num: 0 },
       ],
-
       deptList: [
         { label: "鹿城区政府", value: "A02A01" },
         { label: "龙湾区政府", value: "A02A03" },
@@ -104,7 +85,8 @@ export default {
         { label: "温州城发集团", value: "A02A07" },
         { label: "温州现代集团", value: "A02A06" },
       ],
-      currentDept: "鹿城区政府",
+      currentDept: { label: "鹿城区政府", value: "A02A01" },
+      projectList: [],
     };
   },
 
@@ -117,6 +99,18 @@ export default {
         return Number(b.num) - Number(a.num);
       });
     },
+
+    // 当前列表
+    fixProjectList() {
+      return this.projectList.filter((item) => {
+        return item.sysOrgCode == this.currentDept.value;
+      });
+    },
+  },
+
+  async mounted() {
+    await this.getProjectCount();
+    await this.getProjectList();
   },
 
   methods: {
@@ -127,8 +121,29 @@ export default {
 
     // 监听事件
     changeDept(obj) {
-      console.log("val", obj.value);
-      this.currentDept = obj.label;
+      this.currentDept = obj;
+    },
+
+    // 获取项目统计
+    async getProjectCount() {
+      let { data } = await countProjectProgressNum();
+      if (data.code == 200) {
+        this.listData.map((item) => {
+          data.result.map((v) => {
+            if (item.label == v.name) {
+              item.num = v.num;
+            }
+          });
+        });
+      }
+    },
+
+    // 获取项目列表
+    async getProjectList() {
+      let { data } = await queryProgressList();
+      if (data.code == 200) {
+        this.projectList = data.result;
+      }
     },
   },
 };
@@ -358,6 +373,16 @@ export default {
                 }
               }
             }
+          }
+
+          .no-data {
+            display: block;
+            height: 3vh;
+            line-height: 3vh;
+            text-align: center;
+            font-family: YouSheBiaoTiHei;
+            font-size: 1.5vh;
+            color: #fff;
           }
 
           // 滚动条

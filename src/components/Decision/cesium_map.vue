@@ -54,6 +54,9 @@ export default {
       hubShow: true,
     };
   },
+  computed: {
+    ...mapGetters("decision", ["bufferFlag"]),
+  },
   components: {
     LayerHub,
     Search,
@@ -136,8 +139,38 @@ export default {
         window.earth.scene.canvas
       );
       // 监听左键点击事件
-      this.handler.setInputAction((e) => {
+      this.handler.setInputAction(async (e) => {
         const pick = window.earth.scene.pick(e.position);
+
+        // 判断是否开启周边查询
+        if (this.bufferFlag) {
+          const scene = window.earth.scene;
+          const ellipsoid = scene.globe.ellipsoid;
+          const cartesian3 = window.earth.scene.pickPosition(e.position);
+          const cartographic = ellipsoid.cartesianToCartographic(cartesian3);
+          const lat = Cesium.Math.toDegrees(cartographic.latitude);
+          const lng = Cesium.Math.toDegrees(cartographic.longitude);
+          const geometry = new SuperMap.Geometry.Point(lng, lat);
+
+          window.earth.scene.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(
+              geometry.x,
+              geometry.y,
+              1200
+            ),
+            orientation: {
+              heading: 0.01768860454315663,
+              pitch: Cesium.Math.toRadians(-90),
+              roll: 0,
+            },
+          });
+
+          this.drawBuffer(geometry);
+          const res = await this.bufferQuery(geometry);
+          this.$bus.$emit("change-around-chart", { result: res });
+          return;
+        }
+
         if (!pick || !pick.id) {
           cleanLocationIcon();
           return;
@@ -147,9 +180,9 @@ export default {
 
           if (~["label", "billboard"].indexOf(_TYPE_)) {
             const feature = window.featureMap[_NODEID_][_SMID_];
+            const geometry = feature.geometry;
 
             // 定位图标
-            const geometry = feature.geometry;
             addLocationIcon(geometry, _NODEID_);
 
             this.$refs.Search.results = [];
@@ -206,11 +239,93 @@ export default {
       });
     },
 
+    // 画缓冲区
+    drawBuffer(geometry) {
+      // 清除原有图形
+      this.removeBuffer();
+      const { x, y } = geometry;
+
+      const datasource = window.earth.dataSources.getByName("buffer")[0];
+      const circleEntity = new Cesium.Entity({
+        position: Cesium.Cartesian3.fromDegrees(x, y, 0),
+        ellipse: {
+          semiMinorAxis: 200,
+          semiMajorAxis: 200,
+          height: 0,
+          material: Cesium.Color.fromCssColorString("#A0F4FF").withAlpha(0.6),
+          outline: true,
+          outlineWidth: 4,
+          outlineColor: Cesium.Color.WHITE,
+        },
+        id: "circle",
+      });
+      datasource.entities.add(circleEntity);
+
+      const pointEntity = new Cesium.Entity({
+        position: Cesium.Cartesian3.fromDegrees(x, y, 0),
+        billboard: {
+          image: `/libs/images/map-ico/buffer-point.png`,
+          width: 40,
+          height: 40,
+          scaleByDistance: new Cesium.NearFarScalar(3000, 1.5, 6000, 1.2),
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        },
+        id: "point",
+      });
+      datasource.entities.add(pointEntity);
+    },
+
+    // 移除缓冲区
+    removeBuffer() {
+      const datasource = window.earth.dataSources.getByName("buffer")[0];
+      datasource.entities.removeAll();
+    },
+
+    // 周边查询
+    bufferQuery(geometry) {
+      return new Promise((resolve, reject) => {
+        const getFeaturesByGeometryService = new SuperMap.REST.GetFeaturesByBufferService(
+          ServiceUrl.FEATUREMVT,
+          {
+            eventListeners: {
+              processCompleted: (data) => {
+                data && resolve(data);
+              },
+              processFailed: (err) => reject(err),
+            },
+          }
+        );
+
+        getFeaturesByGeometryService.processAsync(
+          new SuperMap.REST.GetFeaturesByBufferParameters({
+            // 缓冲距离单位疑似十万米！！！图形单位米！！！
+            bufferDistance: 0.002,
+            datasetNames: ["172.168.3.181_thxm2:wz_jd"],
+            geometry,
+            returnContent: true,
+            toIndex: -1,
+          })
+        );
+      });
+    },
+
     // 创建datasource
     createEntityCollection() {
       // 定位
       const locationEntityCollection = new Cesium.CustomDataSource("location");
       window.earth.dataSources.add(locationEntityCollection);
+
+      // 周边查询
+      const bufferEntityCollection = new Cesium.CustomDataSource("buffer");
+      window.earth.dataSources.add(bufferEntityCollection);
+    },
+  },
+
+  watch: {
+    bufferFlag(val) {
+      if (!val) {
+        this.removeBuffer();
+      }
     },
   },
 };
