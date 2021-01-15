@@ -11,7 +11,21 @@ export default {
     };
   },
   created() {
-    // 空间分析工具
+    // 测距
+    window.handlerDis = new Cesium.MeasureHandler(
+      window.earth,
+      Cesium.MeasureMode.Distance,
+      this.clampMode
+    );
+
+    // 测面
+    window.handlerArea = new Cesium.MeasureHandler(
+      window.earth,
+      Cesium.MeasureMode.Area,
+      this.clampMode
+    );
+
+    // 空间分析
     window.handlerAreaAnalyze = new Cesium.MeasureHandler(
       window.earth,
       Cesium.MeasureMode.Area,
@@ -27,6 +41,44 @@ export default {
   methods: {
     //  事件绑定
     eventRegsiter() {
+      // 测距
+      window.handlerDis.measureEvt.addEventListener((result) => {
+        const dis = Number(result.distance);
+        const positions = result.positions;
+        const distance =
+          dis > 1000 ? (dis / 1000).toFixed(2) + "km" : dis.toFixed(2) + "m";
+        window.handlerDis.disLabel.text = "距离:" + distance;
+      });
+
+      window.handlerDis.activeEvt.addEventListener((isActive) => {
+        if (isActive == true) {
+          window.earth.enableCursorStyle = false;
+          window.earth._element.style.cursor = "";
+        } else {
+          window.earth.enableCursorStyle = true;
+        }
+      });
+
+      // 测面
+      window.handlerArea.measureEvt.addEventListener((result) => {
+        const mj = Number(result.area);
+        const positions = result.positions;
+        const area =
+          mj > 1000000
+            ? (mj / 1000000).toFixed(2) + "km²"
+            : mj.toFixed(2) + "㎡";
+        window.handlerArea.areaLabel.text = "面积:" + area;
+      });
+      window.handlerArea.activeEvt.addEventListener((isActive) => {
+        if (isActive == true) {
+          window.earth.enableCursorStyle = false;
+          window.earth._element.style.cursor = "";
+        } else {
+          window.earth.enableCursorStyle = true;
+        }
+      });
+
+      // 空间分析
       window.handlerAreaAnalyze.measureEvt.addEventListener(async (result) => {
         if (!this.analyzeActive) {
           const scene = window.earth.scene;
@@ -62,6 +114,18 @@ export default {
       });
     },
 
+    // 测距
+    gaugeDistance() {
+      this.deactiveAll();
+      window.handlerDis && window.handlerDis.activate();
+    },
+
+    // 测面
+    gaugeArea() {
+      this.deactiveAll();
+      window.handlerArea && window.handlerArea.activate();
+    },
+
     //  面分析
     gaugeAreaAnalyze() {
       this.deactiveAll();
@@ -70,11 +134,16 @@ export default {
 
     //  清除分析结果
     clearGauge() {
+      this.deactiveAll();
+      window.handlerDis && window.handlerDis.clear();
+      window.handlerArea && window.handlerArea.clear();
       window.handlerAreaAnalyze && window.handlerAreaAnalyze.clear();
     },
 
     // 关闭所有量测处理器
     deactiveAll() {
+      window.handlerDis && window.handlerDis.deactivate();
+      window.handlerArea && window.handlerArea.deactivate();
       window.handlerAreaAnalyze && window.handlerAreaAnalyze.deactivate();
     },
 

@@ -15,10 +15,10 @@
         >
           <ul>
             <li
-              v-for="item in options"
+              v-for="item in deptList"
               :key="item.value"
-              :class="{ selected: item.value == input }"
-              @click="selected(item.value)"
+              :class="{ selected: item.label == currentDept.label }"
+              @click="selected(item)"
             >
               <span>{{ item.label }}</span>
             </li>
@@ -27,7 +27,7 @@
             slot="reference"
             placeholder="请选择"
             readonly="readonly"
-            v-model="input"
+            v-model="currentDept.label"
           >
             <i
               slot="suffix"
@@ -43,27 +43,27 @@
     <div class="analyze-bg">
       <div class="analyze-row">
         <div class="analyze-item star1">
-          <span class="item-num">6</span>
+          <span class="item-num">{{ fixListData.starData.star1 || 0 }}</span>
           <span class="item-unit">个</span>
         </div>
       </div>
       <div class="analyze-row">
         <div class="analyze-item star2">
-          <span class="item-num">6</span>
+          <span class="item-num">{{ fixListData.starData.star2 || 0 }}</span>
           <span class="item-unit">个</span>
         </div>
         <div class="analyze-item star3">
-          <span class="item-num">6</span>
+          <span class="item-num">{{ fixListData.starData.star3 || 0 }}</span>
           <span class="item-unit">个</span>
         </div>
       </div>
       <div class="analyze-row">
         <div class="analyze-item star4">
-          <span class="item-num">6</span>
+          <span class="item-num">{{ fixListData.starData.star4 || 0 }}</span>
           <span class="item-unit">个</span>
         </div>
         <div class="analyze-item star5">
-          <span class="item-num">6</span>
+          <span class="item-num">{{ fixListData.starData.star5 || 0 }}</span>
           <span class="item-unit">个</span>
         </div>
       </div>
@@ -72,55 +72,80 @@
 </template>
 
 <script>
+import { countProjectStar } from "@/api/tangheAPI";
 export default {
   data() {
     return {
-      options: [],
-      countryList: [
-        "全区",
-        "南郊街道",
-        "南汇街道",
-        "五马街道",
-        "山福镇",
-        "藤桥镇",
-        "仰义街道",
-        "丰门街道",
-        "双屿街道",
-        "广化街道",
-        "松台街道",
-        "大南街道",
-        "蒲鞋市街道",
-        "滨江街道",
-        "七都街道",
+      listData: [
+        { label: "鹿城区政府", value: "A02A01", starData: {} },
+        { label: "龙湾区政府", value: "A02A03", starData: {} },
+        { label: "瓯海区政府", value: "A02A02", starData: {} },
+        { label: "瑞安市政府", value: "A02A04", starData: {} },
+        { label: "浙南产业区", value: "A02A05", starData: {} },
+        { label: "温州城发集团", value: "A02A07", starData: {} },
+        { label: "温州现代集团", value: "A02A06", starData: {} },
       ],
+      deptList: [
+        { label: "鹿城区政府", value: "A02A01" },
+        { label: "龙湾区政府", value: "A02A03" },
+        { label: "瓯海区政府", value: "A02A02" },
+        { label: "瑞安市政府", value: "A02A04" },
+        { label: "浙南产业区", value: "A02A05" },
+        { label: "温州城发集团", value: "A02A07" },
+        { label: "温州现代集团", value: "A02A06" },
+      ],
+      currentDept: { label: "鹿城区政府", value: "A02A01" },
       visible: false,
-      input: "南郊街道",
     };
   },
-  mounted() {
-    this.fixOptions();
+
+  computed: {
+    // 筛选数据
+    fixListData() {
+      return this.listData.find((item) => {
+        return item.value == this.currentDept.value;
+      });
+    },
+  },
+
+  async mounted() {
+    await this.getProjectList();
   },
 
   methods: {
-    // 组装数据
-    fixOptions() {
-      this.options = [];
-      this.countryList.map((item) => {
-        this.options.push({
-          value: item,
-          label: item,
-        });
-      });
-    },
-
-    selected(value) {
-      this.input = value;
+    selected(obj) {
       this.visible = false;
+      this.currentDept = obj;
     },
 
     closeInfo() {
       this.$parent.analyzeShow = false;
       this.$parent.topicList[6].check = false;
+    },
+
+    // 获取项目列表
+    async getProjectList() {
+      const { data } = await countProjectStar();
+      if (data.code == 200) {
+        this.listData.map((item) => {
+          data.result.map((v) => {
+            if (item.label == v.name) {
+              const starData = {};
+
+              // 增加评分数据
+              v.countBaseRespList.map(({ name, num }) => {
+                name == "1" && (starData["star1"] = num);
+                name == "2" && (starData["star2"] = num);
+                name == "3" && (starData["star3"] = num);
+                name == "4" && (starData["star4"] = num);
+                name == "5" && (starData["star5"] = num);
+              });
+
+              item.starData = starData;
+            }
+          });
+        });
+      }
     },
   },
 };

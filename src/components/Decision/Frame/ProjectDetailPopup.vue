@@ -259,7 +259,7 @@
                 </div>
               </div>
             </div>
-            <div class="rate-info">
+            <div class="rate-info" v-if="resourceType == 'project_all'">
               <div class="sub-title">
                 <span class="sub-title-text">打分</span>
                 <span class="sub-title-line"></span>
@@ -275,7 +275,7 @@
                   </div>
                   <div class="rate-box">
                     <span>总体评分</span>
-                    <el-rate disabled v-model="value1"></el-rate>
+                    <el-rate disabled v-model="detailData.star"></el-rate>
                   </div>
                 </div>
                 <div class="comment-list">

@@ -172,7 +172,7 @@ export default {
     background-color: rgba(0, 0, 0, 0.8);
     border: solid 0.06vh #0f4dd8;
     box-sizing: border-box;
-    padding: 1.44vh 1.38vh 3.75vh 2.38vh;
+    padding: 1.44vh 1.38vh 1.75vh 2.38vh;
     position: relative;
 
     .panel-title {

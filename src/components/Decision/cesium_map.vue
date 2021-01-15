@@ -178,7 +178,10 @@ export default {
         if (typeof pick.id == "string") {
           const [_TYPE_, _SMID_, _NODEID_] = pick.id.split("@");
 
-          if (~["label", "billboard"].indexOf(_TYPE_)) {
+          if (
+            ~["label", "billboard"].indexOf(_TYPE_) &&
+            _NODEID_ != "supervise"
+          ) {
             const feature = window.featureMap[_NODEID_][_SMID_];
             const geometry = feature.geometry;
 

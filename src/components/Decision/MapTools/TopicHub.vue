@@ -20,7 +20,7 @@
 
     <Supervise v-show="superviseShow" />
     <Around v-show="aroundShow" />
-    <Analyze v-show="analyzeShow" />
+    <Analyze v-if="analyzeShow" />
   </div>
 </template>
 
@@ -94,6 +94,10 @@ export default {
 
   components: { Supervise, Around, Analyze },
 
+  async mounted() {
+    // await this.addProjectLayer();
+  },
+
   methods: {
     ...mapActions("decision", ["setBufferFlag"]),
     // 专题事件
@@ -155,14 +159,28 @@ export default {
     // 领导督办
     superviseHandle(show) {
       this.superviseShow = show;
+
+      if (show) {
+        if (window.billboardMap["supervise"]) {
+          window.billboardMap["supervise"]._billboards.map(
+            (v) => (v.show = true)
+          );
+        } else {
+          this.addProjectLayer();
+        }
+      } else {
+        if (window.billboardMap["supervise"]) {
+          window.billboardMap["supervise"]._billboards.map(
+            (v) => (v.show = false)
+          );
+        }
+      }
     },
 
     // 周边活跃度分析
     aroundHandle(show) {
       this.setBufferFlag(show);
       !show && (this.aroundShow = false);
-
-      // this.aroundShow = show;
     },
 
     // 考核分析
@@ -178,6 +196,61 @@ export default {
     // 项目投资
     investHandle(obj) {
       this.$parent.$refs.TopicPopup.setTabList(obj.id, obj.check);
+    },
+
+    // 添加项目图层
+    async addProjectLayer() {
+      const { result } = await this.fetchProjectData();
+      console.log(result);
+
+      window.billboardMap["supervise"] = window.earth.scene.primitives.add(
+        new Cesium.BillboardCollection()
+      );
+
+      const forceDrawFeatures = result.features;
+      forceDrawFeatures.map((item) => {
+        const position = Cesium.Cartesian3.fromDegrees(
+          item.geometry.x,
+          item.geometry.y,
+          4
+        );
+
+        window.billboardMap["supervise"].add({
+          id: `billboard@${item.attributes.SMID}@supervise`,
+          image: `/libs/images/map-ico/${item.attributes.STATUS.trim()}-问题.png`,
+          width: 34,
+          height: 34,
+          scaleByDistance: new Cesium.NearFarScalar(500, 1.5, 6000, 1),
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          position,
+        });
+      });
+    },
+
+    // 获取项目数据
+    fetchProjectData() {
+      return new Promise((resolve, reject) => {
+        const getFeatureBySQLService = new SuperMap.REST.GetFeaturesBySQLService(
+          ServiceUrl.FEATUREMVT,
+          {
+            eventListeners: {
+              processCompleted: (data) => {
+                data && resolve(data);
+              },
+              processFailed: (err) => reject(err),
+            },
+          }
+        );
+        getFeatureBySQLService.processAsync(
+          new SuperMap.REST.GetFeaturesBySQLParameters({
+            queryParameter: new SuperMap.REST.FilterParameter({
+              attributeFilter: "",
+            }),
+            toIndex: -1,
+            datasetNames: ["172.168.3.181_thxm_manage:th_spatial_project_view"],
+          })
+        );
+      });
     },
   },
 };

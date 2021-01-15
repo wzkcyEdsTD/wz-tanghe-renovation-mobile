@@ -50,14 +50,10 @@
             </div>
           </li>
           <li class="result-item" v-show="moreShow" @click="checkMore">
-            查看更多结果
+            <span class="check-more">查看更多结果</span>
           </li>
         </ul>
-        <ul
-          id="addressResultContent"
-          style="margin-top: 1.31vh"
-          v-show="addressResults.length"
-        >
+        <ul id="addressResultContent" v-show="addressResults.length">
           <li
             class="result-item"
             v-for="(item, i) in addressResults"
@@ -126,7 +122,7 @@ export default {
       const datasource = "172.168.3.181_thxm_manage:";
       const url = ServiceUrl.FEATUREMVT;
       const getFeatureParam = new SuperMap.REST.FilterParameter({
-        attributeFilter: `NAME like '%${word}%' AND (resource_type = 'scenicspot12' OR resource_type='greenway_all')`,
+        attributeFilter: `NAME like '%${word}%'`,
       });
       const getFeatureBySQLParams = new SuperMap.REST.GetFeaturesBySQLParameters(
         {
@@ -173,50 +169,43 @@ export default {
 
       this.results = [];
       data.map(({ attributes, geometry }) => {
-        this.results.push({
-          id: `${attributes.SMID}@${
-            ~attributes.RESOURCE_TYPE.indexOf("scenicspot12")
+        const type = attributes.RESOURCE_TYPE;
+        if (
+          type == "project_all" ||
+          type == "greenway_all" ||
+          type == "scenicspot12"
+        ) {
+          this.results.push({
+            id: `${attributes.SMID}@${type}`,
+            type: type,
+            icon: ~type.indexOf("scenicspot12")
               ? `十二景`
-              : ~attributes.RESOURCE_TYPE.indexOf("greenway_all")
+              : ~type.indexOf("greenway_all")
               ? `断点`
-              : "项目"
-          }`,
-          type: ~attributes.RESOURCE_TYPE.indexOf("scenicspot12")
-            ? `十二景`
-            : ~attributes.RESOURCE_TYPE.indexOf("greenway_all")
-            ? `断点`
-            : "项目",
-          icon: ~attributes.RESOURCE_TYPE.indexOf("scenicspot12")
-            ? `十二景`
-            : ~attributes.RESOURCE_TYPE.indexOf("greenway_all")
-            ? `断点`
-            : attributes.STATUS,
-          img_dir: ~attributes.RESOURCE_TYPE.indexOf("scenicspot12")
-            ? `十二景`
-            : ~attributes.RESOURCE_TYPE.indexOf("greenway_all")
-            ? `绿道断点`
-            : "项目",
-          img:
-            (attributes.JGT
-              ? ~attributes.JGT.indexOf(";")
-                ? attributes.JGT.split(";")[0]
-                : attributes.JGT
-              : null) ||
-            (attributes.PHOTO
-              ? ~attributes.PHOTO.indexOf(";")
-                ? attributes.PHOTO.split(";")[0]
-                : attributes.PHOTO
-              : null) ||
-            null,
-          name:
-            attributes.SHORT_NAME ||
-            attributes.NAME ||
-            attributes.MC ||
-            attributes.JC,
-          dep: attributes.STREET || `无`,
-          attributes,
-          geometry,
-        });
+              : attributes.STATUS,
+            img_dir: ~type.indexOf("scenicspot12")
+              ? `十二景`
+              : ~type.indexOf("greenway_all")
+              ? `绿道断点`
+              : "项目",
+            img:
+              (attributes.JGT
+                ? ~attributes.JGT.indexOf(";")
+                  ? attributes.JGT.split(";")[0]
+                  : attributes.JGT
+                : null) ||
+              (attributes.PHOTO
+                ? ~attributes.PHOTO.indexOf(";")
+                  ? attributes.PHOTO.split(";")[0]
+                  : attributes.PHOTO
+                : null) ||
+              null,
+            name: attributes.SHORT_NAME || attributes.NAME,
+            dep: attributes.STREET || `无`,
+            attributes,
+            geometry,
+          });
+        }
       });
     },
 
@@ -229,7 +218,7 @@ export default {
       addLocationIcon(item.geometry, item.id);
 
       // 详情
-      if (item.type == "十二景") {
+      if (item.type == "scenicspot12") {
         this.$parent.$refs.CommonDetailPopup.isSearch = true;
         this.$parent.$refs.CommonDetailPopup.getForceEntity({ ...item });
         this.$parent.$refs.ProjectDetailPopup.closeInfo();
@@ -470,6 +459,24 @@ export default {
           &::after {
             height: 0;
           }
+        }
+
+        .check-more {
+          display: block;
+          text-align: center;
+          font-family: YouSheBiaoTiHei;
+          font-size: 1.5vh;
+          color: #fff;
+        }
+      }
+
+      #addressResultContent {
+        margin-top: 1.31vh;
+
+        .result-item {
+          font-family: PingFang;
+          font-weight: 600;
+          font-size: 1.38vh;
         }
       }
     }

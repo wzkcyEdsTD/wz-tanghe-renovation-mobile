@@ -36,10 +36,12 @@
       <div class="space-sub-tool-measure" v-show="measureToolShow">
         <div
           class="sub-tool-item"
-          v-for="(item, index) in measureToolList"
-          :key="index"
+          v-for="(item, index) in measureToolList.filter(
+            (item) => item.id != '清除'
+          )"
+          :key="item.id"
           :class="{ active: item.check }"
-          @click="changeMeasureTool(item, index)"
+          @click="changeMeasureTool(item)"
         >
           <img
             :src="
@@ -50,7 +52,25 @@
           />
           <span>{{ item.label }}</span>
         </div>
-        <div class=""></div>
+        <div
+          class="sub-tool-item"
+          v-for="(item, index) in measureToolList.filter(
+            (item) => item.id == '清除'
+          )"
+          :key="item.id"
+          :class="{ active: item.check }"
+          @mousedown="changeMeasureTool(item)"
+          @mouseup="item.check = false"
+        >
+          <img
+            :src="
+              require(`@/assets/images/spacetools/${
+                item.check ? `${item.icon}高亮` : item.icon
+              }@2x.png`)
+            "
+          />
+          <span>{{ item.label }}</span>
+        </div>
       </div>
     </div>
 
@@ -58,7 +78,7 @@
 
     <div class="space-result" v-show="spaceShow">
       <span class="space-result-title">空间分析结果</span>
-      <i class="space-result-close" @click="closeSpace(true)"></i>
+      <i class="space-result-close" @click="closeAreaAnalyze(true)"></i>
       <div class="space-result-body">
         <div class="space-result-left">
           <div class="project">
@@ -172,45 +192,27 @@ export default {
       ],
       drawToolList: [
         {
-          id: "新建",
-          label: "新建",
-          icon: "新建",
+          id: "点",
+          label: "点",
+          icon: "点",
           check: false,
         },
         {
-          id: "打开",
-          label: "打开",
-          icon: "打开",
+          id: "线",
+          label: "线",
+          icon: "线",
           check: false,
         },
         {
-          id: "退出",
-          label: "退出",
-          icon: "退出",
+          id: "面",
+          label: "面",
+          icon: "面",
           check: false,
         },
         {
-          id: "删除",
-          label: "删除",
-          icon: "删除",
-          check: false,
-        },
-        {
-          id: "保存",
-          label: "保存",
-          icon: "保存",
-          check: false,
-        },
-        {
-          id: "撤销",
-          label: "撤销",
-          icon: "撤销",
-          check: false,
-        },
-        {
-          id: "重做",
-          label: "重做",
-          icon: "重做",
+          id: "历史查询",
+          label: "历史查询",
+          icon: "历史查询",
           check: false,
         },
       ],
@@ -300,8 +302,8 @@ export default {
 
       // 清空
       this.drawToolShow = false;
-      this.measureToolShow = false;
-      this.closeSpace(false);
+      this.closeMeasureTool();
+      this.closeAreaAnalyze(false);
 
       if (this.currentIndex == 0) {
         this.drawToolShow = true;
@@ -318,13 +320,24 @@ export default {
     },
 
     // 测量工具选择
-    changeMeasureTool(item, index) {
-      item.check = true;
+    changeMeasureTool(item) {
+      // 清空测量
+      this.$refs.CalTools.clearGauge();
+      this.measureToolList.map((_item) => {
+        if (_item.id != item.id) {
+          _item.check = false;
+        }
+      });
 
-      // 模拟操作后关闭
-      setTimeout(() => {
-        item.check = false;
-      }, 2000);
+      if (item.id == "测距") {
+        item.check = !item.check;
+        item.check && this.$refs.CalTools.gaugeDistance();
+      } else if (item.id == "测面") {
+        item.check = !item.check;
+        item.check && this.$refs.CalTools.gaugeArea();
+      } else if (item.id == "清除") {
+        item.check = true;
+      }
     },
 
     // 下拉选择
@@ -334,20 +347,26 @@ export default {
     },
 
     // 关闭标绘工具
-    closeDrawTool(){},
+    closeDrawTool() {},
 
     // 关闭测量工具
-    closeMeasureTool(){},
+    closeMeasureTool() {
+      this.measureToolShow = false;
+      this.$refs.CalTools.clearGauge();
+      this.measureToolList.map((item) => {
+        item.check = false;
+      });
+    },
 
     // 关闭空间分析
-    closeSpace(flag) {
+    closeAreaAnalyze(flag) {
       // 是否由按钮关闭
       flag && (this.currentIndex = null);
       this.spaceShow = false;
       this.$refs.CalTools.clearGauge();
     },
 
-      // 事件注册
+    // 事件注册
     eventRegsiter() {
       this.$bus.$off("areaAnalyze");
       this.$bus.$on("areaAnalyze", ({ result }) => {
@@ -586,7 +605,7 @@ export default {
       box-sizing: border-box;
       border-radius: 1.88vh;
       background-color: #0454c1;
-      padding: 0 1.38vh;
+      padding: 0 5.19vh;
       opacity: 0.8;
       z-index: 99;
 
@@ -594,7 +613,7 @@ export default {
         display: flex;
         align-items: center;
         font-family: PingFang;
-        font-size: 1vh;
+        font-size: 1.5vh;
         color: #fff;
         opacity: 0.6;
         cursor: pointer;
@@ -625,7 +644,7 @@ export default {
       box-sizing: border-box;
       border-radius: 1.88vh;
       background-color: #0454c1;
-      padding: 0 9.56vh;
+      padding: 0 7.19vh;
       opacity: 0.8;
       z-index: 99;
 
@@ -633,7 +652,7 @@ export default {
         display: flex;
         align-items: center;
         font-family: PingFang;
-        font-size: 1vh;
+        font-size: 1.5vh;
         color: #fff;
         opacity: 0.6;
         cursor: pointer;

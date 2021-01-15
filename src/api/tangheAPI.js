@@ -102,6 +102,12 @@ export function getPointDetail(data) {
   return get(url, data)
 }
 
+// 景点详情
+export function getSpotDetail(data) {
+  const url = 'http://192.168.2.103:8080/tanghe/front/resourceScenicSpot/queryForMap'
+  return get(url, data)
+}
+
 // 互学互比列表查询
 export function queryMeetingSortFront(data) {
   const url = 'http://192.168.2.103:8080/tanghe/front/bsMeeting/queryMeetingSortFront'
@@ -177,5 +183,11 @@ export function countProjectStreetNum(data) {
 // 各单位总投资额统计
 export function countProjectAmound(data) {
   const url = 'http://192.168.2.103:8080/tanghe/front/resourceProject/countProjectAmound'
+  return get(url, data)
+}
+
+// 项目评分统计
+export function countProjectStar(data) {
+  const url = 'http://192.168.2.103:8080/tanghe/front/resourceProjectComment/countProjectStar'
   return get(url, data)
 }

@@ -153,6 +153,7 @@ export default {
   display: flex;
   position: fixed;
   top: 9.81vh;
+  bottom: 9.06vh;
   right: 2.88vh;
   z-index: 1999;
 
@@ -222,7 +223,7 @@ export default {
 
     .tab-body {
       width: 35.63vh;
-      height: 81.25vh;
+      height: 100%;
       position: relative;
 
       .popup-close {

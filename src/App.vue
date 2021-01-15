@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <MHeader v-if="this.$route.path != '/mark'" />
+    <MHeader v-if="!~['/mark','/login'].indexOf(this.$route.path)" />
     <div class="content">
       <router-view />
     </div>
