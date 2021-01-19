@@ -4,7 +4,7 @@
       <div
         class="detail-popup common-detail-popup"
         v-if="infoShow"
-        :style="{ top: (isSearch ? 16.81 : 13.81) + 'vh' }"
+        :style="{ top: (isSearch ? 18.01 : 14.51) + 'vh' }"
       >
         <i class="popup-close" @click="closeInfo" />
         <div class="info-container">

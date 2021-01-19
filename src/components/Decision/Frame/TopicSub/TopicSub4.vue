@@ -212,7 +212,7 @@ export default {
       flex: 1;
       display: flex;
       flex-direction: column;
-      margin-top: 3.44vh;
+      margin-top: 1.84vh;
 
       .sub-title {
         display: flex;
@@ -221,7 +221,7 @@ export default {
         font-family: PingFang;
         font-size: 1.5vh;
         color: #62abff;
-        margin-bottom: 1.81vh;
+        margin-bottom: 1.41vh;
 
         span {
           &:first-child {
@@ -241,7 +241,7 @@ export default {
 
       .dept-list {
         box-sizing: border-box;
-        margin-bottom: 4.63vh;
+        margin-bottom: 2.63vh;
 
         .chart-box {
           width: 100%;

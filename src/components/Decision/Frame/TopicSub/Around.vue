@@ -188,9 +188,9 @@ export default {
   width: 59vh;
   height: 44.75vh;
   position: fixed;
-  top: 30%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   color: #fff;
   z-index: 2999;
 

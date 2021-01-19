@@ -49,9 +49,9 @@ export default {
 
   .circle-1 {
     position: absolute;
-    top: 8.81%;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     width: 77.56vh;
     height: 77.56vh;
     border: solid 0.5vh rgba(255, 255, 255, 0.3);

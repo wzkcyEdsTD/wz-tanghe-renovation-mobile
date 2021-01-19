@@ -16,8 +16,7 @@ export default {};
   z-index: 999;
 
   img {
-    width: 18vh;
-    // height: 18.75vh;
+    width: 21.6vh;
   }
 }
 </style>

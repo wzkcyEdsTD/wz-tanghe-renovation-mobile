@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <Supervise v-show="superviseShow" />
+    <Supervise ref="Supervise" v-show="superviseShow" />
     <Around v-show="aroundShow" />
     <Analyze v-if="analyzeShow" />
   </div>
@@ -42,42 +42,49 @@ export default {
           label: "进度预警专题",
           icon: "进度预警专题",
           check: false,
+          doFun: "warningHandle",
         },
         {
           id: "项目投资",
           label: "项目投资专题",
           icon: "项目投资专题",
           check: false,
+          doFun: "investHandle",
         },
         {
           id: "绿化覆盖",
           label: "绿化覆盖专题",
           icon: "绿化覆盖专题",
           check: false,
+          doFun: "greeningHandle",
         },
         {
           id: "城市规划",
           label: "城市规划专题",
           icon: "城市规划专题",
           check: false,
+          doFun: "cityplanningHandle",
         },
         {
           id: "领导督办",
           label: "领导督办专题",
           icon: "领导督办专题",
           check: false,
+          doFun: "superviseHandle",
         },
         {
           id: "周边活跃度",
           label: "周边活跃度分析",
           icon: "周边活跃度分析",
           check: false,
+          doFun: "aroundHandle",
         },
         {
           id: "考核分析",
           label: "考核分析",
           icon: "考核分析",
           check: false,
+          doFun: "analyzeHandle",
         },
       ],
       topicLayer: {
@@ -94,37 +101,35 @@ export default {
 
   components: { Supervise, Around, Analyze },
 
-  async mounted() {
-    // await this.addProjectLayer();
+  mounted() {
+    this.eventRegsiter();
   },
 
   methods: {
     ...mapActions("decision", ["setBufferFlag"]),
+
+    //  事件绑定
+    eventRegsiter() {
+      this.$bus.$off("set-supervise");
+      this.$bus.$on("set-supervise", ({ feature }) => {
+        // console.log(feature);
+        this.superviseShow = true;
+        this.$refs.Supervise.fixData(feature);
+      });
+    },
+
     // 专题事件
     topicChange(item) {
       if (!("check" in item)) return;
       item.check = !item.check;
 
-      if (item.id == "进度预警") {
-        this.warningHandle(item);
-      } else if (item.id == "项目投资") {
-        this.investHandle(item);
-      } else if (item.id == "绿化覆盖") {
-        this.greeningHandle(item.check);
-      } else if (item.id == "城市规划") {
-        this.cityplanningHandle(item.check);
-      } else if (item.id == "领导督办") {
-        this.superviseHandle(item.check);
-      } else if (item.id == "周边活跃度") {
-        this.aroundHandle(item.check);
-      } else if (item.id == "考核分析") {
-        this.analyzeHandle(item.check);
-      }
+      // 调用对应handle
+      item.doFun && this[item.doFun](item);
     },
 
     // 绿化覆盖
-    greeningHandle(show) {
-      if (!show) {
+    greeningHandle({ check }) {
+      if (!check) {
         this.topicLayer.greening && (this.topicLayer.greening.show = false);
         this.topicLayer.greeningLine &&
           (this.topicLayer.greeningLine.show = false);
@@ -142,8 +147,8 @@ export default {
     },
 
     // 城市规划
-    cityplanningHandle(show) {
-      if (!show) {
+    cityplanningHandle({ check }) {
+      if (!check) {
         this.topicLayer.cityplanning &&
           (this.topicLayer.cityplanning.show = false);
       } else {
@@ -157,35 +162,26 @@ export default {
     },
 
     // 领导督办
-    superviseHandle(show) {
-      this.superviseShow = show;
-
-      if (show) {
-        if (window.billboardMap["supervise"]) {
-          window.billboardMap["supervise"]._billboards.map(
-            (v) => (v.show = true)
-          );
-        } else {
-          this.addProjectLayer();
-        }
-      } else {
-        if (window.billboardMap["supervise"]) {
-          window.billboardMap["supervise"]._billboards.map(
-            (v) => (v.show = false)
-          );
-        }
+    superviseHandle({ check }) {
+      !check && (this.superviseShow = false);
+      if (window.billboardMap["supervise"]) {
+        window.billboardMap["supervise"]._billboards.map(
+          (v) => (v.show = check)
+        );
+      } else if (check && !window.billboardMap["supervise"]) {
+        this.addProjectLayer();
       }
     },
 
     // 周边活跃度分析
-    aroundHandle(show) {
-      this.setBufferFlag(show);
-      !show && (this.aroundShow = false);
+    aroundHandle({ check }) {
+      this.setBufferFlag(check);
+      !check && (this.aroundShow = false);
     },
 
     // 考核分析
-    analyzeHandle(show) {
-      this.analyzeShow = show;
+    analyzeHandle({ check }) {
+      this.analyzeShow = check;
     },
 
     // 进度预警
@@ -201,14 +197,25 @@ export default {
     // 添加项目图层
     async addProjectLayer() {
       const { result } = await this.fetchProjectData();
-      console.log(result);
-
       window.billboardMap["supervise"] = window.earth.scene.primitives.add(
         new Cesium.BillboardCollection()
       );
 
       const forceDrawFeatures = result.features;
       forceDrawFeatures.map((item) => {
+        !window.featureMap["supervise"] &&
+          (window.featureMap["supervise"] = {});
+        window.featureMap["supervise"][item.attributes.SMID] = {
+          name:
+            item.attributes.SHORT_NAME ||
+            item.attributes.NAME ||
+            item.attributes.MC ||
+            item.attributes.JC,
+          attributes: item.attributes,
+          geometry: item.geometry,
+          type: "supervise",
+        };
+
         const position = Cesium.Cartesian3.fromDegrees(
           item.geometry.x,
           item.geometry.y,
@@ -273,15 +280,15 @@ export default {
       cursor: pointer;
 
       img {
-        width: 6.88vh;
-        height: 6.88vh;
+        width: 8.26vh;
+        height: 8.26vh;
       }
 
       span {
         font-family: PingFang;
-        font-size: 1.25vh;
+        font-size: 1.5vh;
         color: #c3c3c3;
-        text-shadow: 0vh 0vh 0.13vh rgba(0, 0, 0, 0.4);
+        text-shadow: 0vh 0vh 0.16vh rgba(0, 0, 0, 0.4);
         margin-top: 0.88vh;
 
         &.active {

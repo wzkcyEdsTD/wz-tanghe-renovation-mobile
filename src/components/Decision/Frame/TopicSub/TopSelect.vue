@@ -73,18 +73,18 @@ export default {
   }
 
   .el-input {
-    width: 9.94vh;
+    width: 11.92vh;
 
     /deep/ input {
       position: relative;
-      height: 2.56vh;
-      line-height: 2.56vh;
+      height: 3.07vh;
+      line-height: 3.07vh;
       background-color: #0a121d;
       border-radius: 0.5vh;
-      border: solid 0.03vh #40a1c5;
+      border: solid 0.07vh #40a1c5;
       box-sizing: border-box;
       font-family: PingFang;
-      font-size: 0.89vh;
+      font-size: 1.07vh;
       color: #fff;
       padding: 0.44vh 1vh 0.38vh;
       cursor: pointer;
@@ -96,8 +96,8 @@ export default {
 
     .input-suffix {
       position: absolute;
-      width: 0.94vh;
-      height: 0.63vh;
+      width: 1.12vh;
+      height: 0.75vh;
       top: 50%;
       right: 1vh;
       transform: translateY(-50%);
@@ -115,14 +115,14 @@ export default {
 </style>
 <style lang="less">
 .select-pop {
-  width: 9.94vh;
+  width: 11.92vh;
   min-width: 0;
   box-sizing: border-box;
   background-color: #0a121d;
   border-radius: 0.5vh;
-  border: solid 0.06vh #40a1c5;
+  border: solid 0.07vh #40a1c5;
   font-family: PingFang;
-  font-size: 0.89vh;
+  font-size: 1.07vh;
   color: #fff;
   margin-top: 0.13vh !important;
   padding: 0.69vh 0.63vh;
@@ -133,8 +133,9 @@ export default {
     > span {
       display: block;
       width: 100%;
-      height: 1.75vh;
-      line-height: 1.75vh;
+      height: 2.1vh;
+      line-height: 2.1vh;
+      box-sizing: border-box;
       padding: 0 0.38vh;
     }
 
@@ -146,7 +147,7 @@ export default {
     }
 
     &:not(:last-child) {
-      margin-bottom: 0.63vh;
+      margin-bottom: 0.75vh;
     }
   }
 }

@@ -270,23 +270,23 @@ export default {
       this.pieChart &&
         this.pieChart.setOption({
           legend: {
-            itemWidth: vhToPx(1.44),
-            itemHeight: vhToPx(1.13),
-            top: vhToPx(1.21),
-            itemGap: vhToPx(1.63),
+            itemWidth: vhToPx(1.72),
+            itemHeight: vhToPx(1.35),
+            top: vhToPx(1.45),
+            itemGap: vhToPx(1.96),
             textStyle: {
-              fontSize: vhToPx(1.25),
+              fontSize: vhToPx(1.5),
             },
           },
           series: [
             {
               type: "pie",
-              radius: vhToPx(5.8),
+              radius: vhToPx(6.96),
               label: {
-                fontSize: vhToPx(1.31),
+                fontSize: vhToPx(1.57),
               },
-              left: vhToPx(9.88),
-              right: vhToPx(3.81),
+              left: vhToPx(11.85),
+              right: vhToPx(4.57),
             },
           ],
         });
@@ -493,20 +493,20 @@ export default {
             selectedMode: false,
             orient: "vertical",
             icon: "roundRect",
-            itemWidth: vhToPx(1.44),
-            itemHeight: vhToPx(1.13),
+            itemWidth: vhToPx(1.72),
+            itemHeight: vhToPx(1.35),
             left: 0,
-            top: vhToPx(1.21),
-            itemGap: vhToPx(1.63),
+            top: vhToPx(1.45),
+            itemGap: vhToPx(1.96),
             textStyle: {
               color: "#fff",
-              fontSize: vhToPx(1.25),
+              fontSize: vhToPx(1.5),
             },
           },
           series: [
             {
               type: "pie",
-              radius: vhToPx(5.8),
+              radius: vhToPx(6.96),
               center: ["50%", "50%"],
               animation: false,
               label: {
@@ -514,10 +514,10 @@ export default {
                 position: "outer",
                 alignTo: "none",
                 fontFfamily: "PingFang",
-                fontSize: vhToPx(1.31),
+                fontSize: vhToPx(1.57),
               },
-              left: vhToPx(9.88),
-              right: vhToPx(3.81),
+              left: vhToPx(11.85),
+              right: vhToPx(4.57),
               data: data,
             },
           ],
@@ -548,8 +548,8 @@ export default {
     top: 9.81vh;
     left: 50%;
     transform: translateX(-50%);
-    width: 63.5vh;
-    height: 3.5vh;
+    width: 76.2vh;
+    height: 4.2vh;
     .bg-image("~@/assets/images/spacetools/spacetool-bg");
     z-index: 99;
 
@@ -557,17 +557,17 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 38.75vh;
+      width: 46.5vh;
       height: 100%;
       margin: auto;
-      padding: 0 5vh;
+      padding: 0 6vh;
       box-sizing: border-box;
 
       .tool-item {
-        height: 2.31vh;
+        height: 2.77vh;
+        line-height: 2.77vh;
         font-family: PingFang;
-        font-size: 1.63vh;
-        line-height: 2.31vh;
+        font-size: 2vh;
         color: #fff;
         opacity: 0.6;
         cursor: pointer;
@@ -583,8 +583,8 @@ export default {
             top: 50%;
             transform: translateY(-50%);
             left: -1.5vh;
-            width: 0.63vh;
-            height: 0.63vh;
+            width: 0.75vh;
+            height: 0.75vh;
             border-radius: 50%;
             background-color: #69fee5;
           }
@@ -597,15 +597,15 @@ export default {
       justify-content: space-between;
       align-items: center;
       position: fixed;
-      top: 4vh;
+      top: 5vh;
       left: 50%;
       transform: translateX(-50%);
-      width: 36.63vh;
-      height: 3vh;
+      width: 43.96vh;
+      height: 3.6vh;
       box-sizing: border-box;
       border-radius: 1.88vh;
       background-color: #0454c1;
-      padding: 0 5.19vh;
+      padding: 0 6.22vh;
       opacity: 0.8;
       z-index: 99;
 
@@ -613,15 +613,15 @@ export default {
         display: flex;
         align-items: center;
         font-family: PingFang;
-        font-size: 1.5vh;
+        font-size: 1.8vh;
         color: #fff;
         opacity: 0.6;
         cursor: pointer;
 
         > img {
-          width: 1.25vh;
-          height: 1.25vh;
-          margin-right: 0.5vh;
+          width: 1.5vh;
+          height: 1.5vh;
+          margin-right: 0.6vh;
         }
 
         &.active {
@@ -636,15 +636,15 @@ export default {
       justify-content: space-between;
       align-items: center;
       position: fixed;
-      top: 4vh;
+      top: 5vh;
       left: 50%;
       transform: translateX(-50%);
-      width: 36.63vh;
-      height: 3vh;
+      width: 43.96vh;
+      height: 3.6vh;
       box-sizing: border-box;
       border-radius: 1.88vh;
       background-color: #0454c1;
-      padding: 0 7.19vh;
+      padding: 0 8.63vh;
       opacity: 0.8;
       z-index: 99;
 
@@ -652,15 +652,15 @@ export default {
         display: flex;
         align-items: center;
         font-family: PingFang;
-        font-size: 1.5vh;
+        font-size: 1.8vh;
         color: #fff;
         opacity: 0.6;
         cursor: pointer;
 
         > img {
-          width: 1.25vh;
-          height: 1.25vh;
-          margin-right: 0.5vh;
+          width: 1.5vh;
+          height: 1.5vh;
+          margin-right: 0.6vh;
         }
 
         &.active {
@@ -673,11 +673,11 @@ export default {
 
   .space-result {
     position: fixed;
-    bottom: 14.81vh;
+    bottom: 17.77vh;
     left: 50%;
     transform: translateX(-50%);
-    width: 67.19vh;
-    height: 29.87vh;
+    width: 80.63vh;
+    height: 35.84vh;
 
     &::after {
       content: "";
@@ -690,11 +690,11 @@ export default {
     }
 
     .space-result-close {
-      width: 1.44vh;
-      height: 1.5vh;
+      width: 1.73vh;
+      height: 1.8vh;
       position: absolute;
-      top: 1.31vh;
-      right: -0.69vh;
+      top: 1.57vh;
+      right: -0.83vh;
       .bg-image("~@/assets/images/detail/space-result-close");
       cursor: pointer;
       z-index: 99;
@@ -703,19 +703,19 @@ export default {
     .space-result-title {
       position: absolute;
       top: 0;
-      left: 2.31vh;
-      height: 3.31vh;
+      left: 2.77vh;
+      height: 3.97vh;
       font-family: YouSheBiaoTiHei;
-      font-size: 2.56vh;
+      font-size: 3.07vh;
       color: #fff;
 
       &::before {
         content: "";
         position: absolute;
-        left: -1.25vh;
-        top: 0.44vh;
-        width: 2vh;
-        height: 3.25vh;
+        left: -1.5vh;
+        top: 0.53vh;
+        width: 2.4vh;
+        height: 3.9vh;
         .bg-image("~@/assets/images/detail/title-before");
         z-index: -1;
       }
@@ -726,14 +726,14 @@ export default {
       left: 0;
       bottom: 0;
       width: 100%;
-      height: 25.63vh;
+      height: 30.76vh;
       background-color: rgba(0, 0, 0, 0.8);
 
       .space-result-left {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 31.38vh;
+        width: 50%;
         height: 100%;
         box-sizing: border-box;
         padding: 3.56vh 0 3.81vh 3.56vh;
@@ -747,14 +747,14 @@ export default {
           .label-bg {
             display: flex;
             align-items: center;
-            width: 4.31vh;
-            height: 7.31vh;
+            width: 5.17vh;
+            height: 8.77vh;
             background-color: #007281;
 
             .label {
               font-family: YouSheBiaoTiHei;
-              font-size: 2.75vh;
-              line-height: 2.75vh;
+              font-size: 3.3vh;
+              line-height: 3.3vh;
             }
           }
 
@@ -770,18 +770,18 @@ export default {
 
               .number {
                 display: block;
-                min-width: 10.13vh;
+                min-width: 13.5vh;
                 text-align: left;
-                height: 4.63vh;
-                line-height: 4.63vh;
+                height: 5.55vh;
+                line-height: 5.55vh;
                 font-family: YouSheBiaoTiHei;
-                font-size: 3.56vh;
+                font-size: 4.27vh;
                 color: #00e2ff;
               }
 
               .unit {
                 font-family: PingFang;
-                font-size: 1.69vh;
+                font-size: 2.02vh;
               }
             }
           }
@@ -799,29 +799,31 @@ export default {
       }
 
       .space-result-right {
+        display: flex;
+        flex-direction: column;
         position: absolute;
-        top: -3.81vh;
-        right: -0.75vh;
-        width: 36.56vh;
-        height: 27.75vh;
+        top: -4.57vh;
+        right: -0.9vh;
+        width: 43.87vh;
+        height: 33.3vh;
 
         .space-result-tab-pane {
           display: flex;
           justify-content: space-between;
           align-items: center;
           position: relative;
-          width: 12.5vh;
-          height: 3vh;
+          width: 15vh;
+          height: 3.6vh;
           box-sizing: border-box;
           .bg-image("~@/assets/images/detail/space-tab-pane-bg");
-          padding: 0.31vh 2.88vh 0.31vh 1.69vh;
+          padding: 0.31vh 3.45vh 0.31vh 2.02vh;
 
           > span {
             display: block;
-            height: 2.31vh;
-            line-height: 2.31vh;
+            height: 2.77vh;
+            line-height: 2.77vh;
             font-family: PingFang;
-            font-size: 1.25vh;
+            font-size: 1.5vh;
             color: #fff;
             z-index: 4999;
             cursor: pointer;
@@ -834,8 +836,8 @@ export default {
               top: 50%;
               left: 0.69vh;
               transform: translateY(-50%);
-              width: 5.38vh;
-              height: 2.31vh;
+              width: 6.45vh;
+              height: 2.77vh;
               .bg-image("~@/assets/images/detail/区县@2x");
               z-index: -1;
             }
@@ -848,8 +850,8 @@ export default {
               top: 50%;
               right: 1.06vh;
               transform: translateY(-50%);
-              width: 6.38vh;
-              height: 2.31vh;
+              width: 7.65vh;
+              height: 2.77vh;
               .bg-image("~@/assets/images/detail/街道@2x");
               z-index: -1;
             }
@@ -865,10 +867,10 @@ export default {
         }
 
         .space-result-tab {
+          flex: 1;
           display: flex;
           flex-direction: column;
           width: 100%;
-          height: 24.75vh;
           background-color: #001346;
           box-sizing: border-box;
           border: solid 0.06vh #00414a;
@@ -882,12 +884,12 @@ export default {
 
             .label {
               display: block;
-              height: 2.19vh;
-              line-height: 2.19vh;
+              height: 2.63vh;
+              line-height: 2.63vh;
               font-family: YouSheBiaoTiHei;
-              font-size: 1.69vh;
+              font-size: 2.03vh;
               color: #fff;
-              border-bottom: solid 0.06vh #00b1ff;
+              border-bottom: solid 0.07vh #00b1ff;
             }
 
             .space-result-select {
@@ -895,14 +897,14 @@ export default {
                 position: relative;
                 display: flex;
                 align-items: center;
-                width: 4.8vh;
-                height: 2vh;
-                line-height: 1.88vh;
+                width: 5.76vh;
+                height: 2.4vh;
+                line-height: 2.25vh;
                 background-color: #000514;
                 border-radius: 0.06vh;
                 box-sizing: border-box;
                 font-family: PingFang;
-                font-size: 1vh;
+                font-size: 1.2vh;
                 color: #fff;
                 outline: none;
                 padding-left: 0.5vh;
@@ -910,14 +912,12 @@ export default {
 
                 span {
                   display: block;
-                  height: 1.38vh;
-                  line-height: 1.38vh;
                 }
 
                 .input-suffix {
                   position: absolute;
-                  width: 0.7vh;
-                  height: 0.5vh;
+                  width: 0.84vh;
+                  height: 0.6vh;
                   top: 50%;
                   right: 0.56vh;
                   transform: translateY(-50%);
@@ -937,7 +937,7 @@ export default {
 
           .chart {
             flex: 1;
-            padding-top: 1.44vh;
+            padding-top: 1.73vh;
 
             #pieChart {
               width: 100%;
@@ -952,17 +952,17 @@ export default {
 </style>
 <style lang="less">
 .space-result-select-pop {
-  width: 4.8vh;
+  width: 5.76vh;
   min-width: 0;
   box-sizing: border-box;
   background-color: #000514;
-  border: solid 0.06vh #00323c;
+  border: solid 0.07vh #00323c;
   border: none;
   font-family: PingFang;
-  font-size: 1vh;
+  font-size: 1.2vh;
   color: #fff;
   outline: none;
-  margin-top: 0.13vh !important;
+  margin-top: 0.16vh !important;
   padding: 0.44vh 0.31vh;
   z-index: 3999 !important;
 
@@ -972,9 +972,10 @@ export default {
     > span {
       display: block;
       width: 100%;
-      height: 1.85vh;
-      line-height: 1.85vh;
-      padding: 0 0.38vh;
+      height: 2.22vh;
+      line-height: 2.22vh;
+      box-sizing: border-box;
+      padding: 0 0.45vh;
     }
 
     &.selected,
@@ -984,7 +985,7 @@ export default {
     }
 
     &:not(:last-child) {
-      margin-bottom: 0.38vh;
+      margin-bottom: 0.45vh;
     }
   }
 }

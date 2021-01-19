@@ -36,7 +36,7 @@ export default {
   .toplab {
     display: inline-block;
     font-family: YouSheBiaoTiHei;
-    font-size: 4.94vh;
+    font-size: 5.92vh;
     font-weight: 400;
     height: 6.44vh;
     line-height: 6.44vh;
@@ -52,7 +52,7 @@ export default {
       height: 4.06vh;
       line-height: 3.94vh;
       font-family: YouSheBiaoTiHei;
-      font-size: 3.13vh;
+      font-size: 3.76vh;
       color: #fff;
       text-shadow: 0vh 0.75vh 0.75vh #0036a2;
       opacity: 0.6;
@@ -81,7 +81,7 @@ export default {
     position: absolute;
 
     .logo {
-      height: 3vh;
+      height: 3.6vh;
     }
   }
 

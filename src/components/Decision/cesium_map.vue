@@ -178,26 +178,30 @@ export default {
         if (typeof pick.id == "string") {
           const [_TYPE_, _SMID_, _NODEID_] = pick.id.split("@");
 
-          if (
-            ~["label", "billboard"].indexOf(_TYPE_) &&
-            _NODEID_ != "supervise"
-          ) {
-            const feature = window.featureMap[_NODEID_][_SMID_];
-            const geometry = feature.geometry;
+          if (~["label", "billboard"].indexOf(_TYPE_)) {
+            if (_NODEID_ != "supervise") {
+              const feature = window.featureMap[_NODEID_][_SMID_];
+              const geometry = feature.geometry;
 
-            // 定位图标
-            addLocationIcon(geometry, _NODEID_);
+              // 定位图标
+              addLocationIcon(geometry, _NODEID_);
 
-            this.$refs.Search.results = [];
-            this.$refs.Search.resultShow = false;
-            if (~_NODEID_.indexOf("项目") || _NODEID_ == "绿道断点") {
-              this.$refs.ProjectDetailPopup.isSearch = false;
-              this.$refs.ProjectDetailPopup.getForceEntity({ ...feature });
-              this.$refs.CommonDetailPopup.closeInfo();
+              this.$refs.Search.results = [];
+              this.$refs.Search.resultShow = false;
+              if (~_NODEID_.indexOf("项目") || _NODEID_ == "绿道断点") {
+                this.$refs.ProjectDetailPopup.isSearch = false;
+                this.$refs.ProjectDetailPopup.getForceEntity({ ...feature });
+                this.$refs.CommonDetailPopup.closeInfo();
+              } else {
+                this.$refs.CommonDetailPopup.isSearch = false;
+                this.$refs.CommonDetailPopup.getForceEntity({ ...feature });
+                this.$refs.ProjectDetailPopup.closeInfo();
+              }
             } else {
-              this.$refs.CommonDetailPopup.isSearch = false;
-              this.$refs.CommonDetailPopup.getForceEntity({ ...feature });
-              this.$refs.ProjectDetailPopup.closeInfo();
+              const feature = window.featureMap[_NODEID_][_SMID_];
+              this.$bus.$emit("set-supervise", { feature });
+
+              // console.log(feature);
             }
           }
         }

@@ -4,7 +4,7 @@
       <div
         class="detail-popup project-detail-popup"
         v-if="infoShow"
-        :style="{ top: (isSearch ? 16.81 : 13.81) + 'vh' }"
+        :style="{ top: (isSearch ? 18.01 : 14.51) + 'vh' }"
       >
         <i class="popup-close" @click="closeInfo" />
         <div class="info-container">
@@ -297,7 +297,7 @@
                           <el-rate
                             class="comment-rate"
                             disabled
-                            v-model="value1"
+                            v-model="item.star"
                           ></el-rate>
                           <span class="time">{{ item.createTime }}</span>
                         </div>
@@ -330,20 +330,6 @@
                       <span>总体评分</span>
                       <el-rate v-model="inputStar"></el-rate>
                     </div>
-                  </div>
-                </div>
-                <div class="items-rate">
-                  <div class="items-rate-row">
-                    <span class="rate-type">投资完成率</span>
-                    <el-rate v-model="rateValue1"></el-rate>
-                  </div>
-                  <div class="items-rate-row">
-                    <span class="rate-type">进度评分</span>
-                    <el-rate v-model="rateValue2"></el-rate>
-                  </div>
-                  <div class="items-rate-row">
-                    <span class="rate-type">质量评分</span>
-                    <el-rate v-model="rateValue3"></el-rate>
                   </div>
                 </div>
                 <div class="comment-box">
@@ -441,11 +427,7 @@ export default {
 
       dorate: false,
       commentList: [],
-      value1: 4,
       inputStar: null,
-      rateValue1: null,
-      rateValue2: null,
-      rateValue3: null,
       textarea: "",
     };
   },
@@ -633,7 +615,7 @@ export default {
       const { data } = await addComment({
         username: "test",
         name: "测试",
-        commend: this.inputComment,
+        commend: this.textarea,
         star: this.inputStar,
         resourceId: this.detailData.id,
       });

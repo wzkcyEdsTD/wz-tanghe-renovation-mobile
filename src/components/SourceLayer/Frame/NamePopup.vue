@@ -18,6 +18,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { vhToPx } from "@/common/js/util";
 export default {
   data() {
     return {
@@ -75,10 +76,7 @@ export default {
 
     // 文字偏移
     offsetText({ x, y }) {
-      const height = window.innerHeight;
-      const offsetWidth = (100 / height) * x;
-      const offsetHeight = (100 / height) * (y + 46);
-      return `translate(${offsetWidth}vh, ${offsetHeight + 3}vh)`;
+      return `translate(${x}px, ${y + 34 + vhToPx(2.5)}px)`;
     },
   },
 };

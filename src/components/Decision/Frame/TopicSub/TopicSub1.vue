@@ -316,7 +316,6 @@ export default {
 
       .select-tool {
         width: 100%;
-        height: 2.56vh;
         box-sizing: border-box;
         margin: 1.56vh 0 1.13vh;
         padding: 0 0.68vh 0 1.13vh;

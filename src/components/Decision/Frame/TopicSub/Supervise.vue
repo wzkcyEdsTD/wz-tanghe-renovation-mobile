@@ -8,7 +8,7 @@
           <img class="item-thumb" src="@/assets/images/maptools/暂无图片.png" />
         </div>
         <div class="right">
-          <span class="name">高联大厦</span>
+          <span class="name">{{ detailData.name }}</span>
           <div class="rate-box">
             <span>总体评分</span>
             <el-rate v-model="value"></el-rate>
@@ -22,26 +22,31 @@
         </div>
         <div class="comment-body">
           <div class="comment-list">
-            <div class="comment-item" v-for="k in 5" :key="k">
+            <div
+              class="comment-item"
+              v-for="item in commentList"
+              :key="item.id"
+            >
               <div class="comment-header">
                 <div class="left">
                   <img class="avatar" src="@/assets/images/detail/avatar.png" />
                 </div>
                 <div class="right">
-                  <span class="name">XXX</span>
+                  <span class="name">{{ item.name }}</span>
                   <div class="right-rate">
                     <el-rate
                       class="comment-rate"
                       disabled
-                      v-model="rateValue"
+                      v-model="item.star"
                     ></el-rate>
-                    <span class="time">2020.12.20 14:40:00</span>
+                    <span class="time">{{ item.createTime }}</span>
                   </div>
                 </div>
               </div>
-              <div class="comment-content">
-                评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评论评
-              </div>
+              <div class="comment-content">{{ item.commend }}</div>
+            </div>
+            <div class="comment-item" v-if="!commentList.length">
+              <span class="no-data">暂无评论</span>
             </div>
           </div>
         </div>
@@ -51,12 +56,33 @@
 </template>
 
 <script>
+import { resourceComment } from "@/api/tangheAPI";
 export default {
   data() {
     return {
-      value: 4,
-      rateValue: 4,
+      value: null,
+      detailData: {},
+      commentList: [],
     };
+  },
+  methods: {
+    async fixData(res) {
+      this.detailData = res;
+      this.value = res.attributes.STAR || 0;
+      await this.getCommentList();
+    },
+
+    // 获取评论
+    async getCommentList() {
+      this.commentList = [];
+      const { data } = await resourceComment({
+        resourceId: this.detailData.attributes.ID,
+      });
+
+      if (data.code === 200) {
+        this.commentList = data.result.records;
+      }
+    },
   },
 };
 </script>
@@ -65,12 +91,12 @@ export default {
 .supervise {
   display: flex;
   flex-direction: column;
-  width: 42.79vh;
-  height: 31.97vh;
+  width: 51.34vh;
+  height: 38.36vh;
   position: fixed;
-  top: 30%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   color: #fff;
   z-index: 2999;
 
@@ -80,7 +106,7 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - 0.58vh);
+    height: calc(100% - 0.7vh);
     .bg-image("~@/assets/images/map-ico/map-rate-bg");
     z-index: -1;
   }
@@ -88,21 +114,21 @@ export default {
   .supervise-title {
     display: block;
     text-align: left;
-    height: 2.32vh;
-    line-height: 2.32vh;
+    height: 2.78vh;
+    line-height: 2.78vh;
     font-family: YouSheBiaoTiHei;
-    font-size: 1.78vh;
+    font-size: 2.13vh;
     font-weight: 600;
     text-shadow: 0vh 0.13vh 0.27vh rgba(0, 0, 0, 0.8);
-    padding-left: 1.1vh;
+    padding-left: 1.32vh;
   }
 
   .supervise-close {
-    width: 1.34vh;
-    height: 1.34vh;
+    width: 1.6vh;
+    height: 1.6vh;
     position: absolute;
-    top: 0.53vh;
-    right: 0.04vh;
+    top: 0.63vh;
+    right: 0.05vh;
     .bg-image("~@/assets/images/detail/space-result-close");
     cursor: pointer;
     z-index: 99;
@@ -112,17 +138,17 @@ export default {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 2.09vh 1.42vh 1.16vh;
+    padding: 2.51vh 1.7vh 1.39vh;
 
     .rate-box-header {
       display: flex;
       align-items: center;
-      padding-bottom: 1.2vh;
-      border-bottom: solid 0.04vh #4a4949;
+      padding-bottom: 1.44vh;
+      border-bottom: solid 0.05vh #4a4949;
 
       .left {
-        width: 8.55vh;
-        height: 5.39vh;
+        width: 10.26vh;
+        height: 6.47vh;
 
         .item-thumb {
           width: 100%;
@@ -133,18 +159,18 @@ export default {
 
       .right {
         flex: 1;
-        padding-left: 0.85vh;
+        padding-left: 1.02vh;
         font-family: PingFang;
 
         .name {
           display: block;
           width: 100%;
-          height: 2.14vh;
-          line-height: 2.14vh;
+          height: 2.57vh;
+          line-height: 2.57vh;
           text-align: left;
           font-weight: 600;
-          font-size: 1.51vh;
-          margin-bottom: 0.62vh;
+          font-size: 1.81vh;
+          margin-bottom: 0.74vh;
         }
 
         .rate-box {
@@ -152,14 +178,19 @@ export default {
           align-items: center;
 
           > span {
-            font-size: 1.34vh;
+            font-size: 1.61vh;
             color: #fff;
-            padding-right: 2.27vh;
+            padding-right: 2.72vh;
           }
 
-          > div {
+          .el-rate {
             display: flex;
             align-items: center;
+
+            /deep/ .el-rate__icon {
+              font-size: 1.29vh !important;
+              margin-right: 0.62vh !important;
+            }
           }
         }
       }
@@ -169,24 +200,24 @@ export default {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding-top: 1.02vh;
+      padding-top: 1.22vh;
 
       .comment-title {
         display: flex;
         align-items: center;
         text-align: left;
         font-family: PingFang;
-        font-size: 1.34vh;
-        margin-bottom: 0.62vh;
+        font-size: 1.61vh;
+        margin-bottom: 0.74vh;
 
         span {
           &:first-child {
             display: block;
-            width: 0.45vh;
-            height: 0.4vh;
+            width: 0.54vh;
+            height: 0.48vh;
             background-color: #21b2ff;
             border-radius: 50%;
-            margin-right: 0.45vh;
+            margin-right: 0.54vh;
           }
         }
       }
@@ -198,7 +229,7 @@ export default {
         .comment-list {
           height: 100%;
           overflow-y: auto;
-          padding: 0 1.56vh;
+          padding: 0 1.87vh;
           background-color: rgba(0, 33, 54, 0.8);
 
           .comment-item {
@@ -213,30 +244,34 @@ export default {
             .comment-header {
               display: flex;
               align-items: center;
-              margin-bottom: 0.31vh;
+              margin-bottom: 0.43vh;
 
               .left {
-                width: 2.94vh;
-                height: 2.94vh;
+                width: 3.53vh;
+                height: 3.53vh;
 
                 .avatar {
                   width: 100%;
-                  height: 1005;
+                  height: 100%;
                 }
               }
 
               .right {
                 flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 3.53vh;
                 padding-left: 0.89vh;
                 font-family: PingFang;
 
                 .name {
                   display: block;
                   width: 100%;
-                  height: 1.87vh;
-                  line-height: 1.87vh;
+                  height: 1.8vh;
+                  line-height: 1.8vh;
                   text-align: left;
-                  font-size: 1.34vh;
+                  font-size: 1.31vh;
                 }
 
                 .right-rate {
@@ -244,9 +279,21 @@ export default {
                   display: flex;
                   flex-direction: row;
                   justify-content: space-between;
+                  align-items: center;
+
+                  .comment-rate {
+                    height: unset;
+                    /deep/ .el-rate__icon {
+                      font-size: 0.67vh;
+                      margin-right: 0.22vh;
+                    }
+                  }
 
                   .time {
-                    font-size: 0.71vh;
+                    display: block;
+                    height: 1.17vh;
+                    line-height: 1.17vh;
+                    font-size: 0.85vh;
                   }
                 }
               }
@@ -255,8 +302,17 @@ export default {
             .comment-content {
               text-align: justify;
               font-family: PingFang;
-              font-size: 1.07vh;
+              font-size: 1.28vh;
               color: #fff;
+            }
+
+            .no-data {
+              display: block;
+              height: 3vh;
+              line-height: 3vh;
+              text-align: center;
+              font-family: YouSheBiaoTiHei;
+              font-size: 1.5vh;
             }
           }
         }

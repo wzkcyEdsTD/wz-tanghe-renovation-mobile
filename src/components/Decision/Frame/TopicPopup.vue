@@ -154,12 +154,12 @@ export default {
   position: fixed;
   top: 9.81vh;
   bottom: 9.06vh;
-  right: 2.88vh;
+  right: 3.45vh;
   z-index: 1999;
 
   .popup-open {
-    width: 3.5vh;
-    height: 3.5vh;
+    width: 4.2vh;
+    height:  4.2vh;
     background-image: url("~@/assets/images/detail/topic-popup-open.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -227,8 +227,8 @@ export default {
       position: relative;
 
       .popup-close {
-        width: 1.38vh;
-        height: 1.38vh;
+        width: 1.65vh;
+        height: 1.65vh;
         position: absolute;
         top: 1.25vh;
         right: 1.25vh;

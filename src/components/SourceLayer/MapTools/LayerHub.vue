@@ -23,7 +23,7 @@
       <el-popover
         placement="bottom-end"
         trigger="click"
-        popper-class="layer-popper"
+        popper-class="layer-popper-sourcelayer"
       >
         <div class="panel">
           <span class="panel-title">塘河沿线</span>
@@ -191,38 +191,38 @@ export default {
   align-items: center;
   position: fixed;
   top: 9.81vh;
-  right: 3.5vh;
+  right: 5vh;
   z-index: 999;
 
   .map-list {
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 3.5vh;
+    height: 4.2vh;
     background: #fff;
-    border: 1px solid #255cdb;
-    border-radius: 0.8vh;
+    border: solid 0.06vh #0f4dd8;
+    border-radius: 0.96vh;
 
     .map-item {
       display: flex;
       align-items: center;
       position: relative;
-      font-size: 1.5vh;
+      font-size: 1.8vh;
       box-sizing: border-box;
-      padding: 0 1.25vh;
+      padding: 0 1.5vh;
       cursor: pointer;
 
       img {
-        width: 1.5vh;
-        height: 1.5vh;
+        width: 1.8vh;
+        height: 1.8vh;
       }
 
       span {
         display: inline-block;
         font-family: PingFang;
-        font-size: 1.5vh;
+        font-size: 1.8vh;
         color: #666;
-        margin-left: 0.5vh;
+        margin-left: 0.6vh;
 
         &.active {
           font-weight: 600;
@@ -230,19 +230,15 @@ export default {
         }
       }
 
-      &::after {
+      &:not(:last-child):after {
         content: "";
-        width: 0.12vh;
-        height: 1.5vh;
+        width: 0.14vh;
+        height: 1.8vh;
         position: absolute;
         top: 50%;
         right: 0;
         transform: translateY(-50%);
         background-color: #666;
-      }
-
-      &:last-child::after {
-        width: 0;
       }
     }
   }
@@ -252,27 +248,27 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 3.5vh;
-      height: 3.5vh;
+      width: 4.2vh;
+      height: 4.2vh;
       background-color: rgba(255, 255, 255, 0.9);
       box-shadow: 0vh 0.13vh 0.25vh 0vh rgba(10, 73, 120, 0.4);
       border: solid 0.06vh #0f4dd8;
       border-radius: 50%;
-      margin-left: 1vh;
+      margin-left: 1.2vh;
       cursor: pointer;
 
       .catalog-icon-inner {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 3vh;
-        height: 3vh;
+        width: 3.6vh;
+        height: 3.6vh;
         background-color: rgba(15, 77, 216, 0.9);
         border-radius: 50%;
 
         img {
-          width: 1.63vh;
-          height: 1.38vh;
+          width: 1.95vh;
+          height: 1.65vh;
         }
       }
     }
@@ -281,33 +277,33 @@ export default {
 </style>
 <style lang="less">
 // 弹出框
-.layer-popper {
-  width: 14.69vh;
-  min-width: 0;
-  border-radius: 0.8vh;
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0vh 0.13vh 0.25vh 0vh rgba(10, 73, 120, 0.4);
-  border: solid 0.06vh #0f4dd8;
-  box-sizing: border-box;
-  padding: 1.38vh 1.63vh 1.75vh;
+.layer-popper-sourcelayer {
+  width: 17vh !important;
+  min-width: 0 !important;
+  border-radius: 0.8vh !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0vh 0.13vh 0.25vh 0vh rgba(10, 73, 120, 0.4) !important;
+  border: solid 0.06vh #0f4dd8 !important;
+  box-sizing: border-box !important;
+  padding: 1.38vh 1.63vh 1.75vh !important;
 
   .panel {
     .panel-title {
       display: block;
-      height: 1.75vh;
-      line-height: 1.75vh;
+      height: 2.1vh;
+      line-height: 2.1vh;
       font-family: PingFang;
       font-weight: 600;
-      font-size: 1.25vh;
+      font-size: 1.5vh;
       color: #000;
-      margin-bottom: 0.63vh;
+      margin-bottom: 0.75vh;
     }
 
     .panel-body {
       .line {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 1.25vh;
+        margin-bottom: 1.5vh;
 
         &:last-child {
           margin-bottom: 0;
@@ -319,32 +315,31 @@ export default {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 5vh;
-        height: 6.75vh;
+        width: 6vh;
+        height: 8.1vh;
         background-color: transparent;
-        border-radius: 0.38vh;
-        border: dashed 0.06vh #255dda;
-        border-radius: 0.38vh;
+        border: dashed 0.07vh #255dda;
+        border-radius: 0.45vh;
         cursor: pointer;
 
         img {
-          width: 3.5vh;
-          height: 3.5vh;
-          margin-bottom: 0.63vh;
+          width: 4.2vh;
+          height: 4.2vh;
+          margin-bottom: 0.75vh;
         }
 
         .card-label {
           display: block;
-          height: 1.38vh;
-          line-height: 1.38vh;
+          height: 1.65vh;
+          line-height: 1.65vh;
           font-family: PingFang;
-          font-size: 1vh;
+          font-size: 1.2vh;
           color: #000;
         }
 
         &.active {
           background-color: rgba(167, 238, 255, 0.8);
-          border: solid 0.13vh #255dda;
+          border: solid 0.15vh #255dda;
         }
       }
     }

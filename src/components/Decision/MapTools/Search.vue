@@ -304,12 +304,12 @@ export default {
   .search-box {
     display: flex;
     align-items: center;
-    width: 33.75vh;
-    height: 3.5vh;
+    width: 36.75vh;
+    height: 4.2vh;
     background-color: rgba(6, 16, 53, 0.9);
     box-shadow: 0vh 0.13vh 0.25vh 0vh rgba(10, 73, 120, 0.4);
-    border: solid 0.06vh #0f4dd8;
-    border-radius: 0.63vh;
+    border: solid 0.07vh #0f4dd8;
+    border-radius: 0.75vh;
     box-sizing: border-box;
     padding: 0.75vh 1vh;
 
@@ -318,8 +318,7 @@ export default {
       background: transparent;
       border: none;
       font-family: PingFang;
-      font-size: 1.5vh;
-      margin: 0.4vh 1vh 0.4vh 0;
+      font-size: 1.8vh;
       color: #fff;
       outline: none;
     }
@@ -333,31 +332,31 @@ export default {
     }
 
     img {
-      height: 1.5vh;
+      height: 1.8vh;
       cursor: pointer;
     }
 
     .btn-split {
       display: inline-block;
-      width: 0.13vh;
-      height: 1.5vh;
+      width: 0.15vh;
+      height: 1.8vh;
       background-color: #4b588e;
-      margin: 0 0.94vh;
+      margin: 0 1.12vh;
     }
   }
 
   .result {
-    width: 33.75vh;
+    width: 36.75vh;
     background-color: rgba(6, 16, 53, 0.9);
     box-shadow: 0vh 0.13vh 0.25vh 0vh rgba(10, 73, 120, 0.4);
-    border: solid 0.06vh #0f4dd8;
-    border-radius: 0.63vh;
+    border: solid 0.07vh #0f4dd8;
+    border-radius: 0.75vh;
     box-sizing: border-box;
     margin-top: 0.5vh;
     padding: 1.56vh 1.25vh 1.31vh;
 
     .result-inner {
-      max-height: 68.75vh;
+      max-height: 60vh;
       overflow-x: hidden;
       overflow-y: auto;
 
@@ -368,20 +367,20 @@ export default {
         align-items: center;
         position: relative;
         box-sizing: border-box;
-        margin-top: 1.31vh;
-        padding: 0 1.63vh 1.25vh 1.06vh;
+        margin-top: 1.57vh;
+        padding: 0 1.95vh 1.5vh 1.27vh;
         text-align: left;
         cursor: pointer;
         color: #fff;
 
         .item-thumb {
-          width: 10.5vh;
-          height: 6.69vh;
-          padding-right: 1.31vh;
+          width: 12.6vh;
+          height: 8.03vh;
+          padding-right: 1.57vh;
         }
 
         .item-body {
-          width: 16.75vh;
+          flex: 1;
           text-align: left;
 
           .line {
@@ -389,18 +388,19 @@ export default {
             align-items: center;
 
             img {
-              margin-right: 0.63vh;
-              width: 2vh;
+              margin-right: 0.75vh;
+              width: 2.4vh;
+              height: 2.4vh;
             }
 
             > span {
               flex: 1;
               display: block;
-              height: 2.5vh;
-              line-height: 2.5vh;
+              height: 3vh;
+              line-height: 3vh;
               font-family: PingFang;
               font-weight: 600;
-              font-size: 1.75vh;
+              font-size: 2.1vh;
               color: #fff;
               overflow: hidden;
               white-space: nowrap;
@@ -410,19 +410,19 @@ export default {
 
           .item-dep {
             box-sizing: border-box;
-            margin-top: 0.5vh;
-            padding: 0.1vh 0.5vh 0.3vh;
+            margin-top: 0.6vh;
+            padding: 0.12vh 0.6vh 0.36vh;
 
             span {
-              height: 1.88vh;
-              line-height: 1.88vh;
+              height: 2.25vh;
+              line-height: 2.25vh;
               font-family: PingFang;
               font-weight: 600;
-              font-size: 1.38vh;
+              font-size: 1.65vh;
               color: #fff;
 
               &:first-child {
-                margin-right: 1vh;
+                margin-right: 1.2vh;
               }
 
               &:last-child {
@@ -438,14 +438,14 @@ export default {
           left: 0;
           bottom: 0;
           width: 100%;
-          height: 0.06vh;
+          height: 0.07vh;
           background-image: linear-gradient(
             to right,
             #165fea 0%,
             #165fea 50%,
             transparent 50%
           );
-          background-size: 0.8vh 0.06vh;
+          background-size: 0.96vh 0.07vh;
           background-repeat: repeat-x;
         }
 
@@ -465,18 +465,18 @@ export default {
           display: block;
           text-align: center;
           font-family: YouSheBiaoTiHei;
-          font-size: 1.5vh;
+          font-size: 1.8vh;
           color: #fff;
         }
       }
 
       #addressResultContent {
-        margin-top: 1.31vh;
+        margin-top: 1.57vh;
 
         .result-item {
           font-family: PingFang;
           font-weight: 600;
-          font-size: 1.38vh;
+          font-size: 1.65vh;
         }
       }
     }
@@ -484,28 +484,28 @@ export default {
 
   .back {
     display: flex;
-    width: 33.75vh;
-    height: 2.5vh;
+    width: 36.75vh;
+    height: 3vh;
     background-color: rgba(6, 16, 53, 0.9);
-    border-radius: 0.5vh;
-    border: solid 0.06vh #0f4dd8;
+    border-radius: 0.6vh;
+    border: solid 0.07vh #0f4dd8;
     box-sizing: border-box;
     margin-top: 0.5vh;
-    padding: 0 1vh;
+    padding: 0 1.2vh;
     cursor: pointer;
 
     span {
       display: block;
-      height: 2.5vh;
-      line-height: 2.5vh;
+      height: 3vh;
+      line-height: 3vh;
       font-family: PingFang;
       font-weight: 600;
-      font-size: 1.13vh;
+      font-size: 1.35vh;
       color: #fff;
       opacity: 0.6;
 
       &:first-child {
-        padding-right: 0.81vh;
+        padding-right: 0.97vh;
       }
 
       &:last-child {
@@ -517,19 +517,19 @@ export default {
   }
 
   .none {
-    width: 33.75vh;
+    width: 36.75vh;
     background-color: rgba(6, 16, 53, 0.9);
     box-shadow: 0vh 0.13vh 0.25vh 0vh rgba(10, 73, 120, 0.4);
-    border: solid 0.06vh #0f4dd8;
-    border-radius: 0.63vh;
+    border: solid 0.07vh #0f4dd8;
+    border-radius: 0.6vh;
     box-sizing: border-box;
     margin-top: 0.5vh;
-    padding: 1vh;
+    padding: 1.2vh;
 
     span {
       text-align: center;
       font-family: YouSheBiaoTiHei;
-      font-size: 1.5vh;
+      font-size: 1.8vh;
       color: #fff;
     }
   }
