@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { ServiceUrl, MediaServer } from "@/config/mapConfig";
+import { ServiceUrl, MediaServer, ServerDatasource } from "@/config/mapConfig";
 import { searchIconHash } from "@/common/js/hash";
 import {
   addLocationIcon,
@@ -119,7 +119,7 @@ export default {
 
     // 多数据集查询
     multSqlQuery(word) {
-      const datasource = "172.168.3.181_thxm_manage:";
+      const datasource = ServerDatasource;
       const url = ServiceUrl.FEATUREMVT;
       const getFeatureParam = new SuperMap.REST.FilterParameter({
         attributeFilter: `NAME like '%${word}%'`,

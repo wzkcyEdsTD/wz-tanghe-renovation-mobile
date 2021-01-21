@@ -26,7 +26,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { ServiceUrl } from "@/config/mapConfig";
+import { ServiceUrl, ServerDatasource } from "@/config/mapConfig";
 import { addMapImgLayer } from "@/components/Decision/cesium_map_init";
 
 import Supervise from "@/components/Decision/Frame/TopicSub/Supervise";
@@ -254,7 +254,7 @@ export default {
               attributeFilter: "",
             }),
             toIndex: -1,
-            datasetNames: ["172.168.3.181_thxm_manage:th_spatial_project_view"],
+            datasetNames: [`${ServerDatasource}th_spatial_project_view`],
           })
         );
       });
