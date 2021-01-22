@@ -1,7 +1,7 @@
 import axios from "axios";
 // const BASEURL = "http://172.168.3.182:8080/jeecg-boot";
-const serverInstanec = axios.create();
-// serverInstanec.defaults.baseURL = BASEURL;
+const serverInstance = axios.create();
+// serverInstance.defaults.baseURL = BASEURL;
 
 /**
  * axios default
@@ -9,7 +9,7 @@ const serverInstanec = axios.create();
  * @param {*} data
  */
 const post = (url, data) => {
-  return serverInstanec.request({
+  return serverInstance.request({
     url,
     data,
     method: "post"
@@ -19,7 +19,7 @@ const post = (url, data) => {
 };
 
 const get = (url, data) => {
-  return serverInstanec.request({
+  return serverInstance.request({
     url,
     params: data,
     method: "get"
