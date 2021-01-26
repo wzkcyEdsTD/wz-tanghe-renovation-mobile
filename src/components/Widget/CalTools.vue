@@ -163,7 +163,7 @@ export default {
         );
         getFeaturesByGeometryService.processAsync(
           new SuperMap.REST.GetFeaturesByGeometryParameters({
-            datasetNames: ["172.168.3.181_thxm_manage:th_spatial_query"],
+            datasetNames: [`${ServerDatasource}th_spatial_query`],
             geometry,
             toIndex: -1,
           })

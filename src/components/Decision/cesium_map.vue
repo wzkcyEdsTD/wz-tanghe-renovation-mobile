@@ -45,7 +45,6 @@ export default {
       mapLoaded: false,
       maplayer: {
         black: undefined,
-        blackMark: undefined,
         img: undefined,
         river: undefined,
         roadnet: undefined,
@@ -107,10 +106,6 @@ export default {
 
       // 大数据风格底图
       this.maplayer.black = addMapImgLayer(ServiceUrl.BDIMG);
-
-      // 大数据风格注记
-      this.maplayer.blackMark = addMapImgLayer(ServiceUrl.BDIMGMARK);
-      this.maplayer.blackMark.alpha = 0.9;
 
       // 塘河
       this.maplayer.river = addRiverLayer();
@@ -214,12 +209,10 @@ export default {
       this.$bus.$on("decision-layer-change", ({ value }) => {
         if (value == "vector") {
           this.maplayer.black && (this.maplayer.black.show = true);
-          this.maplayer.blackMark && (this.maplayer.blackMark.show = true);
           this.maplayer.img && (this.maplayer.img.show = false);
           this.maplayer.roadnet && (this.maplayer.roadnet.show = false);
         } else if (value == "img") {
           this.maplayer.black && (this.maplayer.black.show = false);
-          this.maplayer.blackMark && (this.maplayer.blackMark.show = false);
           this.maplayer.img
             ? (this.maplayer.img.show = true)
             : (this.maplayer.img = addMapImgLayer(ServiceUrl.TDTIMG));
@@ -307,7 +300,7 @@ export default {
           new SuperMap.REST.GetFeaturesByBufferParameters({
             // 缓冲距离单位疑似十万米！！！图形单位米！！！
             bufferDistance: 0.002,
-            datasetNames: ["172.168.3.181_thxm2:wz_jd"],
+            datasetNames: ["thxm2:wz_jd"],
             geometry,
             returnContent: true,
             toIndex: -1,
