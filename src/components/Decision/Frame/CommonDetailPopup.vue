@@ -44,7 +44,7 @@
                       class="swiper-item"
                     >
                       <img
-                        :src="`${MediaServer}/images/VRPic/${item.thumbnail}`"
+                        :src="`${MediaServer}/${item.thumbnail}`"
                         @click="openOverview(i)"
                       />
                     </swiper-slide>
@@ -72,7 +72,7 @@
                       <video
                         id="video"
                         ref="video"
-                        :src="`${MediaServer}/video/${item.path}`"
+                        :src="`${MediaServer}/${item.path}`"
                         controls="controls"
                         muted
                       ></video>
@@ -95,7 +95,7 @@
                       class="swiper-item"
                     >
                       <el-image
-                        :src="`${MediaServer}/images/${item.path}`"
+                        :src="`${MediaServer}/${item.path}`"
                         @click="onPreview(currentData.photo, i)"
                       ></el-image>
                     </swiper-slide>
@@ -137,7 +137,7 @@
                 <span class="sub-title-line"></span>
               </div>
               <div class="audio-content" v-if="detailData.audioSrc">
-                <MAudio :src="`${MediaServer}/audio/${detailData.audioSrc}`" />
+                <MAudio :src="`${MediaServer}/${detailData.audioSrc}`" />
               </div>
               <div v-else class="no-tip">暂无数据</div>
             </div>
@@ -227,7 +227,7 @@ export default {
     // 开启图片查看
     onPreview(list, index) {
       this.imgList = list.map((item) => {
-        return `${MediaServer}/images/${item.path}`;
+        return `${MediaServer}/${item.path}`;
       });
       this.imgIndex = index;
       this.viewerShow = true;

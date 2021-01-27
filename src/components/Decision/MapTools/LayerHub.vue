@@ -94,6 +94,9 @@ export default {
   mounted() {
     // 深拷贝
     this.LayerHubs = deepClone(LayerList);
+    
+    this.nodeChange(this.LayerHubs[1]);
+    this.nodeChange(this.LayerHubs[3]);
   },
 
   methods: {

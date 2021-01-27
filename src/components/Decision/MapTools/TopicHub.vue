@@ -15,6 +15,17 @@
           "
         />
         <span :class="{ active: item.check }">{{ item.label }}</span>
+        <ul class="children-list" v-show="item.check && item.children">
+          <li
+            class="children-item"
+            :class="{ active: child.check }"
+            v-for="(child, index) in item.children"
+            :key="index"
+            @click.stop="childClick(child, item.children)"
+          >
+            {{ child.label }}
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -26,7 +37,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { ServiceUrl, ServerDatasource } from "@/config/mapConfig";
+import { ServiceUrl, ServerDatasource, LayerList } from "@/config/mapConfig";
 import { addMapImgLayer } from "@/components/Decision/cesium_map_init";
 
 import Supervise from "@/components/Decision/Frame/TopicSub/Supervise";
@@ -63,7 +74,26 @@ export default {
           label: "城市规划专题",
           icon: "城市规划专题",
           check: false,
-          doFun: "cityplanningHandle",
+          // doFun: "cityplanningHandle",
+          // children: ["用地现状", "用地性规划", "用地分析", "2020贯通绿道"],
+          children: [
+            {
+              label: "用地现状",
+              check: false,
+            },
+            {
+              label: "用地性规划",
+              check: false,
+            },
+            {
+              label: "用地分析",
+              check: false,
+            },
+            {
+              label: "2020贯通绿道",
+              check: false,
+            },
+          ],
         },
         {
           id: "领导督办",
@@ -91,6 +121,9 @@ export default {
         greening: undefined,
         greeningLine: undefined,
         cityplanning: undefined,
+        ydxz: undefined,
+        ydfx: undefined,
+        ld2020: undefined,
       },
 
       superviseShow: false,
@@ -123,8 +156,20 @@ export default {
       if (!("check" in item)) return;
       item.check = !item.check;
 
-      // 调用对应handle
-      item.doFun && this[item.doFun](item);
+      if (!item.children) {
+        // 调用对应handle
+        item.doFun && this[item.doFun](item);
+      } else {
+        if (item.id == '城市规划' && !item.check) {
+          this.topicLayer.cityplanning && (this.topicLayer.cityplanning.show = false);
+          this.topicLayer.ydxz && (this.topicLayer.ydxz.show = false);
+          this.topicLayer.ydfx && (this.topicLayer.ydfx.show = false);
+          this.topicLayer.ld2020 && (this.topicLayer.ld2020.show = false);
+            item.children.forEach((child) => {
+              child.check = false;
+            });
+        }
+      }
     },
 
     // 绿化覆盖
@@ -147,23 +192,30 @@ export default {
     },
 
     // 城市规划
-    cityplanningHandle({ check }) {
-      if (!check) {
-        this.topicLayer.cityplanning &&
-          (this.topicLayer.cityplanning.show = false);
-      } else {
-        this.topicLayer.cityplanning
-          ? (this.topicLayer.cityplanning.show = true)
-          : (this.topicLayer.cityplanning = addMapImgLayer(
-              ServiceUrl.CITYPLANNING
-            ));
-        this.topicLayer.cityplanning.alpha = 0.8;
-      }
-    },
+    // cityplanningHandle({ check }) {
+    //   if (!check) {
+    //     this.topicLayer.cityplanning &&
+    //       (this.topicLayer.cityplanning.show = false);
+    //   } else {
+    //     this.topicLayer.cityplanning
+    //       ? (this.topicLayer.cityplanning.show = true)
+    //       : (this.topicLayer.cityplanning = addMapImgLayer(
+    //           ServiceUrl.CITYPLANNING
+    //         ));
+    //     this.topicLayer.cityplanning.alpha = 0.8;
+    //   }
+    // },
 
     // 领导督办
     superviseHandle({ check }) {
-      !check && (this.superviseShow = false);
+      // !check && (this.superviseShow = false);
+      window.billboardMap["项目"]._billboards.map((v) => (v.show = false));
+      if (!check) {
+        this.superviseShow = false;
+        if (LayerList[1].check) {
+          window.billboardMap["项目"]._billboards.map((v) => (v.show = true));
+        }
+      }
       if (window.billboardMap["supervise"]) {
         window.billboardMap["supervise"]._billboards.map(
           (v) => (v.show = check)
@@ -192,6 +244,57 @@ export default {
     // 项目投资
     investHandle(obj) {
       this.$parent.$refs.TopicPopup.setTabList(obj.id, obj.check);
+    },
+
+    childClick(item, list) {
+      // if (!("check" in item)) return;
+      this.topicLayer.cityplanning && (this.topicLayer.cityplanning.show = false);
+      this.topicLayer.ydxz && (this.topicLayer.ydxz.show = false);
+      this.topicLayer.ydfx && (this.topicLayer.ydfx.show = false);
+      this.topicLayer.ld2020 && (this.topicLayer.ld2020.show = false);
+      if (item.check) {
+        list.forEach((item) => {
+          item.check = false;
+          if (item.label == '2020贯通绿道') {
+            this.$bus.$emit("decision-greenway-change", {
+              value: true,
+            });
+          }
+        });
+      } else {
+        list.forEach((item) => {
+          item.check = false;
+        });
+        item.check = !item.check;
+        if (item.label == "用地现状") {
+          this.topicLayer.ydxz
+            ? (this.topicLayer.ydxz.show = true)
+            : (this.topicLayer.ydxz = addMapImgLayer(ServiceUrl.YDXZ));
+          this.topicLayer.ydxz.alpha = 0.8;
+        }
+        if (item.label == "用地性规划") {
+          this.topicLayer.cityplanning
+            ? (this.topicLayer.cityplanning.show = true)
+            : (this.topicLayer.cityplanning = addMapImgLayer(
+                ServiceUrl.CITYPLANNING
+              ));
+          this.topicLayer.cityplanning.alpha = 0.8;
+        }
+        if (item.label == "用地分析") {
+          this.topicLayer.ydfx
+            ? (this.topicLayer.ydfx.show = true)
+            : (this.topicLayer.ydfx = addMapImgLayer(ServiceUrl.YDFX));
+          this.topicLayer.ydfx.alpha = 0.8;
+        }
+        if (item.label == "2020贯通绿道") {
+          this.topicLayer.ld2020
+            ? (this.topicLayer.ld2020.show = true)
+            : (this.topicLayer.ld2020 = addMapImgLayer(ServiceUrl.LD2020));
+          this.$bus.$emit("decision-greenway-change", {
+            value: false,
+          });
+        }
+      }
     },
 
     // 添加项目图层
@@ -274,6 +377,7 @@ export default {
     z-index: 99;
 
     .topic-item {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -293,6 +397,25 @@ export default {
 
         &.active {
           color: #00e2ff;
+        }
+      }
+
+      .children-list {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 105%;
+        padding: 0 7px;
+        width: 80%;
+        background-color: rgba(15, 77, 216, 0.5);
+        border-radius: 10px;
+        .children-item {
+          font-size: 1.2vh;
+          margin: 10px 0;
+          color: #fff;
+          &.active {
+            color: #00e2ff;
+          }
         }
       }
 

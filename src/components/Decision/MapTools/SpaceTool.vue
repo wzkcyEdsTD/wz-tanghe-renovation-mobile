@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <div class="space-sub-tool-draw" v-show="drawToolShow">
+      <!-- <div class="space-sub-tool-draw" v-show="drawToolShow">
         <div
           class="sub-tool-item"
           v-for="(item, index) in drawToolList"
@@ -31,7 +31,7 @@
           />
           <span>{{ item.label }}</span>
         </div>
-      </div>
+      </div> -->
 
       <div class="space-sub-tool-measure" v-show="measureToolShow">
         <div
@@ -177,10 +177,10 @@ export default {
   data() {
     return {
       toolList: [
-        {
-          id: "标绘",
-          label: "空间标绘",
-        },
+        // {
+        //   id: "标绘",
+        //   label: "空间标绘",
+        // },
         {
           id: "量算",
           label: "空间量算",
@@ -216,7 +216,7 @@ export default {
           check: false,
         },
       ],
-      drawToolShow: false,
+      // drawToolShow: false,
 
       measureToolList: [
         {
@@ -301,15 +301,16 @@ export default {
       this.currentIndex = this.currentIndex == index ? null : index;
 
       // 清空
-      this.drawToolShow = false;
+      // this.drawToolShow = false;
       this.closeMeasureTool();
       this.closeAreaAnalyze(false);
 
+      // if (this.currentIndex == 0) {
+      //   this.drawToolShow = true;
+      // }
       if (this.currentIndex == 0) {
-        this.drawToolShow = true;
-      } else if (this.currentIndex == 1) {
         this.measureToolShow = true;
-      } else if (this.currentIndex == 2) {
+      } else if (this.currentIndex == 1) {
         this.$refs.CalTools.gaugeAreaAnalyze();
       }
     },
@@ -557,10 +558,10 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 46.5vh;
+      width: 30vh;
       height: 100%;
       margin: auto;
-      padding: 0 6vh;
+      padding: 0 5vh;
       box-sizing: border-box;
 
       .tool-item {

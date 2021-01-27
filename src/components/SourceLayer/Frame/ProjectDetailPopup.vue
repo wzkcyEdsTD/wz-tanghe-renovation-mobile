@@ -14,7 +14,7 @@
           </div>
           <div class="panel-body">
             <div class="content-info">
-              <div class="jgt-wrapper" v-show="forceEntity.attributes.JGT">
+              <!-- <div class="jgt-wrapper" v-show="forceEntity.attributes.JGT">
                 <div class="swiper-buttons jgt-swiper-button-left"></div>
                 <swiper
                   ref="SwiperJgt"
@@ -33,7 +33,7 @@
                   </swiper-slide>
                 </swiper>
                 <div class="swiper-buttons jgt-swiper-button-right"></div>
-              </div>
+              </div> -->
               <div class="btn-list">
                 <button
                   v-for="(item, index) in topBtns"
@@ -44,7 +44,7 @@
                     active: currentShow == item.id,
                     disabled: !detailData.overallViews,
                   }"
-                  @click="currentShow = item.id"
+                  @click="onTypeClick(item.id)"
                 >
                   <span>{{ item.label }}</span>
                 </button>
@@ -64,7 +64,7 @@
                       class="swiper-item"
                     >
                       <img
-                        :src="`${MediaServer}/images/VRPic/${item}`"
+                        :src="`${MediaServer}/${item}`"
                         @click="openOverview(i)"
                       />
                     </swiper-slide>
@@ -92,7 +92,7 @@
                       <video
                         id="video"
                         ref="video"
-                        :src="`${MediaServer}/video/${item}`"
+                        :src="`${MediaServer}/${item}`"
                         controls="controls"
                         muted
                       ></video>
@@ -115,7 +115,7 @@
                       class="swiper-item"
                     >
                       <el-image
-                        :src="`${MediaServer}/images/${item}`"
+                        :src="`${MediaServer}/${item}`"
                         @click="onPreview(currentData.photo, i, false)"
                       ></el-image>
                     </swiper-slide>
@@ -488,12 +488,25 @@ export default {
       this.finalList.sort((a, b) => {
         const date1 = a.date.split("-").join("");
         const date2 = b.date.split("-").join("");
-        return date1 - date2;
+        return date2 - date1;
       });
 
       if (this.finalList.length) {
         this.currentData = this.finalList[this.currentIndex];
       }
+    },
+
+    onTypeClick(type) {
+      if (!this.currentData[type]) {
+        for (let i = 0; i < this.finalList.length; i++) {
+          if (this.finalList[i][type]) {
+            this.currentIndex = i;
+            this.$refs.SwiperTime.swiper.slideTo(i, 0, false);
+            break;
+          }
+        }
+      }
+      this.currentShow = type;
     },
 
     // 关闭详情
@@ -514,7 +527,7 @@ export default {
       this.imgList = list.map((item) => {
         return includeUrl
           ? item
-          : `${MediaServer}/images/${this.forceEntity.type}/${item}`;
+          : `${MediaServer}/${item}`;
       });
       this.imgIndex = index;
       this.viewerShow = true;
@@ -530,11 +543,20 @@ export default {
       this.currentData = this.finalList[val];
     },
     currentData(val) {
-      this.currentShow = val.overview
-        ? "overview"
-        : val.video
-        ? "video"
-        : "photo";
+      if (!val[this.currentShow]) {
+        if (val.overallViews) {
+          this.currentShow = "overallViews";
+          return;
+        }
+        if (val.videos) {
+          this.currentShow = "videos";
+          return;
+        }
+        if (val.photos) {
+          this.currentShow = "photos";
+          return;
+        }
+      }
     },
     currentShow(val) {
       if (val != "video") {

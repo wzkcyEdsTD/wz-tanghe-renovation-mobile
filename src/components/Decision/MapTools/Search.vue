@@ -21,7 +21,7 @@
             :key="index"
             @click="itemClick(item)"
           >
-            <img
+            <!-- <img
               v-if="item.img"
               class="item-thumb"
               :src="`${MediaServer}/images/${item.img_dir}/${item.img}`"
@@ -30,7 +30,7 @@
               v-else
               class="item-thumb"
               src="@/assets/images/maptools/暂无图片.png"
-            />
+            /> -->
             <div class="item-body">
               <div class="line">
                 <img

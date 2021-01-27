@@ -178,6 +178,7 @@ export default {
     closeInfo() {
       // 仅关闭弹框
       this.$parent.aroundShow = false;
+      this.$parent.$parent.removeBuffer();
     },
   },
 };

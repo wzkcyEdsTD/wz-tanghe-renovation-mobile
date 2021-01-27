@@ -39,11 +39,20 @@ export const ServiceUrl = {
     // 绿化覆盖线
     GREENING_LINE: "http://172.20.83.228:8090/iserver/services/3D-ldfw_line/rest/realspace/datas/ldfw_line",
 
-    // 城市规划
-    CITYPLANNING: "http://172.20.83.228:8090/iserver/services/3D-KGSQ/rest/realspace/datas/KGSQ"
+    // 用地性规划
+    CITYPLANNING: "http://172.20.83.228:8090/iserver/services/3D-KGSQ/rest/realspace/datas/KGSQ",
+
+    // 用地现状
+    YDXZ: "http://172.20.83.228:8090/iserver/services/3D-dltb/rest/realspace/datas/dltb",
+
+    // 用地分析
+    YDFX: "http://172.20.83.228:8090/iserver/services/3D-rgfxm/rest/realspace/datas/rgfxm",
+
+    // 2020贯通绿道
+    LD2020: "http://172.20.83.228:8090/iserver/services/3D-ld2020/rest/realspace/datas/ld2020",
 }
 
-export const MediaServer = "http://172.168.3.182:8090/static";
+export const MediaServer = "http://172.20.83.227:8080/sys/common/static";
 
 const datasource = "thxm:";
 

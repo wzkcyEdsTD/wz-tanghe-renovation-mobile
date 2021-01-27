@@ -77,6 +77,8 @@
 </template>
 
 <script>
+import { ServiceUrl } from "@/config/mapConfig";
+import { switchHeatMap } from "@/components/Decision/HeatMap";
 import { resourceProjectList, getProjStatusByDept } from "@/api/tangheAPI";
 export default {
   data() {
@@ -107,6 +109,14 @@ export default {
 
   async mounted() {
     await this.getProjectList(this.yearList[this.currentYearIndex]);
+    this.addHeatMap()
+  },
+
+  beforeDestroy() {
+    switchHeatMap(false, "k2");
+    switchHeatMap(false, "k3");
+    switchHeatMap(false, "k4");
+    switchHeatMap(false, "k5");
   },
 
   methods: {
@@ -127,7 +137,7 @@ export default {
         status,
         pageNo: 1,
         pageSize: 9999,
-        tag: year,
+        tag: `*${year}*`,
         column: "totalamount",
         order: "desc",
       });
@@ -146,12 +156,77 @@ export default {
         });
       }
     },
+
+    async addHeatMap() {
+      switchHeatMap(false, "k2");
+      switchHeatMap(false, "k3");
+      switchHeatMap(false, "k4");
+      switchHeatMap(false, "k5");
+      const { result } = await this.fetchProjectData();
+      console.log("resultttt", result);
+      let smallHeatArr = [];
+      let bigHeatArr = [];
+      result.features.forEach((v) => {
+        if (~v.attributes.TAG.indexOf(this.yearList[this.currentYearIndex])) {
+          if (v.attributes.TOTALAMOUNT <= 3000) {
+            smallHeatArr.push([
+              v.geometry.x,
+              v.geometry.y,
+              v.attributes.TOTALAMOUNT,
+            ]);
+          }
+          if (v.attributes.TOTALAMOUNT > 3000) {
+            bigHeatArr.push([
+              v.geometry.x,
+              v.geometry.y,
+              v.attributes.TOTALAMOUNT,
+            ]);
+          }
+        }
+      });
+      // console.log("smallHeatArr???", smallHeatArr);
+      // console.log("bigHeatArr???", bigHeatArr);
+      if (this.yearList[this.currentYearIndex] == 2020) {
+        switchHeatMap(true, "k2", smallHeatArr, 30, 3000);
+        switchHeatMap(true, "k3", bigHeatArr, 3000, 300000);
+      }
+      if (this.yearList[this.currentYearIndex] == 2021) {
+        switchHeatMap(true, "k4", smallHeatArr, 30, 3000);
+        switchHeatMap(true, "k5", bigHeatArr, 3000, 300000);
+      }
+    },
+    // 获取项目数据
+    fetchProjectData() {
+      return new Promise((resolve, reject) => {
+        const getFeatureBySQLService = new SuperMap.REST.GetFeaturesBySQLService(
+          ServiceUrl.FEATUREMVT,
+          {
+            eventListeners: {
+              processCompleted: (data) => {
+                data && resolve(data);
+              },
+              processFailed: (err) => reject(err),
+            },
+          }
+        );
+        getFeatureBySQLService.processAsync(
+          new SuperMap.REST.GetFeaturesBySQLParameters({
+            queryParameter: new SuperMap.REST.FilterParameter({
+              attributeFilter: "",
+            }),
+            toIndex: -1,
+            datasetNames: ["thxm:th_spatial_project_view"],
+          })
+        );
+      });
+    },
   },
 
   watch: {
     currentYearIndex(n, o) {
       const year = this.yearList[n];
       this.getProjectList(year);
+      this.addHeatMap();
     },
   },
 };

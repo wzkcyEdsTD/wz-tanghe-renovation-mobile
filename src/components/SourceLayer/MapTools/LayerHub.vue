@@ -94,9 +94,9 @@ export default {
     this.LayerHubs = deepClone(LayerList);
 
     // 默认显示
-    this.nodeChange(this.LayerHubs[0]);
+    // this.nodeChange(this.LayerHubs[0]);
     this.nodeChange(this.LayerHubs[1]);
-    this.nodeChange(this.LayerHubs[2]);
+    // this.nodeChange(this.LayerHubs[2]);
     this.nodeChange(this.LayerHubs[3]);
   },
 

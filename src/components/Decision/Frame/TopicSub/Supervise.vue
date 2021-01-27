@@ -5,13 +5,17 @@
     <div class="supervise-body">
       <div class="rate-box-header">
         <div class="left">
-          <img class="item-thumb" src="@/assets/images/maptools/暂无图片.png" />
+          <img class="item-thumb" :src="
+              detailData.photos && detailData.photos.length
+                ? `${MediaServer}/${detailData.photos[0].path}`
+                : require(`@/assets/images/maptools/暂无图片.png`)
+            " />
         </div>
         <div class="right">
           <span class="name">{{ detailData.name }}</span>
           <div class="rate-box">
             <span>总体评分</span>
-            <el-rate v-model="value"></el-rate>
+            <el-rate v-model="detailData.star"></el-rate>
           </div>
         </div>
       </div>
@@ -56,27 +60,37 @@
 </template>
 
 <script>
-import { resourceComment } from "@/api/tangheAPI";
+import { MediaServer } from "@/config/mapConfig";
+import { getProjectDetail, resourceComment } from "@/api/tangheAPI";
 export default {
   data() {
     return {
-      value: null,
+      MediaServer,
+      // value: null,
       detailData: {},
       commentList: [],
     };
   },
   methods: {
-    async fixData(res) {
-      this.detailData = res;
-      this.value = res.attributes.STAR || 0;
-      await this.getCommentList();
+    fixData(res) {
+      // this.detailData = res;
+      // this.value = res.attributes.STAR || 0;
+      this.initData(res.attributes.RESOURCE_ID);
     },
-
+    async initData(id) {
+      let {data} = await getProjectDetail({ id });
+      if (data.code === 200) {
+        this.detailData = data.result;
+        console.log("detailData", this.detailData);
+        this.getCommentList(id);
+        this.showSupervise = true;
+      }
+    },
     // 获取评论
-    async getCommentList() {
+    async getCommentList(id) {
       this.commentList = [];
       const { data } = await resourceComment({
-        resourceId: this.detailData.attributes.ID,
+        resourceId: id
       });
 
       if (data.code === 200) {

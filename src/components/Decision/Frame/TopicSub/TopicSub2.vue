@@ -140,7 +140,10 @@ export default {
 
     // 获取项目列表
     async getProjectList() {
-      let { data } = await queryProgressList();
+      let { data } = await queryProgressList({
+        resourceType: 'project_all',
+        tag: 1
+      });
       if (data.code == 200) {
         this.projectList = data.result;
       }

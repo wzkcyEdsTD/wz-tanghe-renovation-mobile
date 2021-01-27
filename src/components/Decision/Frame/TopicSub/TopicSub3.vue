@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { ServiceUrl } from "@/config/mapConfig";
+import { switchHeatMap } from "@/components/Decision/HeatMap";
 import { countProjectStreetNum } from "@/api/tangheAPI";
 import TopSelect from "./TopSelect";
 export default {
@@ -83,6 +85,12 @@ export default {
 
   async mounted() {
     await this.getStreetData();
+    this.addHeatMap()
+  },
+
+  beforeDestroy() {
+    console.log(222)
+    switchHeatMap(false, "k1");
   },
 
   methods: {
@@ -97,6 +105,41 @@ export default {
       if (data.code == 200) {
         this.streetData = data.result;
       }
+    },
+
+    async addHeatMap() {
+      const { result } = await this.fetchProjectData();
+      console.log("resultttt", result);
+      let areaArr = [];
+      result.features.forEach((v) => {
+        areaArr.push([v.geometry.x, v.geometry.y, 1]);
+      });
+      switchHeatMap(true, "k1", areaArr, 0, 2);
+    },
+    // 获取项目数据
+    fetchProjectData() {
+      return new Promise((resolve, reject) => {
+        const getFeatureBySQLService = new SuperMap.REST.GetFeaturesBySQLService(
+          ServiceUrl.FEATUREMVT,
+          {
+            eventListeners: {
+              processCompleted: (data) => {
+                data && resolve(data);
+              },
+              processFailed: (err) => reject(err),
+            },
+          }
+        );
+        getFeatureBySQLService.processAsync(
+          new SuperMap.REST.GetFeaturesBySQLParameters({
+            queryParameter: new SuperMap.REST.FilterParameter({
+              attributeFilter: "",
+            }),
+            toIndex: -1,
+            datasetNames: ["thxm:th_spatial_project_view"],
+          })
+        );
+      });
     },
   },
 };

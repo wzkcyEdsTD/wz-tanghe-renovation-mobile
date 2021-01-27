@@ -2,7 +2,7 @@
   <div class="cal-tools"></div>
 </template>
 <script>
-import { ServiceUrl } from "@/config/mapConfig";
+import { ServiceUrl, ServerDatasource } from "@/config/mapConfig";
 export default {
   data() {
     return {
