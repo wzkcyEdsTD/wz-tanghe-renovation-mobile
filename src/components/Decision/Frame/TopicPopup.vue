@@ -45,8 +45,8 @@ export default {
     return {
       tabList: [
         {
-          id: "延期项目",
-          label: "延期项目",
+          id: "滞后项目",
+          label: "滞后项目",
           show: false,
         },
         {
@@ -120,6 +120,26 @@ export default {
           ~[2, 3].indexOf(this.currentIndex) && (this.currentIndex = 0);
         }
       }
+    },
+
+    // 筛选地图元素
+    filterData(array) {
+      window.billboardMap["项目"]._billboards.forEach((v) => {
+        v.show = false;
+        array.forEach((item) => {
+          if (v.id == `billboard@${item.attributes.SMID}@项目`) {
+            v.show = true;
+          }
+        });
+      });
+      window.whiteLabelMap["项目"]._labels.forEach((v) => {
+        v.show = false;
+        array.forEach((item) => {
+          if (v.id == `label@${item.attributes.SMID}@项目`) {
+            v.show = true;
+          }
+        });
+      });
     },
   },
 

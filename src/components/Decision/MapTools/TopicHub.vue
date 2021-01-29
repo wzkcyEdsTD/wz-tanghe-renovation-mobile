@@ -363,6 +363,18 @@ export default {
       });
     },
   },
+  watch: {
+    topicList: {
+      handler(newVal) {
+        if (!newVal[0].check) {
+          window.billboardMap["项目"]._billboards.map((v) => (v.show = true));
+          window.whiteLabelMap["项目"].setAllLabelsVisible(true);
+        }
+      },
+      immediate: true,
+      deep: true
+    }
+  }
 };
 </script>
 

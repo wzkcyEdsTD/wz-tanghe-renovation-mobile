@@ -146,6 +146,14 @@ export default {
       });
       if (data.code == 200) {
         this.projectList = data.result;
+        let tempArr = [];
+        for (let key in window.featureMap["项目"]) {
+          let item = window.featureMap["项目"][key];
+          if (item.attributes.PROBLEM) {
+            tempArr.push(item);
+          }
+        }
+        this.$parent.filterData(tempArr);
       }
     },
   },

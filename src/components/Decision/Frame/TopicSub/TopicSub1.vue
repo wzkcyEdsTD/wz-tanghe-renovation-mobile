@@ -3,7 +3,7 @@
     <div class="info-container">
       <div class="panel-title">
         <img src="@/assets/images/detail/title-before.png" />
-        <span>延期项目</span>
+        <span>滞后项目</span>
       </div>
       <div class="panel-body">
         <div class="dept-list">
@@ -159,6 +159,14 @@ export default {
 
       if (data.code == 200) {
         this.projectList = data.result.records;
+        let tempArr = [];
+        for (let key in window.featureMap["项目"]) {
+          let item = window.featureMap["项目"][key];
+          if (~item.attributes.STATUS.indexOf("滞后")) {
+            tempArr.push(item);
+          }
+        }
+        this.$parent.filterData(tempArr);
       }
     },
   },
