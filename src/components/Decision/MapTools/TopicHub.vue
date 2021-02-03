@@ -116,6 +116,12 @@ export default {
           check: false,
           doFun: "analyzeHandle",
         },
+        {
+          id: "一键清除",
+          label: "一键清除",
+          icon: "清除",
+          check: false,
+        }
       ],
       topicLayer: {
         greening: undefined,
@@ -151,8 +157,24 @@ export default {
       });
     },
 
+    closeAllLayer() {
+      this.topicLayer.cityplanning && (this.topicLayer.cityplanning.show = false);
+      this.topicLayer.ydxz && (this.topicLayer.ydxz.show = false);
+      this.topicLayer.ydfx && (this.topicLayer.ydfx.show = false);
+      this.topicLayer.ld2020 && (this.topicLayer.ld2020.show = false);
+    },
+
     // 专题事件
     topicChange(item) {
+      if (item.id == '一键清除') {
+        this.topicList.forEach(topic => {
+          topic.check = false
+          topic.doFun && this[topic.doFun](topic);
+        })
+        this.closeAllLayer()
+        return
+      }
+
       if (!("check" in item)) return;
       item.check = !item.check;
 
@@ -161,13 +183,10 @@ export default {
         item.doFun && this[item.doFun](item);
       } else {
         if (item.id == '城市规划' && !item.check) {
-          this.topicLayer.cityplanning && (this.topicLayer.cityplanning.show = false);
-          this.topicLayer.ydxz && (this.topicLayer.ydxz.show = false);
-          this.topicLayer.ydfx && (this.topicLayer.ydfx.show = false);
-          this.topicLayer.ld2020 && (this.topicLayer.ld2020.show = false);
-            item.children.forEach((child) => {
-              child.check = false;
-            });
+          this.closeAllLayer()
+          item.children.forEach((child) => {
+            child.check = false;
+          });
         }
       }
     },
@@ -209,10 +228,15 @@ export default {
     // 领导督办
     superviseHandle({ check }) {
       // !check && (this.superviseShow = false);
+      if (check && this.topicList[0].check) {
+        this.topicList[0].check = false
+        this.warningHandle(this.topicList[0])
+      }
+
       window.billboardMap["项目"]._billboards.map((v) => (v.show = false));
       if (!check) {
         this.superviseShow = false;
-        if (LayerList[1].check) {
+        if (LayerList[1].check && !this.topicList[0].check) {
           window.billboardMap["项目"]._billboards.map((v) => (v.show = true));
         }
       }
@@ -238,6 +262,10 @@ export default {
 
     // 进度预警
     warningHandle(obj) {
+      if (obj.check && this.topicList[4].check) {
+        this.topicList[4].check = false
+        this.superviseHandle(this.topicList[4])
+      }
       this.$parent.$refs.TopicPopup.setTabList(obj.id, obj.check);
     },
 
@@ -365,8 +393,8 @@ export default {
   },
   watch: {
     topicList: {
-      handler(newVal) {
-        if (!newVal[0].check) {
+      handler(newVal, oldVal) {
+        if (oldVal && !newVal[0].check && !newVal[4].check) {
           window.billboardMap["项目"]._billboards.map((v) => (v.show = true));
           window.whiteLabelMap["项目"].setAllLabelsVisible(true);
         }

@@ -181,10 +181,10 @@ export default {
         //   id: "标绘",
         //   label: "空间标绘",
         // },
-        {
-          id: "量算",
-          label: "空间量算",
-        },
+        // {
+        //   id: "量算",
+        //   label: "空间量算",
+        // },
         {
           id: "分析",
           label: "空间分析",
@@ -308,9 +308,10 @@ export default {
       // if (this.currentIndex == 0) {
       //   this.drawToolShow = true;
       // }
+      // if (this.currentIndex == 0) {
+      //   this.measureToolShow = true;
+      // }
       if (this.currentIndex == 0) {
-        this.measureToolShow = true;
-      } else if (this.currentIndex == 1) {
         this.$refs.CalTools.gaugeAreaAnalyze();
       }
     },
@@ -549,14 +550,14 @@ export default {
     top: 9.81vh;
     left: 50%;
     transform: translateX(-50%);
-    width: 76.2vh;
+    width: 50.2vh;
     height: 4.2vh;
     .bg-image("~@/assets/images/spacetools/spacetool-bg");
     z-index: 99;
 
     .space-tool-inner {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       width: 30vh;
       height: 100%;

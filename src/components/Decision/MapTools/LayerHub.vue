@@ -31,12 +31,12 @@
           <span class="panel-title">塘河沿线</span>
           <div class="panel-body">
             <div
-              v-for="k in Math.ceil(LayerHubs.length / 2)"
+              v-for="k in Math.ceil(LayerList.length / 2)"
               :key="k"
               class="line"
             >
               <div
-                v-for="(item, index) in LayerHubs.slice(
+                v-for="(item, index) in LayerList.slice(
                   (k - 1) * 2,
                   (k - 1) * 2 + 2
                 )"
@@ -85,7 +85,8 @@ export default {
           value: "reset",
         },
       ],
-      LayerHubs: [],
+      // LayerHubs: [],
+      LayerList,
       saveDataMap: {},
       currentMap: 0,
     };
@@ -93,10 +94,12 @@ export default {
 
   mounted() {
     // 深拷贝
-    this.LayerHubs = deepClone(LayerList);
+    // this.LayerHubs = deepClone(LayerList);
     
-    this.nodeChange(this.LayerHubs[1]);
-    this.nodeChange(this.LayerHubs[3]);
+    // this.nodeChange(this.LayerHubs[1]);
+    // this.nodeChange(this.LayerHubs[3]);
+    this.nodeChange(LayerList[1]);
+    this.nodeChange(LayerList[3]);
   },
 
   methods: {

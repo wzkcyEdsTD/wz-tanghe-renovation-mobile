@@ -89,7 +89,6 @@ export default {
   },
 
   beforeDestroy() {
-    console.log(222)
     switchHeatMap(false, "k1");
   },
 

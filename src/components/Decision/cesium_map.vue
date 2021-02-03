@@ -10,7 +10,7 @@
       <NamePopup ref="NamePopup" />
       <Legend v-show="hubShow" ref="Legend" />
       <TopicHub ref="TopicHub" />
-      <SpaceTool ref="SpaceTool" />
+      <!-- <SpaceTool ref="SpaceTool" /> -->
     </div>
   </div>
 </template>
@@ -33,7 +33,7 @@ import LayerHub from "@/components/Decision/MapTools/LayerHub";
 import Search from "@/components/Decision/MapTools/Search";
 import Legend from "@/components/Decision/MapTools/Legend";
 import TopicHub from "@/components/Decision/MapTools/TopicHub";
-import SpaceTool from "@/components/Decision/MapTools/SpaceTool";
+// import SpaceTool from "@/components/Decision/MapTools/SpaceTool";
 import NamePopup from "@/components/Decision/Frame/NamePopup";
 import CommonDetailPopup from "@/components/Decision/Frame/CommonDetailPopup";
 import ProjectDetailPopup from "@/components/Decision/Frame/ProjectDetailPopup";
@@ -61,7 +61,7 @@ export default {
     Search,
     Legend,
     TopicHub,
-    SpaceTool,
+    // SpaceTool,
     NamePopup,
     CommonDetailPopup,
     ProjectDetailPopup,
@@ -153,7 +153,7 @@ export default {
             destination: Cesium.Cartesian3.fromDegrees(
               geometry.x,
               geometry.y,
-              1200
+              5200
             ),
             orientation: {
               heading: 0.01768860454315663,
@@ -267,8 +267,8 @@ export default {
         position: Cesium.Cartesian3.fromDegrees(x, y, 0),
         billboard: {
           image: `/libs/images/map-ico/buffer-point.png`,
-          width: 40,
-          height: 40,
+          width: 20,
+          height: 20,
           scaleByDistance: new Cesium.NearFarScalar(3000, 1.5, 6000, 1.2),
           disableDepthTestDistance: Number.POSITIVE_INFINITY,
         },
