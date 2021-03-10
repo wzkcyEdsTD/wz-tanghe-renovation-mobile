@@ -544,16 +544,16 @@ export default {
     },
     currentData(val) {
       if (!val[this.currentShow]) {
-        if (val.overallViews) {
-          this.currentShow = "overallViews";
+        if (val.overallView) {
+          this.currentShow = "overallView";
           return;
         }
-        if (val.videos) {
-          this.currentShow = "videos";
+        if (val.video) {
+          this.currentShow = "video";
           return;
         }
-        if (val.photos) {
-          this.currentShow = "photos";
+        if (val.photo) {
+          this.currentShow = "photo";
           return;
         }
       }

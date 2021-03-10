@@ -92,13 +92,17 @@ export default {
     };
   },
 
+  beforeDestroy() {
+    this.nodeChange(LayerList[3]);
+  },
+
   mounted() {
     // 深拷贝
     // this.LayerHubs = deepClone(LayerList);
     
     // this.nodeChange(this.LayerHubs[1]);
     // this.nodeChange(this.LayerHubs[3]);
-    this.nodeChange(LayerList[1]);
+    // this.nodeChange(LayerList[1]);
     this.nodeChange(LayerList[3]);
   },
 
