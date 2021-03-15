@@ -180,7 +180,14 @@ export default {
 
       if (!item.children) {
         // 调用对应handle
-        item.doFun && this[item.doFun](item);
+        if (window.billboardMap["项目"]) {
+          item.doFun && this[item.doFun](item);
+        } else {
+          let LayerHubs = this.$parent.$refs.LayerHub.LayerHubs
+          this.$parent.$refs.LayerHub.nodeChange(LayerHubs[1], () => {
+            item.doFun && this[item.doFun](item);
+          })
+        }
       } else {
         if (item.id == '城市规划' && !item.check) {
           this.closeAllLayer()
@@ -395,8 +402,12 @@ export default {
     topicList: {
       handler(newVal, oldVal) {
         if (oldVal && !newVal[0].check && !newVal[4].check) {
-          window.billboardMap["项目"]._billboards.map((v) => (v.show = true));
-          window.whiteLabelMap["项目"].setAllLabelsVisible(true);
+          if (window.billboardMap["项目"]) {
+            window.billboardMap["项目"]._billboards.map((v) => (v.show = true));
+          }
+          if (window.whiteLabelMap["项目"]) {
+            window.whiteLabelMap["项目"].setAllLabelsVisible(true);
+          }
         }
       },
       immediate: true,

@@ -163,7 +163,7 @@ export default {
       switchHeatMap(false, "k4");
       switchHeatMap(false, "k5");
       const { result } = await this.fetchProjectData();
-      console.log("resultttt", result);
+      // console.log("resultttt", result);
       let smallHeatArr = [];
       let bigHeatArr = [];
       result.features.forEach((v) => {

@@ -80,7 +80,7 @@ export const LayerList = [{
 }, {
     id: "绿道断点",
     label: "断点",
-    dataset: `${datasource}sp_point_resource`,
+    dataset: `${datasource}th_spatial_greenway_view`,
     icon: '断点',
     icon2: "断点",
     type: "mvt",

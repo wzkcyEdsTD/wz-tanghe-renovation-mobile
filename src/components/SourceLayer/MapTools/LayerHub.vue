@@ -1,5 +1,31 @@
 <template>
   <div class="layerhub">
+    <div class="select-wrapper" v-if="menu">
+      <el-select class="filter-select" v-show="menu=='项目'||menu=='绿道断点'" style="width:120px;" v-model="yearValue" placeholder="年份" @change="changeYear">
+        <el-option
+          v-for="item in yearOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-select class="filter-select" v-show="menu=='项目'" style="margin:0 10px;width:150px;" v-model="importantValue" placeholder="类型" @change="changeImportant">
+        <el-option
+          v-for="item in importantOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-select class="filter-select" v-show="menu=='绿道断点'" style="margin:0 10px;width:90px;" v-model="ddtypeValue" placeholder="类型" @change="changeType">
+        <el-option
+          v-for="item in ddtypeOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </div>
     <div class="map-list">
       <div
         v-for="(item, index) in mapList"
@@ -86,6 +112,34 @@ export default {
       LayerHubs: [],
       saveDataMap: {},
       currentMap: 0,
+      yearOptions: [{
+        label: '2020',
+        value: 2020
+      }, {
+        label: '2021',
+        value: 2021
+      }],
+      yearValue: '',
+      importantOptions: [{
+        label: '重点项目',
+        value: '1'
+      }, {
+        label: '非重点项目',
+        value: '0'
+      }],
+      importantValue: '',
+      ddtypeOptions: [{
+        label: '断点',
+        value: 'breakpoint'
+      }, {
+        label: '贯通',
+        value: 'through'
+      }, {
+        label: '提升',
+        value: 'promote'
+      }],      
+      ddtypeValue: '',
+      menu: ''
     };
   },
 
@@ -123,6 +177,10 @@ export default {
         });
       } else {
         if (node.check) {
+          this.yearValue = ''
+          this.ddtypeValue = ''
+          this.importantValue = ''
+          this.menu = node.id
           if (node.id && window.billboardMap[node.id]) {
             node.saveData
               ? this[node.saveData](this.saveDataMap[node.id])
@@ -136,6 +194,7 @@ export default {
             this.addFeatures(node);
           }
         } else {
+          this.menu == node.id && (this.menu = '')
           if (window.billboardMap[node.id]) {
             window.billboardMap[node.id]._billboards.map(
               (v) => (v.show = false)
@@ -179,6 +238,86 @@ export default {
         },
       });
       getFeatureBySQLService.processAsync(getFeatureBySQLParams);
+    },
+
+    changeYear(val) {
+      let res = []
+      for (let key in window.featureMap[this.menu]) {
+        let item = window.featureMap[this.menu][key]
+        if (this.menu=='绿道断点' && this.ddtypeValue) {
+          if (~item.attributes.TAG.indexOf(val) && item.attributes.TYPE == this.ddtypeValue) {
+            res.push(item)
+          }
+        } else if (this.menu=='项目' && this.importantValue) {
+          if (~item.attributes.TAG.indexOf(val) && item.attributes.IS_IMPORTANT == this.importantValue) {
+            res.push(item)
+          }
+        } else {
+          if (~item.attributes.TAG.indexOf(val)) {
+            res.push(item)
+          }
+        }
+      }
+      this.filterData(res)
+    },
+    changeImportant(val) {
+      let res = []
+      for (let key in window.featureMap[this.menu]) {
+        let item = window.featureMap[this.menu][key]
+        if (this.yearValue) {
+          if (item.attributes.IS_IMPORTANT == val && ~item.attributes.TAG.indexOf(this.yearValue)) {
+            res.push(item)
+          }
+        } else {
+          if (item.attributes.IS_IMPORTANT == val) {
+            res.push(item)
+          }
+        }
+      }
+      this.filterData(res)
+    },
+    changeType(val) {
+      let res = []
+      for (let key in window.featureMap[this.menu]) {
+        let item = window.featureMap[this.menu][key]
+        if (this.yearValue) {
+          if (item.attributes.TYPE == val && ~item.attributes.TAG.indexOf(this.yearValue)) {
+            res.push(item)
+          }
+        } else {
+          if (item.attributes.TYPE == val) {
+            res.push(item)
+          }
+        }
+      }
+      this.filterData(res)
+    },
+    filterData(array) {
+      // console.log('array', array)
+      window.billboardMap[this.menu]._billboards.forEach(v => {
+        v.show = false
+        array.forEach(item => {
+          if (v.id == `billboard@${item.attributes.SMID}@${this.menu}`) {
+            v.show = true
+          }
+        })
+      })
+      window.whiteLabelMap[this.menu]._labels.forEach(v => {
+        v.show = false
+        array.forEach(item => {
+          if (v.id == `label@${item.attributes.SMID}@${this.menu}`) {
+            v.show = true
+          }
+        })
+      })
+      window.blackLabelMap[this.menu]._labels.forEach(v => {
+        v.show = false
+        array.forEach(item => {
+          if (v.id == `label@${item.attributes.SMID}@${this.menu}`) {
+            v.show = true
+          }
+        })
+      })
     },
   },
 };
@@ -349,5 +488,8 @@ export default {
     border-color: transparent transparent #0f4dd8 !important;
     border-style: solid dashed dashed !important;
   }
+}
+.el-select-dropdown__wrap.el-scrollbar__wrap {
+  overflow: hidden;
 }
 </style>

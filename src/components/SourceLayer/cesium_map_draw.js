@@ -34,11 +34,23 @@ export const drawFeatures = (ctx, {
             4
         );
 
+        let billImage
+        let width = 34
+        let height = 34
+        if (node.id == '项目') {
+            billImage = `/libs/images/map-ico/${item.attributes.STATUS.trim()}.png`
+        } else if (node.id == '绿道断点') {
+            billImage = `/libs/images/map-ico/${item.attributes.TYPE.trim()}.png`
+        } else {
+            billImage = `/libs/images/map-ico/${node.icon}.png`
+        }
+        
+
         window.billboardMap[node.id].add({
             id: `billboard@${item.attributes.SMID}@${node.id}`,
-            image: node.icon ? `/libs/images/map-ico/${node.icon}.png` : `/libs/images/map-ico/${item.attributes.STATUS.trim()}.png`,
-            width: node.icon=='断点' ? 30 : 34,
-            height: node.icon=='断点' ? 30 : 34,
+            image: billImage,
+            width: width,
+            height: height,
             scaleByDistance: new Cesium.NearFarScalar(500, 1.5, 6000, 1),
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
             position

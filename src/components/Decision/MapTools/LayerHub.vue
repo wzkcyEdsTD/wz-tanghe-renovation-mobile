@@ -1,5 +1,55 @@
 <template>
   <div class="layerhub">
+    <div class="select-wrapper" v-if="menu">
+      <el-select
+        class="filter-select"
+        v-show="menu == '项目' || menu == '绿道断点'"
+        style="width: 120px"
+        v-model="yearValue"
+        placeholder="年份"
+        @change="changeYear"
+      >
+        <el-option
+          v-for="item in yearOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <el-select
+        class="filter-select"
+        v-show="menu == '项目'"
+        style="margin: 0 10px; width: 150px"
+        v-model="importantValue"
+        placeholder="类型"
+        @change="changeImportant"
+      >
+        <el-option
+          v-for="item in importantOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <el-select
+        class="filter-select"
+        v-show="menu == '绿道断点'"
+        style="margin: 0 10px; width: 90px"
+        v-model="ddtypeValue"
+        placeholder="类型"
+        @change="changeType"
+      >
+        <el-option
+          v-for="item in ddtypeOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
     <div class="map-list">
       <div
         v-for="(item, index) in mapList"
@@ -31,12 +81,12 @@
           <span class="panel-title">塘河沿线</span>
           <div class="panel-body">
             <div
-              v-for="k in Math.ceil(LayerList.length / 2)"
+              v-for="k in Math.ceil(LayerHubs.length / 2)"
               :key="k"
               class="line"
             >
               <div
-                v-for="(item, index) in LayerList.slice(
+                v-for="(item, index) in LayerHubs.slice(
                   (k - 1) * 2,
                   (k - 1) * 2 + 2
                 )"
@@ -85,25 +135,57 @@ export default {
           value: "reset",
         },
       ],
-      // LayerHubs: [],
-      LayerList,
+      LayerHubs: [],
       saveDataMap: {},
       currentMap: 0,
+      yearOptions: [
+        {
+          label: "2020",
+          value: 2020,
+        },
+        {
+          label: "2021",
+          value: 2021,
+        },
+      ],
+      yearValue: "",
+      importantOptions: [
+        {
+          label: "重点项目",
+          value: "1",
+        },
+        {
+          label: "非重点项目",
+          value: "0",
+        },
+      ],
+      importantValue: "",
+      ddtypeOptions: [
+        {
+          label: "断点",
+          value: "breakpoint",
+        },
+        {
+          label: "贯通",
+          value: "through",
+        },
+        {
+          label: "提升",
+          value: "promote",
+        },
+      ],
+      ddtypeValue: "",
+      menu: "",
     };
-  },
-
-  beforeDestroy() {
-    this.nodeChange(LayerList[3]);
   },
 
   mounted() {
     // 深拷贝
-    // this.LayerHubs = deepClone(LayerList);
-    
+    this.LayerHubs = deepClone(LayerList);
+
     // this.nodeChange(this.LayerHubs[1]);
     // this.nodeChange(this.LayerHubs[3]);
-    // this.nodeChange(LayerList[1]);
-    this.nodeChange(LayerList[3]);
+    this.nodeChange(this.LayerHubs[3]);
   },
 
   methods: {
@@ -120,7 +202,7 @@ export default {
     },
 
     // 节点事件
-    nodeChange(node) {
+    nodeChange(node, fn) {
       node.check = !node.check;
 
       if (node.id == "绿道") {
@@ -129,6 +211,10 @@ export default {
         });
       } else {
         if (node.check) {
+          this.yearValue = "";
+          this.ddtypeValue = "";
+          this.importantValue = "";
+          this.menu = node.id;
           if (node.id && window.billboardMap[node.id]) {
             node.saveData
               ? this[node.saveData](this.saveDataMap[node.id])
@@ -139,9 +225,10 @@ export default {
             window.blackLabelMap[node.id].setAllLabelsVisible(true);
             window.whiteLabelMap[node.id].setAllLabelsVisible(true);
           } else {
-            this.addFeatures(node);
+            this.addFeatures(node, fn);
           }
         } else {
+          this.menu == node.id && (this.menu = "");
           if (window.billboardMap[node.id]) {
             window.billboardMap[node.id]._billboards.map(
               (v) => (v.show = false)
@@ -165,7 +252,7 @@ export default {
     },
 
     // 添加要素
-    addFeatures(node) {
+    addFeatures(node, fn) {
       const url = ServiceUrl.FEATUREMVT;
       let getFeatureParam, getFeatureBySQLService, getFeatureBySQLParams;
       getFeatureParam = new SuperMap.REST.FilterParameter({
@@ -179,12 +266,104 @@ export default {
       getFeatureBySQLService = new SuperMap.REST.GetFeaturesBySQLService(url, {
         eventListeners: {
           processCompleted: async (res) => {
-            drawFeatures(this, res, node);
+            drawFeatures(this, res, node, fn);
           },
           processFailed: (msg) => console.log(msg),
         },
       });
       getFeatureBySQLService.processAsync(getFeatureBySQLParams);
+    },
+
+    changeYear(val) {
+      let res = [];
+      for (let key in window.featureMap[this.menu]) {
+        let item = window.featureMap[this.menu][key];
+        if (this.menu == "绿道断点" && this.ddtypeValue) {
+          if (
+            ~item.attributes.TAG.indexOf(val) &&
+            item.attributes.TYPE == this.ddtypeValue
+          ) {
+            res.push(item);
+          }
+        } else if (this.menu == "项目" && this.importantValue) {
+          if (
+            ~item.attributes.TAG.indexOf(val) &&
+            item.attributes.IS_IMPORTANT == this.importantValue
+          ) {
+            res.push(item);
+          }
+        } else {
+          if (~item.attributes.TAG.indexOf(val)) {
+            res.push(item);
+          }
+        }
+      }
+      this.filterData(res);
+    },
+    changeImportant(val) {
+      let res = [];
+      for (let key in window.featureMap[this.menu]) {
+        let item = window.featureMap[this.menu][key];
+        if (this.yearValue) {
+          if (
+            item.attributes.IS_IMPORTANT == val &&
+            ~item.attributes.TAG.indexOf(this.yearValue)
+          ) {
+            res.push(item);
+          }
+        } else {
+          if (item.attributes.IS_IMPORTANT == val) {
+            res.push(item);
+          }
+        }
+      }
+      this.filterData(res);
+    },
+    changeType(val) {
+      let res = [];
+      for (let key in window.featureMap[this.menu]) {
+        let item = window.featureMap[this.menu][key];
+        if (this.yearValue) {
+          if (
+            item.attributes.TYPE == val &&
+            ~item.attributes.TAG.indexOf(this.yearValue)
+          ) {
+            res.push(item);
+          }
+        } else {
+          if (item.attributes.TYPE == val) {
+            res.push(item);
+          }
+        }
+      }
+      this.filterData(res);
+    },
+    filterData(array) {
+      // console.log('array', array)
+      window.billboardMap[this.menu]._billboards.forEach((v) => {
+        v.show = false;
+        array.forEach((item) => {
+          if (v.id == `billboard@${item.attributes.SMID}@${this.menu}`) {
+            v.show = true;
+          }
+        });
+      });
+      window.whiteLabelMap[this.menu]._labels.forEach((v) => {
+        v.show = false;
+        array.forEach((item) => {
+          if (v.id == `label@${item.attributes.SMID}@${this.menu}`) {
+            v.show = true;
+          }
+        });
+      });
+      window.blackLabelMap[this.menu]._labels.forEach((v) => {
+        v.show = false;
+        array.forEach((item) => {
+          if (v.id == `label@${item.attributes.SMID}@${this.menu}`) {
+            v.show = true;
+          }
+        });
+      });
     },
   },
 };
@@ -279,6 +458,15 @@ export default {
       }
     }
   }
+  .filter-select {
+    border: 1px solid #0f4dd8;
+    /deep/.el-input__inner {
+      background-color: rgba(5, 13, 50, 0.9) !important;
+      color: white !important;
+      border: none !important;
+      text-align: center !important;
+    }
+  }
 }
 </style>
 <style lang="less">
@@ -359,5 +547,8 @@ export default {
       border-bottom-color: rgba(6, 16, 53, 0.8) !important;
     }
   }
+}
+.el-select-dropdown__wrap.el-scrollbar__wrap {
+  overflow: hidden;
 }
 </style>
