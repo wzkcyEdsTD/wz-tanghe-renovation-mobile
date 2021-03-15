@@ -339,7 +339,6 @@ export default {
       this.filterData(res);
     },
     filterData(array) {
-      // console.log('array', array)
       window.billboardMap[this.menu]._billboards.forEach((v) => {
         v.show = false;
         array.forEach((item) => {

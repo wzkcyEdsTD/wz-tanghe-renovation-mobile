@@ -151,7 +151,6 @@ export default {
     eventRegsiter() {
       this.$bus.$off("set-supervise");
       this.$bus.$on("set-supervise", ({ feature }) => {
-        // console.log(feature);
         this.superviseShow = true;
         this.$refs.Supervise.fixData(feature);
       });

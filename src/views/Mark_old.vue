@@ -235,9 +235,7 @@ export default {
           })
         })
       })
-      console.log('submit', data)
       let res = await addBatch(data)
-      console.log('res', res)
       if (res.data.code === 200) {
         this.$message({
           message: '评测打分成功！',

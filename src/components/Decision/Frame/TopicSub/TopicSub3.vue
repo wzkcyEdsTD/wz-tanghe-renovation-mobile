@@ -108,7 +108,6 @@ export default {
 
     async addHeatMap() {
       const { result } = await this.fetchProjectData();
-      console.log("resultttt", result);
       let areaArr = [];
       result.features.forEach((v) => {
         areaArr.push([v.geometry.x, v.geometry.y, 1]);

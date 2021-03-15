@@ -170,9 +170,7 @@ export default {
           sysOrgCode: zrdw.label,
         });
       });
-      console.log("submit", data);
       let res = await addBatch(data);
-      console.log("res", res);
       if (res.data.code === 200) {
         this.btnLock = false;
         this.submited = true;

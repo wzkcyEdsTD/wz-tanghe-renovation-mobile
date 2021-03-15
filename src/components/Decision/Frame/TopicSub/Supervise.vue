@@ -81,7 +81,6 @@ export default {
       let {data} = await getProjectDetail({ id });
       if (data.code === 200) {
         this.detailData = data.result;
-        console.log("detailData", this.detailData);
         this.getCommentList(id);
         this.showSupervise = true;
       }

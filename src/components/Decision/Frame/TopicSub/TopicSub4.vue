@@ -163,7 +163,6 @@ export default {
       switchHeatMap(false, "k4");
       switchHeatMap(false, "k5");
       const { result } = await this.fetchProjectData();
-      // console.log("resultttt", result);
       let smallHeatArr = [];
       let bigHeatArr = [];
       result.features.forEach((v) => {
@@ -184,8 +183,6 @@ export default {
           }
         }
       });
-      // console.log("smallHeatArr???", smallHeatArr);
-      // console.log("bigHeatArr???", bigHeatArr);
       if (this.yearList[this.currentYearIndex] == 2020) {
         switchHeatMap(true, "k2", smallHeatArr, 30, 3000);
         switchHeatMap(true, "k3", bigHeatArr, 3000, 300000);

@@ -198,7 +198,6 @@ export default {
               const feature = window.featureMap[_NODEID_][_SMID_];
               this.$bus.$emit("set-supervise", { feature });
 
-              // console.log(feature);
             }
           }
         }
